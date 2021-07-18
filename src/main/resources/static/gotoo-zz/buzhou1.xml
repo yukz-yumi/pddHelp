@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BaseRoot>
+    <!-- -->
+    <segment code="luoyang_gw" name="洛阳工务段">
+        <OneStup indexNum="1" name="开始作业" key="startWork" markFlag="start"></OneStup>
+        <OneStup indexNum="2" name="出库清点" key="chuku" markFlag="out"></OneStup>
+        <OneStup indexNum="3" name="入网清点" key="ruwang"></OneStup>
+        <OneStup indexNum="4" name="上道清点" key="shangdao"></OneStup>
+        <OneStup indexNum="5" name="下道清点" key="xiadao"></OneStup>
+        <OneStup indexNum="6" name="出网清点" key="chuwang"></OneStup>
+        <OneStup indexNum="7" name="入库清点" key="ruku" markFlag="in"></OneStup>
+        <OneStup indexNum="8" name="完成作业" key="endWork" markFlag="end"></OneStup>
+    </segment>
+    <!-- -->
+    <segment code="wuhan" name="武汉铁路局">
+        <OneStup indexNum="1" name="开始作业" key="startWork" markFlag="start"></OneStup>
+        <OneStup indexNum="2" name="出库清点" key="chuku" markFlag="out"></OneStup>
+        <OneStup indexNum="3" name="入网清点" key="ruwang"></OneStup>
+        <OneStup indexNum="4" name="上道清点" key="shangdao"></OneStup>
+        <OneStup indexNum="5" name="下道清点" key="xiadao"></OneStup>
+        <OneStup indexNum="6" name="出网清点" key="chuwang"></OneStup>
+        <OneStup indexNum="7" name="入库清点" key="ruku" markFlag="in"></OneStup>
+        <OneStup indexNum="8" name="完成作业" key="endWork" markFlag="end"></OneStup>
+    </segment>
+    <!-- -->
+    <segment code="beijing" name="北京铁路局">
+        <OneStup indexNum="1" name="开始作业" key="startWork" markFlag="start"></OneStup>
+        <OneStup indexNum="2" name="出库清点" key="chuku" markFlag="out"></OneStup>
+        <OneStup indexNum="3" name="入网清点" key="ruwang"></OneStup>
+        <OneStup indexNum="4" name="上道清点" key="shangdao"></OneStup>
+        <OneStup indexNum="5" name="下道清点" key="xiadao"></OneStup>
+        <OneStup indexNum="6" name="出网清点" key="chuwang"></OneStup>
+        <OneStup indexNum="7" name="入库清点" key="ruku" markFlag="in"></OneStup>
+        <OneStup indexNum="8" name="完成作业" key="endWork" markFlag="end"></OneStup>
+    </segment>
+</BaseRoot>
