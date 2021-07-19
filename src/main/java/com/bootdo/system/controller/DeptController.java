@@ -6,7 +6,6 @@ import com.bootdo.common.controller.BaseController;
 import com.bootdo.common.domain.Tree;
 import com.bootdo.common.utils.Query;
 import com.bootdo.common.utils.R;
-import com.bootdo.gotoo.controller.WorkOrderController;
 import com.bootdo.system.domain.DeptDO;
 import com.bootdo.system.domain.UserDO;
 import com.bootdo.system.service.DeptService;

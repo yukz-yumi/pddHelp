@@ -1,12 +1,11 @@
 package com.bootdo.common.controller;
 
-import com.bootdo.common.service.GotooCommonService;
+import com.bootdo.common.service.PddHelpCommonService;
 import com.bootdo.common.utils.R;
-import com.bootdo.gotoo.utils.ObjectExcelRead;
-import com.bootdo.gotoo.utils.PageData;
-import com.bootdo.gotoo.utils.UuidUtil;
-import com.bootdo.gotoo.utils.XmlParser;
-import com.bootdo.system.domain.UserToken;
+import com.bootdo.pddhelp.utils.ObjectExcelRead;
+import com.bootdo.pddhelp.utils.PageData;
+import com.bootdo.pddhelp.utils.UuidUtil;
+import com.bootdo.pddhelp.utils.XmlParser;
 import org.dom4j.Attribute;
 import org.dom4j.Element;
 import org.slf4j.Logger;
@@ -50,7 +49,7 @@ public class BaseController {
 		return getUser().getSegmentCode();
 	}
 
-	public R commonImport(String filePath, String fileName, String path, Logger logger, GotooCommonService gotooCommonService) {
+	public R commonImport(String filePath, String fileName, String path, Logger logger, PddHelpCommonService gotooCommonService) {
 		Element element = XmlParser.getRootNode(path);
 		String desc = element.attributeValue("desc");
 		List<Element> listE = XmlParser.getChildList(element);

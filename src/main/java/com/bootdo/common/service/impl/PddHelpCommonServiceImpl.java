@@ -1,8 +1,8 @@
 package com.bootdo.common.service.impl;
 
-import com.bootdo.common.dao.GotooCommonDao;
-import com.bootdo.common.service.GotooCommonService;
-import com.bootdo.gotoo.utils.PageData;
+import com.bootdo.common.dao.PddHelpCommonDao;
+import com.bootdo.common.service.PddHelpCommonService;
+import com.bootdo.pddhelp.utils.PageData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
  * author：ykz time:2019/7/6 20:48
  */
 @Service
-public class GotooCommonServiceImpl implements GotooCommonService {
+public class PddHelpCommonServiceImpl implements PddHelpCommonService {
     @Autowired
-    private GotooCommonDao gotooCommonDao;
+    private PddHelpCommonDao pddHelpCommonDao;
     /**
      * 保存导入数据
      *
@@ -21,6 +21,6 @@ public class GotooCommonServiceImpl implements GotooCommonService {
      */
     @Override
     public int saveDevData(PageData pd) throws Exception {
-        return gotooCommonDao.save(pd);
+        return pddHelpCommonDao.save(pd);
     }
 }
