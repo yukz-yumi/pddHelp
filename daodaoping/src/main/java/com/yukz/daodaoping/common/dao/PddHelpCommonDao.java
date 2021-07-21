@@ -1,6 +1,6 @@
 package com.yukz.daodaoping.common.dao;
 
-import com.yukz.daodaoping.pddhelp.utils.PageData;
+import com.yukz.daodaoping.system.utils.PageData;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

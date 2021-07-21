@@ -2,7 +2,7 @@ package com.yukz.daodaoping.common.service.impl;
 
 import com.yukz.daodaoping.common.dao.PddHelpCommonDao;
 import com.yukz.daodaoping.common.service.PddHelpCommonService;
-import com.yukz.daodaoping.pddhelp.utils.PageData;
+import com.yukz.daodaoping.system.utils.PageData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

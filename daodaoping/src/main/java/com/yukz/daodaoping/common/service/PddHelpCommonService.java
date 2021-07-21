@@ -1,6 +1,6 @@
 package com.yukz.daodaoping.common.service;
 
-import com.yukz.daodaoping.pddhelp.utils.PageData;
+import com.yukz.daodaoping.system.utils.PageData;
 
 /**
  * author：ykz time:2019/7/6 20:44
