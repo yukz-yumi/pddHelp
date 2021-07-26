@@ -1,10 +1,12 @@
+use daodaoping_dev;
+
 SET FOREIGN_KEY_CHECKS=0;
 
 -- ----------------------------
--- Table structure for `user_info`
+-- Table structure for `ddp_user_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `user_info`;
-CREATE TABLE `user_info` (
+DROP TABLE IF EXISTS `ddp_user_info`;
+CREATE TABLE `ddp_user_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL COMMENT '用户编号',
   `open_id` varchar(128) NOT NULL COMMENT '用户openid',
@@ -22,10 +24,10 @@ CREATE TABLE `user_info` (
 
 
 -- ----------------------------
--- Table structure for `user_vs_ex_account`
+-- Table structure for `ddp_user_vs_ex_account`
 -- ----------------------------
-DROP TABLE IF EXISTS `user_vs_ex_account`;
-CREATE TABLE `user_vs_ex_account` (
+DROP TABLE IF EXISTS `ddp_user_vs_ex_account`;
+CREATE TABLE `ddp_user_vs_ex_account` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL COMMENT '用户编号',
   `account_type` varchar(32) NOT NULL COMMENT '账号类型',
@@ -42,10 +44,10 @@ CREATE TABLE `user_vs_ex_account` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户与外部账号映射表';
 
 -- ----------------------------
--- Table structure for `ex_account_type_info`
+-- Table structure for `ddp_ex_account_type_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `ex_account_type_info`;
-CREATE TABLE `ex_account_type_info` (
+DROP TABLE IF EXISTS `ddp_ex_account_type_info`;
+CREATE TABLE `ddp_ex_account_type_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_type` varchar(32) NOT NULL COMMENT '账号类型',
   `platform` varchar(32) NOT NULL COMMENT '平台类型',
@@ -59,10 +61,10 @@ CREATE TABLE `ex_account_type_info` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='外部账号类型表';
 
 -- ----------------------------
--- Table structure for `task_apply_info`
+-- Table structure for `ddp_task_apply_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `task_apply_info`;
-CREATE TABLE `task_apply_info` (
+DROP TABLE IF EXISTS `ddp_task_apply_info`;
+CREATE TABLE `ddp_task_apply_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `task_id` varchar(128) NOT NULL COMMENT '任务编号',
   `task_type_id` varchar(128) NOT NULL COMMENT '任务类型id',
@@ -81,10 +83,10 @@ CREATE TABLE `task_apply_info` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务申请表';
 
 -- ----------------------------
--- Table structure for `task_type_info`
+-- Table structure for `ddp_task_type_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `task_type_info`;
-CREATE TABLE `task_type_info` (
+DROP TABLE IF EXISTS `ddp_task_type_info`;
+CREATE TABLE `ddp_task_type_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `platform` varchar(32) NOT NULL COMMENT '平台类型',
   `task_type_desc` varchar(256) NOT NULL COMMENT '任务类型说明',
@@ -98,17 +100,17 @@ CREATE TABLE `task_type_info` (
 
 
 -- ----------------------------
--- Table structure for `order_info`
+-- Table structure for `ddp_order_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `order_info`;
-CREATE TABLE `order_info` (
+DROP TABLE IF EXISTS `ddp_order_info`;
+CREATE TABLE `ddp_order_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_id` bigint(20) NOT NULL COMMENT '订单编号',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `task_id` bigint(20) NOT NULL COMMENT '任务id',
   `total_amount` bigint(20) NOT NULL COMMENT '订单应付',
   `scores_deduction` bigint(20) DEFAULT '0' COMMENT '积分扣减',
-  `discount` double(2) DEFAULT '1' COMMENT '折扣',
+  `discount` int(2) NOT NULL COMMENT '折扣',
   `payment_amount` bigint(20) NOT NULL COMMENT '实际支付订单金额',
   `order_status` char(2) NOT NULL COMMENT '0:未支付/1:支付中/2:已支付/3:已过期/4:已取消',
   `expire_time` datetime  NOT NULL COMMENT '订单支付过期时间',
@@ -121,10 +123,10 @@ CREATE TABLE `order_info` (
 
 
 -- ----------------------------
--- Table structure for `fund_transfer_info`
+-- Table structure for `ddp_fund_transfer_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `fund_transfer_info`;
-CREATE TABLE `fund_transfer_info` (
+DROP TABLE IF EXISTS `ddp_fund_transfer_info`;
+CREATE TABLE `ddp_fund_transfer_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_id` bigint(20) NOT NULL COMMENT '订单编号',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
@@ -142,10 +144,10 @@ CREATE TABLE `fund_transfer_info` (
 
 
 -- ----------------------------
--- Table structure for `refund_info`
+-- Table structure for `ddp_refund_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `refund_info`;
-CREATE TABLE `refund_info` (
+DROP TABLE IF EXISTS `ddp_refund_info`;
+CREATE TABLE `ddp_refund_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `refund_id` bigint(20) NOT NULL COMMENT '退费id',
   `task_id` bigint(20) NOT NULL COMMENT '退费任务id',
@@ -163,10 +165,10 @@ CREATE TABLE `refund_info` (
 
 
 -- ----------------------------
--- Table structure for `task_accept_info`
+-- Table structure for `ddp_task_accept_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `task_accept_info`;
-CREATE TABLE `task_accept_info` (
+DROP TABLE IF EXISTS `ddp_task_accept_info`;
+CREATE TABLE `ddp_task_accept_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `task_id` bigint(20) NOT NULL COMMENT '退费任务id',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
@@ -185,10 +187,10 @@ CREATE TABLE `task_accept_info` (
 
 
 -- ----------------------------
--- Table structure for `invitation`
+-- Table structure for `ddp_invitation`
 -- ----------------------------
-DROP TABLE IF EXISTS `invitation`;
-CREATE TABLE `invitation` (
+DROP TABLE IF EXISTS `ddp_invitation`;
+CREATE TABLE `ddp_invitation` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `open_id` varchar(128) DEFAULT NULL COMMENT '用户openid',
@@ -205,10 +207,10 @@ CREATE TABLE `invitation` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='邀请表';
 
 -- ----------------------------
--- Table structure for `account_attr`
+-- Table structure for `ddp_account_attr`
 -- ----------------------------
-DROP TABLE IF EXISTS `account_attr`;
-CREATE TABLE `account_attr` (
+DROP TABLE IF EXISTS `ddp_account_attr`;
+CREATE TABLE `ddp_account_attr` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ex_account_id` bigint(20) NOT NULL COMMENT '用户id',
   `attr_key` varchar(64) NOT NULL COMMENT '属性名',
@@ -220,9 +222,9 @@ CREATE TABLE `account_attr` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='账号属性配置表';
 
 -- ----------------------------
--- Table structure for `task_delay_operation_info`
+-- Table structure for `ddp_task_delay_operation_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `task_delay_operation_info`;
+DROP TABLE IF EXISTS `ddp_task_delay_operation_info`;
 CREATE TABLE `task_delay_operation_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `task_id` bigint(20) NOT NULL COMMENT '用户id',
@@ -237,10 +239,10 @@ CREATE TABLE `task_delay_operation_info` (
 
 
 -- ----------------------------
--- Table structure for `verify_record_info`
+-- Table structure for `ddp_verify_record_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `verify_record_info`;
-CREATE TABLE `verify_record_info` (
+DROP TABLE IF EXISTS `ddp_verify_record_info`;
+CREATE TABLE `ddp_verify_record_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `task_accept_id` bigint(20) NOT NULL COMMENT '任务认领id',
   `task_id` bigint(20) NOT NULL COMMENT '任务id',
@@ -256,10 +258,10 @@ CREATE TABLE `verify_record_info` (
 
 
 -- ----------------------------
--- Table structure for `feedback_info`
+-- Table structure for `ddp_feedback_info`
 -- ----------------------------
-DROP TABLE IF EXISTS `feedback_info`;
-CREATE TABLE `feedback_info` (
+DROP TABLE IF EXISTS `ddp_feedback_info`;
+CREATE TABLE `ddp_feedback_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `open_id` bigint(20) NOT NULL COMMENT '用户openid',
