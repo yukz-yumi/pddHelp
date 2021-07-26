@@ -225,7 +225,7 @@ CREATE TABLE `ddp_account_attr` (
 -- Table structure for `ddp_task_delay_operation_info`
 -- ----------------------------
 DROP TABLE IF EXISTS `ddp_task_delay_operation_info`;
-CREATE TABLE `task_delay_operation_info` (
+CREATE TABLE `ddp_task_delay_operation_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `task_id` bigint(20) NOT NULL COMMENT '用户id',
   `delay_count` int NOT NULL COMMENT '延迟次数',
