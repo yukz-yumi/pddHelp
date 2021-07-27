@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="id" name="id" th:value="${userInfo.id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">用户编号：</label>
+								<div class="col-sm-8">
+									<input id="userId" name="userId" th:value="${userInfo.userId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户openid：</label>
+								<div class="col-sm-8">
+									<input id="openId" name="openId" th:value="${userInfo.openId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户微信昵称：</label>
+								<div class="col-sm-8">
+									<input id="nickName" name="nickName" th:value="${userInfo.nickName}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户头像：</label>
+								<div class="col-sm-8">
+									<input id="headImgUrl" name="headImgUrl" th:value="${userInfo.headImgUrl}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户当前积分：</label>
+								<div class="col-sm-8">
+									<input id="scores" name="scores" th:value="${userInfo.scores}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户等级：</label>
+								<div class="col-sm-8">
+									<input id="userGrade" name="userGrade" th:value="${userInfo.userGrade}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户联系方式：</label>
+								<div class="col-sm-8">
+									<input id="mobile" name="mobile" th:value="${userInfo.mobile}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用：</label>
+								<div class="col-sm-8">
+									<input id="userStatus" name="userStatus" th:value="${userInfo.userStatus}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">机构编号：</label>
+								<div class="col-sm-8">
+									<input id="agentId" name="agentId" th:value="${userInfo.agentId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">创建时间：</label>
+								<div class="col-sm-8">
+									<input id="gmtCreate" name="gmtCreate" th:value="${userInfo.gmtCreate}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">修改时间：</label>
+								<div class="col-sm-8">
+									<input id="gmtModify" name="gmtModify" th:value="${userInfo.gmtModify}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/user/userInfo/edit.js">
+	</script>
+</body>
+</html>

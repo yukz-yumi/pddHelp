@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yukz.daodaoping.fund.dao.RefundInfoDao">
+
+	<select id="get" resultType="com.yukz.daodaoping.fund.domain.RefundInfoDO">
+		select `id`,`refund_id`,`task_id`,`refund_amount`,`user_id`,`open_id`,`refund_status`,`err_msg`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_refund_info where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.yukz.daodaoping.fund.domain.RefundInfoDO">
+		select `id`,`refund_id`,`task_id`,`refund_amount`,`user_id`,`open_id`,`refund_status`,`err_msg`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_refund_info
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="refundId != null and refundId != ''"> and refund_id = #{refundId} </if>
+		  		  <if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
+		  		  <if test="refundAmount != null and refundAmount != ''"> and refund_amount = #{refundAmount} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="openId != null and openId != ''"> and open_id = #{openId} </if>
+		  		  <if test="refundStatus != null and refundStatus != ''"> and refund_status = #{refundStatus} </if>
+		  		  <if test="errMsg != null and errMsg != ''"> and err_msg = #{errMsg} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ddp_refund_info
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="refundId != null and refundId != ''"> and refund_id = #{refundId} </if>
+		  		  <if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
+		  		  <if test="refundAmount != null and refundAmount != ''"> and refund_amount = #{refundAmount} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="openId != null and openId != ''"> and open_id = #{openId} </if>
+		  		  <if test="refundStatus != null and refundStatus != ''"> and refund_status = #{refundStatus} </if>
+		  		  <if test="errMsg != null and errMsg != ''"> and err_msg = #{errMsg} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yukz.daodaoping.fund.domain.RefundInfoDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ddp_refund_info
+		(
+			`refund_id`, 
+			`task_id`, 
+			`refund_amount`, 
+			`user_id`, 
+			`open_id`, 
+			`refund_status`, 
+			`err_msg`, 
+			`agent_id`, 
+			`gmt_create`, 
+			`gmt_modify`
+		)
+		values
+		(
+			#{refundId}, 
+			#{taskId}, 
+			#{refundAmount}, 
+			#{userId}, 
+			#{openId}, 
+			#{refundStatus}, 
+			#{errMsg}, 
+			#{agentId}, 
+			#{gmtCreate}, 
+			#{gmtModify}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yukz.daodaoping.fund.domain.RefundInfoDO">
+		update ddp_refund_info 
+		<set>
+			<if test="refundId != null">`refund_id` = #{refundId}, </if>
+			<if test="taskId != null">`task_id` = #{taskId}, </if>
+			<if test="refundAmount != null">`refund_amount` = #{refundAmount}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="openId != null">`open_id` = #{openId}, </if>
+			<if test="refundStatus != null">`refund_status` = #{refundStatus}, </if>
+			<if test="errMsg != null">`err_msg` = #{errMsg}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ddp_refund_info where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ddp_refund_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

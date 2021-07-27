@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="id" name="id" th:value="${refundInfo.id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">退费id：</label>
+								<div class="col-sm-8">
+									<input id="refundId" name="refundId" th:value="${refundInfo.refundId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">退费任务id：</label>
+								<div class="col-sm-8">
+									<input id="taskId" name="taskId" th:value="${refundInfo.taskId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">退费金额：</label>
+								<div class="col-sm-8">
+									<input id="refundAmount" name="refundAmount" th:value="${refundInfo.refundAmount}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户id：</label>
+								<div class="col-sm-8">
+									<input id="userId" name="userId" th:value="${refundInfo.userId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">用户openid：</label>
+								<div class="col-sm-8">
+									<input id="openId" name="openId" th:value="${refundInfo.openId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">交易状态:wait:等待/success:成功/fail:失败：</label>
+								<div class="col-sm-8">
+									<input id="refundStatus" name="refundStatus" th:value="${refundInfo.refundStatus}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">失败原因：</label>
+								<div class="col-sm-8">
+									<input id="errMsg" name="errMsg" th:value="${refundInfo.errMsg}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">机构编号：</label>
+								<div class="col-sm-8">
+									<input id="agentId" name="agentId" th:value="${refundInfo.agentId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">创建时间：</label>
+								<div class="col-sm-8">
+									<input id="gmtCreate" name="gmtCreate" th:value="${refundInfo.gmtCreate}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">修改时间：</label>
+								<div class="col-sm-8">
+									<input id="gmtModify" name="gmtModify" th:value="${refundInfo.gmtModify}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/fund/refundInfo/edit.js">
+	</script>
+</body>
+</html>

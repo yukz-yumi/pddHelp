@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yukz.daodaoping.user.dao.UserVsExAccountDao">
+
+	<select id="get" resultType="com.yukz.daodaoping.user.domain.UserVsExAccountDO">
+		select `id`,`user_id`,`account_type`,`account`,`allowed`,`account_status`,`user_grade`,`mobile`,`user_status`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_user_vs_ex_account where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.yukz.daodaoping.user.domain.UserVsExAccountDO">
+		select `id`,`user_id`,`account_type`,`account`,`allowed`,`account_status`,`user_grade`,`mobile`,`user_status`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_user_vs_ex_account
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="accountType != null and accountType != ''"> and account_type = #{accountType} </if>
+		  		  <if test="account != null and account != ''"> and account = #{account} </if>
+		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="accountStatus != null and accountStatus != ''"> and account_status = #{accountStatus} </if>
+		  		  <if test="userGrade != null and userGrade != ''"> and user_grade = #{userGrade} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="userStatus != null and userStatus != ''"> and user_status = #{userStatus} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ddp_user_vs_ex_account
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="accountType != null and accountType != ''"> and account_type = #{accountType} </if>
+		  		  <if test="account != null and account != ''"> and account = #{account} </if>
+		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="accountStatus != null and accountStatus != ''"> and account_status = #{accountStatus} </if>
+		  		  <if test="userGrade != null and userGrade != ''"> and user_grade = #{userGrade} </if>
+		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
+		  		  <if test="userStatus != null and userStatus != ''"> and user_status = #{userStatus} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yukz.daodaoping.user.domain.UserVsExAccountDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ddp_user_vs_ex_account
+		(
+			`user_id`, 
+			`account_type`, 
+			`account`, 
+			`allowed`, 
+			`account_status`, 
+			`user_grade`, 
+			`mobile`, 
+			`user_status`, 
+			`agent_id`, 
+			`gmt_create`, 
+			`gmt_modify`
+		)
+		values
+		(
+			#{userId}, 
+			#{accountType}, 
+			#{account}, 
+			#{allowed}, 
+			#{accountStatus}, 
+			#{userGrade}, 
+			#{mobile}, 
+			#{userStatus}, 
+			#{agentId}, 
+			#{gmtCreate}, 
+			#{gmtModify}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yukz.daodaoping.user.domain.UserVsExAccountDO">
+		update ddp_user_vs_ex_account 
+		<set>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="accountType != null">`account_type` = #{accountType}, </if>
+			<if test="account != null">`account` = #{account}, </if>
+			<if test="allowed != null">`allowed` = #{allowed}, </if>
+			<if test="accountStatus != null">`account_status` = #{accountStatus}, </if>
+			<if test="userGrade != null">`user_grade` = #{userGrade}, </if>
+			<if test="mobile != null">`mobile` = #{mobile}, </if>
+			<if test="userStatus != null">`user_status` = #{userStatus}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ddp_user_vs_ex_account where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ddp_user_vs_ex_account where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

@@ -265,7 +265,7 @@ CREATE TABLE `ddp_feedback_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `open_id` bigint(20) NOT NULL COMMENT '用户openid',
-  `e-mail` varchar(512) DEFAULT NULL COMMENT '打回原因',
+  `e_mail` varchar(512) DEFAULT NULL COMMENT '邮箱地址',
   `feedback_type` varchar(32) NOT NULL COMMENT '反馈问题类型',
   `feedback_desc` varchar(512) NOT NULL COMMENT '反馈问题类型',
   `feedback_img_url_1` varchar(2048) DEFAULT NULL COMMENT '图片1',

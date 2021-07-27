@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yukz.daodaoping.fund.dao.FundTransferInfoDao">
+
+	<select id="get" resultType="com.yukz.daodaoping.fund.domain.FundTransferInfoDO">
+		select `id`,`order_id`,`user_id`,`open_id`,`biz_type`,`trans_type`,`fund_amount`,`trans_status`,`err_msg`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_fund_transfer_info where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.yukz.daodaoping.fund.domain.FundTransferInfoDO">
+		select `id`,`order_id`,`user_id`,`open_id`,`biz_type`,`trans_type`,`fund_amount`,`trans_status`,`err_msg`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_fund_transfer_info
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="orderId != null and orderId != ''"> and order_id = #{orderId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="openId != null and openId != ''"> and open_id = #{openId} </if>
+		  		  <if test="bizType != null and bizType != ''"> and biz_type = #{bizType} </if>
+		  		  <if test="transType != null and transType != ''"> and trans_type = #{transType} </if>
+		  		  <if test="fundAmount != null and fundAmount != ''"> and fund_amount = #{fundAmount} </if>
+		  		  <if test="transStatus != null and transStatus != ''"> and trans_status = #{transStatus} </if>
+		  		  <if test="errMsg != null and errMsg != ''"> and err_msg = #{errMsg} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ddp_fund_transfer_info
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="orderId != null and orderId != ''"> and order_id = #{orderId} </if>
+		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+		  		  <if test="openId != null and openId != ''"> and open_id = #{openId} </if>
+		  		  <if test="bizType != null and bizType != ''"> and biz_type = #{bizType} </if>
+		  		  <if test="transType != null and transType != ''"> and trans_type = #{transType} </if>
+		  		  <if test="fundAmount != null and fundAmount != ''"> and fund_amount = #{fundAmount} </if>
+		  		  <if test="transStatus != null and transStatus != ''"> and trans_status = #{transStatus} </if>
+		  		  <if test="errMsg != null and errMsg != ''"> and err_msg = #{errMsg} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yukz.daodaoping.fund.domain.FundTransferInfoDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ddp_fund_transfer_info
+		(
+			`order_id`, 
+			`user_id`, 
+			`open_id`, 
+			`biz_type`, 
+			`trans_type`, 
+			`fund_amount`, 
+			`trans_status`, 
+			`err_msg`, 
+			`agent_id`, 
+			`gmt_create`, 
+			`gmt_modify`
+		)
+		values
+		(
+			#{orderId}, 
+			#{userId}, 
+			#{openId}, 
+			#{bizType}, 
+			#{transType}, 
+			#{fundAmount}, 
+			#{transStatus}, 
+			#{errMsg}, 
+			#{agentId}, 
+			#{gmtCreate}, 
+			#{gmtModify}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yukz.daodaoping.fund.domain.FundTransferInfoDO">
+		update ddp_fund_transfer_info 
+		<set>
+			<if test="orderId != null">`order_id` = #{orderId}, </if>
+			<if test="userId != null">`user_id` = #{userId}, </if>
+			<if test="openId != null">`open_id` = #{openId}, </if>
+			<if test="bizType != null">`biz_type` = #{bizType}, </if>
+			<if test="transType != null">`trans_type` = #{transType}, </if>
+			<if test="fundAmount != null">`fund_amount` = #{fundAmount}, </if>
+			<if test="transStatus != null">`trans_status` = #{transStatus}, </if>
+			<if test="errMsg != null">`err_msg` = #{errMsg}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ddp_fund_transfer_info where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ddp_fund_transfer_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

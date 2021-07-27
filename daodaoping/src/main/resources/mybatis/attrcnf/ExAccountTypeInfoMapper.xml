@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yukz.daodaoping.attrcnf.dao.ExAccountTypeInfoDao">
+
+	<select id="get" resultType="com.yukz.daodaoping.attrcnf.domain.ExAccountTypeInfoDO">
+		select `id`,`account_type`,`platform`,`type_desc`,`valid_url`,`agent_id`,`allowed`,`gmt_create`,`gmt_modify` from ddp_ex_account_type_info where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.yukz.daodaoping.attrcnf.domain.ExAccountTypeInfoDO">
+		select `id`,`account_type`,`platform`,`type_desc`,`valid_url`,`agent_id`,`allowed`,`gmt_create`,`gmt_modify` from ddp_ex_account_type_info
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="accountType != null and accountType != ''"> and account_type = #{accountType} </if>
+		  		  <if test="platform != null and platform != ''"> and platform = #{platform} </if>
+		  		  <if test="typeDesc != null and typeDesc != ''"> and type_desc = #{typeDesc} </if>
+		  		  <if test="validUrl != null and validUrl != ''"> and valid_url = #{validUrl} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ddp_ex_account_type_info
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="accountType != null and accountType != ''"> and account_type = #{accountType} </if>
+		  		  <if test="platform != null and platform != ''"> and platform = #{platform} </if>
+		  		  <if test="typeDesc != null and typeDesc != ''"> and type_desc = #{typeDesc} </if>
+		  		  <if test="validUrl != null and validUrl != ''"> and valid_url = #{validUrl} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yukz.daodaoping.attrcnf.domain.ExAccountTypeInfoDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ddp_ex_account_type_info
+		(
+			`account_type`, 
+			`platform`, 
+			`type_desc`, 
+			`valid_url`, 
+			`agent_id`, 
+			`allowed`, 
+			`gmt_create`, 
+			`gmt_modify`
+		)
+		values
+		(
+			#{accountType}, 
+			#{platform}, 
+			#{typeDesc}, 
+			#{validUrl}, 
+			#{agentId}, 
+			#{allowed}, 
+			#{gmtCreate}, 
+			#{gmtModify}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yukz.daodaoping.attrcnf.domain.ExAccountTypeInfoDO">
+		update ddp_ex_account_type_info 
+		<set>
+			<if test="accountType != null">`account_type` = #{accountType}, </if>
+			<if test="platform != null">`platform` = #{platform}, </if>
+			<if test="typeDesc != null">`type_desc` = #{typeDesc}, </if>
+			<if test="validUrl != null">`valid_url` = #{validUrl}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="allowed != null">`allowed` = #{allowed}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ddp_ex_account_type_info where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ddp_ex_account_type_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

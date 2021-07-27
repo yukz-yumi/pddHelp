@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+	<div class="wrapper wrapper-content ">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-content">
+						<form class="form-horizontal m-t" id="signupForm">
+						<input id="id" name="id" th:value="${taskApplyInfo.id}"  type="hidden">
+							<div class="form-group">	
+								<label class="col-sm-3 control-label">任务编号：</label>
+								<div class="col-sm-8">
+									<input id="taskId" name="taskId" th:value="${taskApplyInfo.taskId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务类型id：</label>
+								<div class="col-sm-8">
+									<input id="taskTypeId" name="taskTypeId" th:value="${taskApplyInfo.taskTypeId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">助力方式：</label>
+								<div class="col-sm-8">
+									<input id="assistantType" name="assistantType" th:value="${taskApplyInfo.assistantType}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务指令：</label>
+								<div class="col-sm-8">
+									<input id="command" name="command" th:value="${taskApplyInfo.command}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务数量：</label>
+								<div class="col-sm-8">
+									<input id="taskNumber" name="taskNumber" th:value="${taskApplyInfo.taskNumber}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">已完成数量：</label>
+								<div class="col-sm-8">
+									<input id="completedNumeber" name="completedNumeber" th:value="${taskApplyInfo.completedNumeber}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务结果 uncompleted/completed：</label>
+								<div class="col-sm-8">
+									<input id="taskResult" name="taskResult" th:value="${taskApplyInfo.taskResult}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务状态 suspend/wait/pending/end/cancel：</label>
+								<div class="col-sm-8">
+									<input id="taskStatus" name="taskStatus" th:value="${taskApplyInfo.taskStatus}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务开启时间：</label>
+								<div class="col-sm-8">
+									<input id="startTime" name="startTime" th:value="${taskApplyInfo.startTime}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">任务过期时间：</label>
+								<div class="col-sm-8">
+									<input id="expireTime" name="expireTime" th:value="${taskApplyInfo.expireTime}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">机构编号：</label>
+								<div class="col-sm-8">
+									<input id="agentId" name="agentId" th:value="${taskApplyInfo.agentId}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">创建时间：</label>
+								<div class="col-sm-8">
+									<input id="gmtCreate" name="gmtCreate" th:value="${taskApplyInfo.gmtCreate}" class="form-control" type="text">
+								</div>
+							</div>
+														<div class="form-group">	
+								<label class="col-sm-3 control-label">修改时间：</label>
+								<div class="col-sm-8">
+									<input id="gmtModify" name="gmtModify" th:value="${taskApplyInfo.gmtModify}" class="form-control" type="text">
+								</div>
+							</div>
+																					<div class="form-group">
+								<div class="col-sm-8 col-sm-offset-3">
+									<button type="submit" class="btn btn-primary">提交</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+	</div>
+	</div>
+	<div th:include="include::footer"></div>
+	<script type="text/javascript" src="/js/appjs/task/taskApplyInfo/edit.js">
+	</script>
+</body>
+</html>
