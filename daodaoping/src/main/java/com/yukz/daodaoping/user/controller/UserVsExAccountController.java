@@ -5,21 +5,20 @@ import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yukz.daodaoping.common.utils.PageUtils;
+import com.yukz.daodaoping.common.utils.Query;
+import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
 import com.yukz.daodaoping.user.service.UserVsExAccountService;
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
 
 /**
  * 用户与外部账号映射表
