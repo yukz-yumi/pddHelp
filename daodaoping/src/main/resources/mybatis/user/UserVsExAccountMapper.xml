@@ -4,11 +4,11 @@
 <mapper namespace="com.yukz.daodaoping.user.dao.UserVsExAccountDao">
 
 	<select id="get" resultType="com.yukz.daodaoping.user.domain.UserVsExAccountDO">
-		select `id`,`user_id`,`account_type`,`account`,`allowed`,`account_status`,`user_grade`,`mobile`,`user_status`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_user_vs_ex_account where id = #{value}
+		select `id`,`user_id`,`account_type`,`account`,`allowed`,`account_status`,`account_img`,`user_grade`,`mobile`,`user_status`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_user_vs_ex_account where id = #{value}
 	</select>
 
 	<select id="list" resultType="com.yukz.daodaoping.user.domain.UserVsExAccountDO">
-		select `id`,`user_id`,`account_type`,`account`,`allowed`,`account_status`,`user_grade`,`mobile`,`user_status`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_user_vs_ex_account
+		select `id`,`user_id`,`account_type`,`account`,`allowed`,`account_status`,`account_img`,`user_grade`,`mobile`,`user_status`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_user_vs_ex_account
         <where>  
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
@@ -16,6 +16,7 @@
 		  		  <if test="account != null and account != ''"> and account = #{account} </if>
 		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
 		  		  <if test="accountStatus != null and accountStatus != ''"> and account_status = #{accountStatus} </if>
+		  		  <if test="accountImg != null and accountImg != ''"> and account_img = #{accountImg} </if>
 		  		  <if test="userGrade != null and userGrade != ''"> and user_grade = #{userGrade} </if>
 		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
 		  		  <if test="userStatus != null and userStatus != ''"> and user_status = #{userStatus} </if>
@@ -45,6 +46,7 @@
 		  		  <if test="account != null and account != ''"> and account = #{account} </if>
 		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
 		  		  <if test="accountStatus != null and accountStatus != ''"> and account_status = #{accountStatus} </if>
+		  		  <if test="accountImg != null and accountImg != ''"> and account_img = #{accountImg} </if>
 		  		  <if test="userGrade != null and userGrade != ''"> and user_grade = #{userGrade} </if>
 		  		  <if test="mobile != null and mobile != ''"> and mobile = #{mobile} </if>
 		  		  <if test="userStatus != null and userStatus != ''"> and user_status = #{userStatus} </if>
@@ -62,6 +64,7 @@
 			`account`, 
 			`allowed`, 
 			`account_status`, 
+			`account_img`, 
 			`user_grade`, 
 			`mobile`, 
 			`user_status`, 
@@ -76,6 +79,7 @@
 			#{account}, 
 			#{allowed}, 
 			#{accountStatus}, 
+			#{accountImg}, 
 			#{userGrade}, 
 			#{mobile}, 
 			#{userStatus}, 
@@ -93,6 +97,7 @@
 			<if test="account != null">`account` = #{account}, </if>
 			<if test="allowed != null">`allowed` = #{allowed}, </if>
 			<if test="accountStatus != null">`account_status` = #{accountStatus}, </if>
+			<if test="accountImg != null">`account_img` = #{accountImg}, </if>
 			<if test="userGrade != null">`user_grade` = #{userGrade}, </if>
 			<if test="mobile != null">`mobile` = #{mobile}, </if>
 			<if test="userStatus != null">`user_status` = #{userStatus}, </if>

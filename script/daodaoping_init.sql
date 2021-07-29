@@ -34,6 +34,7 @@ CREATE TABLE `ddp_user_vs_ex_account` (
   `account` varchar(128) NOT NULL COMMENT '账号',
   `allowed` varchar(16) DEFAULT 'yes' COMMENT '用户是否启用: yes/no',
   `account_status` varchar(16) DEFAULT 'available' COMMENT '系统为当前账号设定的状态 available/forbidden',
+  `account_img` varchar(16) NOT NULL COMMENT '账号截图图片地址',
   `user_grade` varchar(64) DEFAULT NULL COMMENT '用户等级',
   `mobile` varchar(32) DEFAULT NULL COMMENT '用户联系方式',
   `user_status` varchar(16) DEFAULT 'unverified' COMMENT '用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用',

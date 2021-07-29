@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author micezhao
  * @email 1992lcg@163.com
- * @date 2021-07-27 08:07:22
+ * @date 2021-07-29 11:09:24
  */
 public class UserVsExAccountDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -27,6 +27,8 @@ public class UserVsExAccountDO implements Serializable {
 	private String allowed;
 	//系统为当前账号设定的状态 available/forbidden
 	private String accountStatus;
+	//账号截图图片地址
+	private String accountImg;
 	//用户等级
 	private String userGrade;
 	//用户联系方式
@@ -111,6 +113,18 @@ public class UserVsExAccountDO implements Serializable {
 	 */
 	public String getAccountStatus() {
 		return accountStatus;
+	}
+	/**
+	 * 设置：账号截图图片地址
+	 */
+	public void setAccountImg(String accountImg) {
+		this.accountImg = accountImg;
+	}
+	/**
+	 * 获取：账号截图图片地址
+	 */
+	public String getAccountImg() {
+		return accountImg;
 	}
 	/**
 	 * 设置：用户等级

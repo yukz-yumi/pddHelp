@@ -72,6 +72,10 @@ function load() {
 									title : '系统为当前账号设定的状态 available/forbidden' 
 								},
 																{
+									field : 'accountImg', 
+									title : '账号截图图片地址' 
+								},
+																{
 									field : 'userGrade', 
 									title : '用户等级' 
 								},
