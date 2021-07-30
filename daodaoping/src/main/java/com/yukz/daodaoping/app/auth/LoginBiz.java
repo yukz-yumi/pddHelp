@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.yukz.daodaoping.common.SerialNumGenerator;
 import com.yukz.daodaoping.user.domain.UserInfoDO;
 import com.yukz.daodaoping.user.service.UserInfoService;
 
@@ -23,9 +25,17 @@ public class LoginBiz {
 	
 	private static final String INIT_USER_GRADE = "1";
 	
+	private static final String TIMEFORMAT = "yyyyMMddHH";
+	
+	@Value("${serial.prefix.user}")
+	private String prefix;
+	
 	@Autowired
 	private UserInfoService userInfoService;
 	
+	@Autowired
+	private SerialNumGenerator generator;
+		
 	/**
 	 * 检查用户在当前机构是否已经存在
 	 * @param openId
@@ -51,13 +61,15 @@ public class LoginBiz {
 	 * @return
 	 */
 	public boolean initUser(UserInfoDO userInfoDO){
-		userInfoDO.setUserId(null);
+		String serialId=generator.getSerialBizId(prefix, TIMEFORMAT, 8);
+		userInfoDO.setUserId(Long.parseLong(serialId));
 		userInfoDO.setScores(INIT_SCORE);
 		userInfoDO.setUserGrade(INIT_USER_GRADE);
 		userInfoDO.setGmtCreate(new Date());
 		userInfoDO.setUserStatus(UserStatusEnum.UNBIND.getUserStatus());
 		return userInfoService.save(userInfoDO) >= 1?true:false;
 	}
+	
 	
 	
 }

@@ -10,12 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicLong;
+import org.springframework.stereotype.Service;
 
 /**
  * 有序的编码生成器 
  * @author micezhao
  *
  */
+@Service
 public class SerialNumGenerator {
 	
 	@Autowired
@@ -25,16 +27,16 @@ public class SerialNumGenerator {
 	 * 生成单据号
 	 * @param prefixBizCode
 	 * @param timeFormatter
-	 * @param numLength
+	 * @param numLength max:8
 	 * @return
 	 */
-	public Long getSerialBizId(String prefixBizCode, String timeFormatter, int numLength) {
+	public String getSerialBizId(String prefixBizCode, String timeFormatter, int numLength) {
 	   String serialNumLength="";
 	   for(int i=0; i<numLength; i++){
 	      serialNumLength+="0";
 	   }
 	   if(StringUtils.isEmpty(timeFormatter)){
-	      timeFormatter="yyyyMMddHHmmss"; //yyyyMMddHHmmss
+	      timeFormatter="yyyyMMdd"; //yyyyMMdd
 	   }
 	   //默认序列号位数
 	   if(StringUtils.isEmpty(serialNumLength)){//默认
@@ -45,15 +47,15 @@ public class SerialNumGenerator {
 	   Date date=new Date();
 	   String formatDate=sdf.format(date);
 	   String key= formatDate;  
-	   if(StringUtils.isNotBlank(prefixBizCode)) {
-		    key= prefixBizCode+formatDate;  
+	   if(StringUtils.isNoneEmpty(prefixBizCode)) {
+		    key= prefixBizCode+":"+formatDate;  
 	   }
 	   Long incr = getIncr(key, getCurrent2TodayEndMillisTime());
 	   if(incr==0) {
 	      incr = getIncr(key, getCurrent2TodayEndMillisTime());//从000001开始
 	   }
 	   DecimalFormat df=new DecimalFormat(serialNumLength);//流水号位数
-	   return Long.parseLong(prefixBizCode+formatDate+df.format(incr));
+	   return prefixBizCode+formatDate+df.format(incr);
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class SerialNumGenerator {
 	 * @param liveTime
 	 * @return
 	 */
-	public Long getIncr(String key, long liveTime) {
+	private Long getIncr(String key, long liveTime) {
 	   RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory());
 	   Long increment = entityIdCounter.getAndIncrement();
 
@@ -76,7 +78,7 @@ public class SerialNumGenerator {
 	 * 系统日期的毫秒数
 	 * @return
 	 */
-	public Long getCurrent2TodayEndMillisTime() {
+	private Long getCurrent2TodayEndMillisTime() {
 	   Calendar todayEnd = Calendar.getInstance();
 	   // Calendar.HOUR 12小时制
 	   // HOUR_OF_DAY 24小时制

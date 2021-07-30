@@ -23,6 +23,7 @@ public class LoginParamVo {
 	private String userStatus;
 	// 机构编号
 	private Long agentId;
+	
 	public String getValidateCode() {
 		return validateCode;
 	}
