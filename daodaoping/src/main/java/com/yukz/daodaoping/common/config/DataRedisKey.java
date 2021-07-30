@@ -1,4 +1,4 @@
-package com.yukz.daodaoping.config;
+package com.yukz.daodaoping.common.config;
 
 /**
  * REDIS缓存KEY

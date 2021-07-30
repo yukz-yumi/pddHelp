@@ -1,6 +1,6 @@
 package com.yukz.daodaoping.common.aspect;
 
-import com.yukz.daodaoping.config.DataRedisKey;
+import com.yukz.daodaoping.common.config.DataRedisKey;
 import com.yukz.daodaoping.system.config.RedisHandler;
 import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;

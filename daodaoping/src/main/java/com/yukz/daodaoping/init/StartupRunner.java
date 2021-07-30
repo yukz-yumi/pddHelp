@@ -1,7 +1,7 @@
 package com.yukz.daodaoping.init;
 
 import com.alibaba.fastjson.JSON;
-import com.yukz.daodaoping.config.DataRedisKey;
+import com.yukz.daodaoping.common.config.DataRedisKey;
 import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.user.domain.UserInfoDO;
 import com.yukz.daodaoping.user.service.UserInfoService;

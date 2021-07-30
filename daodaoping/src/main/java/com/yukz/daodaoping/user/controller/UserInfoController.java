@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSON;
 import com.yukz.daodaoping.common.aspect.CleanData;
-import com.yukz.daodaoping.config.ConfigKey;
-import com.yukz.daodaoping.config.DataRedisKey;
+import com.yukz.daodaoping.common.config.ConfigKey;
+import com.yukz.daodaoping.common.config.DataRedisKey;
 import com.yukz.daodaoping.system.config.RedisHandler;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,6 @@ import com.yukz.daodaoping.common.utils.Query;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.user.domain.UserInfoDO;
 import com.yukz.daodaoping.user.service.UserInfoService;
-import sun.security.krb5.Config;
 
 /**
  * 用户信息表
