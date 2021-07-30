@@ -1,8 +1,15 @@
 package com.yukz.daodaoping.user.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
+import com.yukz.daodaoping.common.aspect.CleanData;
+import com.yukz.daodaoping.common.config.ConfigKey;
+import com.yukz.daodaoping.common.config.DataRedisKey;
+import com.yukz.daodaoping.system.config.RedisHandler;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,6 +40,8 @@ import com.yukz.daodaoping.user.service.UserInfoService;
 public class UserInfoController {
 	@Autowired
 	private UserInfoService userInfoService;
+	@Autowired
+	private RedisHandler redisHandler;
 	
 	
 	
@@ -74,8 +83,10 @@ public class UserInfoController {
 	@ResponseBody
 	@PostMapping("/save")
 	@RequiresPermissions("user:userInfo:add")
+	@CleanData(DataRedisKey.REDIS_USER_INFO_DATA)//清除redis缓存
 	public R save( UserInfoDO userInfo){
 		if(userInfoService.save(userInfo)>0){
+			setRedis();
 			return R.ok();
 		}
 		return R.error();
@@ -86,8 +97,10 @@ public class UserInfoController {
 	@ResponseBody
 	@RequestMapping("/update")
 	@RequiresPermissions("user:userInfo:edit")
+	@CleanData(DataRedisKey.REDIS_USER_INFO_DATA)//清除redis缓存
 	public R update( UserInfoDO userInfo){
 		userInfoService.update(userInfo);
+		setRedis();
 		return R.ok();
 	}
 	
@@ -97,9 +110,11 @@ public class UserInfoController {
 	@PostMapping( "/remove")
 	@ResponseBody
 	@RequiresPermissions("user:userInfo:remove")
+	@CleanData(DataRedisKey.REDIS_USER_INFO_DATA)//清除redis缓存
 	public R remove( Long id){
 		if(userInfoService.remove(id)>0){
-		return R.ok();
+			setRedis();
+			return R.ok();
 		}
 		return R.error();
 	}
@@ -110,9 +125,20 @@ public class UserInfoController {
 	@PostMapping( "/batchRemove")
 	@ResponseBody
 	@RequiresPermissions("user:userInfo:batchRemove")
+	@CleanData(DataRedisKey.REDIS_USER_INFO_DATA)//清除redis缓存
 	public R remove(@RequestParam("ids[]") Long[] ids){
 		userInfoService.batchRemove(ids);
+		setRedis();
 		return R.ok();
 	}
-	
+
+	private void setRedis() {
+		Long agentId = ConfigKey.agentId;
+		//同步最新数据到redis
+		Map<String, Object> mapQuery = new HashMap<>();
+		mapQuery.put("agentId", agentId);
+		List<UserInfoDO> userInfoList = userInfoService.list(mapQuery);
+		String dataJson = JSON.toJSONString(userInfoList);
+		this.redisHandler.set(DataRedisKey.REDIS_USER_INFO_DATA+agentId, dataJson, 30L, TimeUnit.DAYS);
+	}
 }

@@ -2,6 +2,7 @@ bootdo:
   uploadPath: d:/pddHelp/uploadFiles/
   username:
   password:
+  agentId: 100001
 logging:
   level:
     root: info
