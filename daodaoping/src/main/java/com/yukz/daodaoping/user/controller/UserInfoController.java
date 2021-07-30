@@ -34,6 +34,8 @@ public class UserInfoController {
 	@Autowired
 	private UserInfoService userInfoService;
 	
+	
+	
 	@GetMapping()
 	@RequiresPermissions("user:userInfo:userInfo")
 	String UserInfo(){
