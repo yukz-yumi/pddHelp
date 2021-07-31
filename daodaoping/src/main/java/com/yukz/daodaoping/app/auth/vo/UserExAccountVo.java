@@ -1,18 +1,19 @@
-package com.yukz.daodaoping.app.auth;
+package com.yukz.daodaoping.app.auth.vo;
+
+import java.util.List;
+
+import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
 
 /**
- * 登录参数解析器
- * 
+ * 用户与外部账号绑定视图对象
  * @author micezhao
  *
  */
-
-public class LoginParamVo {
+public class UserExAccountVo {
 	
-	// 用户输入的验证码
-	private String validateCode;
-	// 当前用户的第三方登录平台编码
-	private String thirdPartUserId;
+	private Long userId;
+	
+	private String openId;
 	// 用户微信昵称
 	private String nickName;
 	// 用户头像
@@ -24,53 +25,71 @@ public class LoginParamVo {
 	// 机构编号
 	private Long agentId;
 	
-	public String getValidateCode() {
-		return validateCode;
+	private List<UserVsExAccountDO> exAccountList;
+
+	public Long getUserId() {
+		return userId;
 	}
-	public void setValidateCode(String validateCode) {
-		this.validateCode = validateCode;
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
-	public String getThirdPartUserId() {
-		return thirdPartUserId;
+
+	public String getOpenId() {
+		return openId;
 	}
-	public void setThirdPartUserId(String thirdPartUserId) {
-		this.thirdPartUserId = thirdPartUserId;
+
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
+
 	public String getNickName() {
 		return nickName;
 	}
+
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
 	}
+
 	public String getHeadImgUrl() {
 		return headImgUrl;
 	}
+
 	public void setHeadImgUrl(String headImgUrl) {
 		this.headImgUrl = headImgUrl;
 	}
+
 	public String getMobile() {
 		return mobile;
 	}
+
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
 	}
+
 	public String getUserStatus() {
 		return userStatus;
 	}
+
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
 	}
+
 	public Long getAgentId() {
 		return agentId;
 	}
+
 	public void setAgentId(Long agentId) {
 		this.agentId = agentId;
 	}
-	public LoginParamVo() {
-		super();
-		// TODO Auto-generated constructor stub
+
+	public List<UserVsExAccountDO> getExAccountList() {
+		return exAccountList;
+	}
+
+	public void setExAccountList(List<UserVsExAccountDO> exAccountList) {
+		this.exAccountList = exAccountList;
 	}
 	
 	
-
 }

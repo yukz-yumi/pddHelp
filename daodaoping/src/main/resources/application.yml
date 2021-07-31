@@ -29,6 +29,7 @@ spring:
     type: ehcache
     ehcache:
       config: classpath:config/ehcache.xml
+  session: redis #session 共享的方案
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

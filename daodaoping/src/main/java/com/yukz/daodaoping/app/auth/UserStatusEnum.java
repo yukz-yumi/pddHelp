@@ -1,5 +1,9 @@
 package com.yukz.daodaoping.app.auth;
 
+import java.util.Iterator;
+
+import org.apache.commons.lang3.StringUtils;
+
 public enum UserStatusEnum {
 	
 	UNBIND("unbind","未绑定外部账号"),
@@ -31,6 +35,17 @@ public enum UserStatusEnum {
 		this.desc = desc;
 	}
 	
-	
+	public static UserStatusEnum getEnumByStatus(String status) {
+		if(StringUtils.isBlank(status)) {
+			return null;
+		}else {
+			for (UserStatusEnum item : UserStatusEnum.values()) {
+				if(StringUtils.equals(item.getUserStatus(), status)) {
+					return item;
+				}
+			}
+		}
+		return null;
+	}
 	
 }

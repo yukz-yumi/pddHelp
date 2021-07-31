@@ -29,12 +29,6 @@ public class UserVsExAccountDO implements Serializable {
 	private String accountStatus;
 	//账号截图图片地址
 	private String accountImg;
-	//用户等级
-	private String userGrade;
-	//用户联系方式
-	private String mobile;
-	//用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用
-	private String userStatus;
 	//机构编号
 	private Long agentId;
 	//创建时间
@@ -125,42 +119,6 @@ public class UserVsExAccountDO implements Serializable {
 	 */
 	public String getAccountImg() {
 		return accountImg;
-	}
-	/**
-	 * 设置：用户等级
-	 */
-	public void setUserGrade(String userGrade) {
-		this.userGrade = userGrade;
-	}
-	/**
-	 * 获取：用户等级
-	 */
-	public String getUserGrade() {
-		return userGrade;
-	}
-	/**
-	 * 设置：用户联系方式
-	 */
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
-	/**
-	 * 获取：用户联系方式
-	 */
-	public String getMobile() {
-		return mobile;
-	}
-	/**
-	 * 设置：用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用
-	 */
-	public void setUserStatus(String userStatus) {
-		this.userStatus = userStatus;
-	}
-	/**
-	 * 获取：用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用
-	 */
-	public String getUserStatus() {
-		return userStatus;
 	}
 	/**
 	 * 设置：机构编号
