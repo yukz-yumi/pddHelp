@@ -9,9 +9,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 任务类型表
- * @author micezhao
+ * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-07-27 08:06:02
+ * @date 2021-08-01 11:29:03
  */
 @Mapper
 public interface TaskTypeInfoDao {

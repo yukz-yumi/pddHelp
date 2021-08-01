@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import com.yukz.daodaoping.app.auth.request.UserExAccountRequest;
 import com.yukz.daodaoping.app.auth.vo.UserExAccountVo;
+import com.yukz.daodaoping.app.enums.ExAccountEnum;
+import com.yukz.daodaoping.app.enums.IsAllowEnum;
+import com.yukz.daodaoping.app.enums.UserStatusEnum;
 import com.yukz.daodaoping.common.SerialNumGenerator;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.user.domain.UserInfoDO;

@@ -21,6 +21,7 @@ public class UserExAccountRequest {
 	private String accountStatus;
 	// 账号截图图片地址
 	private String accountImg;
+	
 	public Long getUserId() {
 		return userId;
 	}

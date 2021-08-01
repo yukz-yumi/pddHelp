@@ -1,4 +1,4 @@
-package com.yukz.daodaoping.app.auth;
+package com.yukz.daodaoping.app.enums;
 
 import java.util.Iterator;
 

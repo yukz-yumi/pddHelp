@@ -8,9 +8,9 @@ import java.util.Date;
 /**
  * 任务类型表
  * 
- * @author micezhao
+ * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-07-27 08:06:02
+ * @date 2021-08-01 11:29:03
  */
 public class TaskTypeInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -23,6 +23,8 @@ public class TaskTypeInfoDO implements Serializable {
 	private String taskTypeDesc;
 	//助力方式
 	private String taskType;
+	//任务图片
+	private String taskImg;
 	//是否启用: yes/no
 	private String allowed;
 	//机构编号
@@ -79,6 +81,18 @@ public class TaskTypeInfoDO implements Serializable {
 	 */
 	public String getTaskType() {
 		return taskType;
+	}
+	/**
+	 * 设置：任务图片
+	 */
+	public void setTaskImg(String taskImg) {
+		this.taskImg = taskImg;
+	}
+	/**
+	 * 获取：任务图片
+	 */
+	public String getTaskImg() {
+		return taskImg;
 	}
 	/**
 	 * 设置：是否启用: yes/no

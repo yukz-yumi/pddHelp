@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.app.auth;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,9 +8,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.ibatis.annotations.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yukz.daodaoping.app.auth.request.UserExAccountRequest;
 import com.yukz.daodaoping.app.auth.vo.LoginParamVo;
+import com.yukz.daodaoping.app.enums.IsAllowEnum;
+import com.yukz.daodaoping.app.enums.UserStatusEnum;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.system.config.RedisHandler;
@@ -34,8 +40,9 @@ import com.yukz.daodaoping.user.service.UserVsExAccountService;
  * @author micezhao
  *
  */
+
 @RestController
-@RequestMapping("appInt/user")
+@RequestMapping("appInt/user/")
 public class AppUserCtrl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AppUserCtrl.class);
@@ -138,6 +145,11 @@ public class AppUserCtrl {
 		return R.ok();
 	}
 	
+	@GetMapping("{id}")
+	public UserInfoDO getUserInfoDO(@PathVariable("id") Long id) {
+		return userInfoService.get(id);
+	}
+	
 	@PutMapping("exAccount/turnOff/{id}")
 	public R turnOffExAccount(@PathVariable("id") Long id) {
 		UserVsExAccountDO currentRecord = userVsExAccountService.get(id);
@@ -150,6 +162,32 @@ public class AppUserCtrl {
 		UserVsExAccountDO currentRecord = userVsExAccountService.get(id);
 		currentRecord.setAllowed(IsAllowEnum.YES.getStatus());
 		return R.ok();
+	}
+	
+	
+	@DeleteMapping("exAccount/{id}")
+	public R deleteExAccount(@PathVariable("id") Long id) {
+		userVsExAccountService.remove(id);
+		return R.ok();
+	}
+	
+	@GetMapping("exAccount/{userId}")
+	public List<UserVsExAccountDO> getExAccount(@PathVariable("userId") Long userId) {
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("userId", userId);
+		return userVsExAccountService.list(map);
+	}
+	
+	@PutMapping("exAccount/{id}")
+	public UserVsExAccountDO updateExAccount(@RequestBody UserExAccountRequest userExAccountRequest) {
+		UserVsExAccountDO userVsExAccountDO = new UserVsExAccountDO();
+		try {
+			PropertyUtils.copyProperties(userVsExAccountDO,userExAccountRequest);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			throw new BDException("对象属性复制出现异常");
+		}
+		userVsExAccountService.update(userVsExAccountDO);
+		return userVsExAccountDO;
 	}
 	
 	

@@ -64,6 +64,10 @@ function load() {
 									title : '助力方式' 
 								},
 																{
+									field : 'taskImg', 
+									title : '任务图片' 
+								},
+																{
 									field : 'allowed', 
 									title : '是否启用: yes/no' 
 								},
