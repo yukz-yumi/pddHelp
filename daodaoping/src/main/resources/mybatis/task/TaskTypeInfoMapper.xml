@@ -4,11 +4,11 @@
 <mapper namespace="com.yukz.daodaoping.task.dao.TaskTypeInfoDao">
 
 	<select id="get" resultType="com.yukz.daodaoping.task.domain.TaskTypeInfoDO">
-		select `id`,`platform`,`task_type_desc`,`task_type`,`task_img`,`allowed`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_type_info where id = #{value}
+		select `id`,`platform`,`task_type_desc`,`task_type`,`task_img`,`allowed`,`expirt_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_type_info where id = #{value}
 	</select>
 
 	<select id="list" resultType="com.yukz.daodaoping.task.domain.TaskTypeInfoDO">
-		select `id`,`platform`,`task_type_desc`,`task_type`,`task_img`,`allowed`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_type_info
+		select `id`,`platform`,`task_type_desc`,`task_type`,`task_img`,`allowed`,`expirt_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_type_info
         <where>  
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="platform != null and platform != ''"> and platform = #{platform} </if>
@@ -16,6 +16,7 @@
 		  		  <if test="taskType != null and taskType != ''"> and task_type = #{taskType} </if>
 		  		  <if test="taskImg != null and taskImg != ''"> and task_img = #{taskImg} </if>
 		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="expirtTime != null and expirtTime != ''"> and expirt_time = #{expirtTime} </if>
 		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
@@ -42,6 +43,7 @@
 		  		  <if test="taskType != null and taskType != ''"> and task_type = #{taskType} </if>
 		  		  <if test="taskImg != null and taskImg != ''"> and task_img = #{taskImg} </if>
 		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="expirtTime != null and expirtTime != ''"> and expirt_time = #{expirtTime} </if>
 		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
@@ -56,6 +58,7 @@
 			`task_type`, 
 			`task_img`, 
 			`allowed`, 
+			`expirt_time`, 
 			`agent_id`, 
 			`gmt_create`, 
 			`gmt_modify`
@@ -67,6 +70,7 @@
 			#{taskType}, 
 			#{taskImg}, 
 			#{allowed}, 
+			#{expirtTime}, 
 			#{agentId}, 
 			#{gmtCreate}, 
 			#{gmtModify}
@@ -81,6 +85,7 @@
 			<if test="taskType != null">`task_type` = #{taskType}, </if>
 			<if test="taskImg != null">`task_img` = #{taskImg}, </if>
 			<if test="allowed != null">`allowed` = #{allowed}, </if>
+			<if test="expirtTime != null">`expirt_time` = #{expirtTime}, </if>
 			<if test="agentId != null">`agent_id` = #{agentId}, </if>
 			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
 			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>

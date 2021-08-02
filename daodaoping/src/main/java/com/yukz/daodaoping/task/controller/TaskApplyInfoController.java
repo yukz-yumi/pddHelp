@@ -17,53 +17,53 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.yukz.daodaoping.common.utils.PageUtils;
 import com.yukz.daodaoping.common.utils.Query;
 import com.yukz.daodaoping.common.utils.R;
-import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
-import com.yukz.daodaoping.task.service.TaskTypeInfoService;
+import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 
 /**
- * 任务类型表
+ * 任务申请表
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-02 08:33:34
+ * @date 2021-08-02 08:33:33
  */
  
 @Controller
-@RequestMapping("/task/taskTypeInfo")
-public class TaskTypeInfoController {
+@RequestMapping("/task/taskApplyInfo")
+public class TaskApplyInfoController {
 	@Autowired
-	private TaskTypeInfoService taskTypeInfoService;
+	private TaskApplyInfoService taskApplyInfoService;
 	
 	@GetMapping()
-	@RequiresPermissions("task:taskTypeInfo:taskTypeInfo")
-	String TaskTypeInfo(){
-	    return "task/taskTypeInfo/taskTypeInfo";
+	@RequiresPermissions("task:taskApplyInfo:taskApplyInfo")
+	String TaskApplyInfo(){
+	    return "task/taskApplyInfo/taskApplyInfo";
 	}
 	
 	@ResponseBody
 	@GetMapping("/list")
-	@RequiresPermissions("task:taskTypeInfo:taskTypeInfo")
+	@RequiresPermissions("task:taskApplyInfo:taskApplyInfo")
 	public PageUtils list(@RequestParam Map<String, Object> params){
 		//查询列表数据
         Query query = new Query(params);
-		List<TaskTypeInfoDO> taskTypeInfoList = taskTypeInfoService.list(query);
-		int total = taskTypeInfoService.count(query);
-		PageUtils pageUtils = new PageUtils(taskTypeInfoList, total);
+		List<TaskApplyInfoDO> taskApplyInfoList = taskApplyInfoService.list(query);
+		int total = taskApplyInfoService.count(query);
+		PageUtils pageUtils = new PageUtils(taskApplyInfoList, total);
 		return pageUtils;
 	}
 	
 	@GetMapping("/add")
-	@RequiresPermissions("task:taskTypeInfo:add")
+	@RequiresPermissions("task:taskApplyInfo:add")
 	String add(){
-	    return "task/taskTypeInfo/add";
+	    return "task/taskApplyInfo/add";
 	}
 
 	@GetMapping("/edit/{id}")
-	@RequiresPermissions("task:taskTypeInfo:edit")
+	@RequiresPermissions("task:taskApplyInfo:edit")
 	String edit(@PathVariable("id") Long id,Model model){
-		TaskTypeInfoDO taskTypeInfo = taskTypeInfoService.get(id);
-		model.addAttribute("taskTypeInfo", taskTypeInfo);
-	    return "task/taskTypeInfo/edit";
+		TaskApplyInfoDO taskApplyInfo = taskApplyInfoService.get(id);
+		model.addAttribute("taskApplyInfo", taskApplyInfo);
+	    return "task/taskApplyInfo/edit";
 	}
 	
 	/**
@@ -71,9 +71,9 @@ public class TaskTypeInfoController {
 	 */
 	@ResponseBody
 	@PostMapping("/save")
-	@RequiresPermissions("task:taskTypeInfo:add")
-	public R save( TaskTypeInfoDO taskTypeInfo){
-		if(taskTypeInfoService.save(taskTypeInfo)>0){
+	@RequiresPermissions("task:taskApplyInfo:add")
+	public R save( TaskApplyInfoDO taskApplyInfo){
+		if(taskApplyInfoService.save(taskApplyInfo)>0){
 			return R.ok();
 		}
 		return R.error();
@@ -83,9 +83,9 @@ public class TaskTypeInfoController {
 	 */
 	@ResponseBody
 	@RequestMapping("/update")
-	@RequiresPermissions("task:taskTypeInfo:edit")
-	public R update( TaskTypeInfoDO taskTypeInfo){
-		taskTypeInfoService.update(taskTypeInfo);
+	@RequiresPermissions("task:taskApplyInfo:edit")
+	public R update( TaskApplyInfoDO taskApplyInfo){
+		taskApplyInfoService.update(taskApplyInfo);
 		return R.ok();
 	}
 	
@@ -94,9 +94,9 @@ public class TaskTypeInfoController {
 	 */
 	@PostMapping( "/remove")
 	@ResponseBody
-	@RequiresPermissions("task:taskTypeInfo:remove")
+	@RequiresPermissions("task:taskApplyInfo:remove")
 	public R remove( Long id){
-		if(taskTypeInfoService.remove(id)>0){
+		if(taskApplyInfoService.remove(id)>0){
 		return R.ok();
 		}
 		return R.error();
@@ -107,9 +107,9 @@ public class TaskTypeInfoController {
 	 */
 	@PostMapping( "/batchRemove")
 	@ResponseBody
-	@RequiresPermissions("task:taskTypeInfo:batchRemove")
+	@RequiresPermissions("task:taskApplyInfo:batchRemove")
 	public R remove(@RequestParam("ids[]") Long[] ids){
-		taskTypeInfoService.batchRemove(ids);
+		taskApplyInfoService.batchRemove(ids);
 		return R.ok();
 	}
 	

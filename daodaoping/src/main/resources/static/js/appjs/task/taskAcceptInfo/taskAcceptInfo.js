@@ -1,5 +1,5 @@
 
-var prefix = "/task/taskTypeInfo"
+var prefix = "/task/taskAcceptInfo"
 $(function() {
 	load();
 });
@@ -52,32 +52,44 @@ function load() {
 									title : '' 
 								},
 																{
-									field : 'platform', 
-									title : '平台类型' 
+									field : 'taskId', 
+									title : '退费任务id' 
 								},
 																{
-									field : 'taskTypeDesc', 
-									title : '任务类型说明' 
+									field : 'userId', 
+									title : '用户id' 
 								},
 																{
-									field : 'taskType', 
-									title : '助力方式' 
+									field : 'openId', 
+									title : '用户openid' 
 								},
 																{
-									field : 'taskImg', 
-									title : '任务图片' 
+									field : 'certificationUrl', 
+									title : '任务凭证' 
 								},
 																{
-									field : 'allowed', 
-									title : '是否启用: yes/no' 
+									field : 'taskStatus', 
+									title : '任务状态 pending:接受执行中/expire:已过期/end:已完成' 
 								},
 																{
-									field : 'expirtTime', 
-									title : '' 
+									field : 'verifyStatus', 
+									title : '审核结果 verifying:审核中/unverified:未通过/verified:已审核 ' 
+								},
+																{
+									field : 'workerId', 
+									title : '审核人id' 
+								},
+																{
+									field : 'hasPaid', 
+									title : '是否放款 0:未放款/1:已放款' 
 								},
 																{
 									field : 'agentId', 
 									title : '机构编号' 
+								},
+																{
+									field : 'expireTime', 
+									title : '任务过期时间' 
 								},
 																{
 									field : 'gmtCreate', 

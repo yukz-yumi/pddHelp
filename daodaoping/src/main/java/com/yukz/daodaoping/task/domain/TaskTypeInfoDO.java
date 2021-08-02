@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-01 11:29:03
+ * @date 2021-08-02 08:33:34
  */
 public class TaskTypeInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -27,6 +27,8 @@ public class TaskTypeInfoDO implements Serializable {
 	private String taskImg;
 	//是否启用: yes/no
 	private String allowed;
+	//
+	private Integer expirtTime;
 	//机构编号
 	private Long agentId;
 	//创建时间
@@ -105,6 +107,18 @@ public class TaskTypeInfoDO implements Serializable {
 	 */
 	public String getAllowed() {
 		return allowed;
+	}
+	/**
+	 * 设置：
+	 */
+	public void setExpirtTime(Integer expirtTime) {
+		this.expirtTime = expirtTime;
+	}
+	/**
+	 * 获取：
+	 */
+	public Integer getExpirtTime() {
+		return expirtTime;
 	}
 	/**
 	 * 设置：机构编号

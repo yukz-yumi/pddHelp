@@ -1,5 +1,5 @@
 
-var prefix = "/task/taskTypeInfo"
+var prefix = "/task/taskApplyInfo"
 $(function() {
 	load();
 });
@@ -52,28 +52,44 @@ function load() {
 									title : '' 
 								},
 																{
-									field : 'platform', 
-									title : '平台类型' 
+									field : 'taskId', 
+									title : '任务编号' 
 								},
 																{
-									field : 'taskTypeDesc', 
-									title : '任务类型说明' 
+									field : 'taskTypeId', 
+									title : '任务类型id' 
 								},
 																{
-									field : 'taskType', 
+									field : 'assistantType', 
 									title : '助力方式' 
 								},
 																{
-									field : 'taskImg', 
-									title : '任务图片' 
+									field : 'command', 
+									title : '任务指令' 
 								},
 																{
-									field : 'allowed', 
-									title : '是否启用: yes/no' 
+									field : 'taskNumber', 
+									title : '任务数量' 
 								},
 																{
-									field : 'expirtTime', 
-									title : '' 
+									field : 'completedNumeber', 
+									title : '已完成数量' 
+								},
+																{
+									field : 'taskResult', 
+									title : '任务结果 uncompleted/completed' 
+								},
+																{
+									field : 'taskStatus', 
+									title : '任务状态 suspend/wait/pending/end/cancel' 
+								},
+																{
+									field : 'startTime', 
+									title : '任务开启时间' 
+								},
+																{
+									field : 'expireTime', 
+									title : '任务过期时间' 
 								},
 																{
 									field : 'agentId', 

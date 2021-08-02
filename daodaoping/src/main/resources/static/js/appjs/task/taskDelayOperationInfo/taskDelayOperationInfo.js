@@ -1,5 +1,5 @@
 
-var prefix = "/task/taskTypeInfo"
+var prefix = "/task/taskDelayOperationInfo"
 $(function() {
 	load();
 });
@@ -52,28 +52,20 @@ function load() {
 									title : '' 
 								},
 																{
-									field : 'platform', 
-									title : '平台类型' 
+									field : 'taskId', 
+									title : '用户id' 
 								},
 																{
-									field : 'taskTypeDesc', 
-									title : '任务类型说明' 
+									field : 'delayCount', 
+									title : '延迟次数' 
 								},
 																{
-									field : 'taskType', 
-									title : '助力方式' 
+									field : 'delayTime', 
+									title : '延迟时间' 
 								},
 																{
-									field : 'taskImg', 
-									title : '任务图片' 
-								},
-																{
-									field : 'allowed', 
-									title : '是否启用: yes/no' 
-								},
-																{
-									field : 'expirtTime', 
-									title : '' 
+									field : 'expireTime', 
+									title : '过期时间' 
 								},
 																{
 									field : 'agentId', 
