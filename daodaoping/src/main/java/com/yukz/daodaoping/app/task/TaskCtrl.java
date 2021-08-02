@@ -1,5 +1,7 @@
 package com.yukz.daodaoping.app.task;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
 import com.yukz.daodaoping.app.task.request.TaskApplyRequest;
+import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
@@ -28,13 +31,19 @@ import com.yukz.daodaoping.task.service.TaskTypeInfoService;
 @RestController
 public class TaskCtrl {
 	
+	public static final int LIMITED_INTERVAL = 10;
+	
 	@Autowired
 	private TaskTypeInfoService taskTypeInfoService;
 	
 	@Autowired
-	private TaskApplyInfoService taskApplyInfoService;
+	private TaskExecuteBiz taskExecuteBiz;
+	
+	@Autowired
+	private TaskApplyInfoService taskApplyInfoDOService;
+	
 		
-	@GetMapping("list/{agentId}/{platform}/{pageNum}/{pageSize}")
+	@GetMapping("/list/{agentId}/{platform}/{pageNum}/{pageSize}")
 	public PageInfo<TaskTypeInfoDO> getAllTaskType(
 			@PathVariable("agentId") Long agentId,@PathVariable("platform") String platform,
 			@PathVariable("pageNum") int pageNum , @PathVariable("pageSize") int pageSize){
@@ -53,7 +62,7 @@ public class TaskCtrl {
 	 * @param assistantNum
 	 * @return
 	 */
-	@PutMapping("amountCalculate")
+	@PutMapping("/amountCalculate")
 	public String taskAmoutCalculate(int assistantNum) {
 		
 		return "";
@@ -66,15 +75,46 @@ public class TaskCtrl {
 	 */
 	@PostMapping("apply")
 	public R taskApply(@RequestBody TaskApplyRequest taskAppleRequest,TaskApplyInfoDO taskApplyInfoDO) {
+		boolean flag = checkInternalLimited(taskAppleRequest.getStartTime());
+		if(!flag) {
+			throw new BDException("任务开始时间与当前时间的间隔必须大于10分钟");
+		}
 		try {
 			PropertyUtils.copyProperties(taskApplyInfoDO, taskAppleRequest);			
 		} catch (Exception e) {
-			R.error("对象复制出现异常");
+			return R.error("对象复制出现异常");
 		}
-		taskApplyInfoDO.setTaskStatus(TaskStatusEnum.SUSPEND.getStatus()); //未支付时的任务为挂起
-		taskApplyInfoService.save(taskApplyInfoDO);
+		taskExecuteBiz.initTaskApplyInfo(taskApplyInfoDO);
 		return R.ok();
 	}
+	
+	@PutMapping("edit")
+	public R taskEdit(@RequestBody TaskApplyRequest taskAppleRequest,TaskApplyInfoDO taskApplyInfoDO) {
+		boolean flag = checkInternalLimited(taskAppleRequest.getStartTime());
+		if(!flag) {
+			throw new BDException("任务开始时间与当前时间的间隔必须大于10分钟");
+		}
+		try {
+			PropertyUtils.copyProperties(taskApplyInfoDO, taskAppleRequest);			
+		} catch (Exception e) {
+			return R.error("对象复制出现异常");
+		}
+		taskExecuteBiz.editTaskApplyInfo(taskApplyInfoDO);
+		return R.ok();
+	}
+	
+	@PutMapping("cancel/{id}")
+	public R taskcancel(@PathVariable("id") Long taskApplyInfoId) {
+		TaskApplyInfoDO taskApplyInfoDO = taskApplyInfoDOService.get(taskApplyInfoId);
+		String taskStatus = taskApplyInfoDO.getTaskStatus();
+		if(TaskStatusEnum.getEnumByStatus(taskStatus) != TaskStatusEnum.WAIT 
+				&& TaskStatusEnum.getEnumByStatus(taskStatus) != TaskStatusEnum.SUSPEND) {
+			throw new BDException("当前任务状态不允许被取消");
+		}
+		taskExecuteBiz.cancel(taskApplyInfoDO);
+		return R.ok();
+	}
+	
 	
 	/**
 	 * 任务提交：生成订单并更新任务状态，并计算任务过期时间
@@ -87,8 +127,17 @@ public class TaskCtrl {
 		return R.ok();
 	}
 	
-	
-	
+	public boolean checkInternalLimited(Date taskStartTime) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.add(LIMITED_INTERVAL, Calendar.MINUTE);
+		Calendar taskStartCal = Calendar.getInstance();
+		taskStartCal.setTime(taskStartTime);
+		if(!taskStartCal.before(cal)) { // 开始时间不满足时间间隔的，不允许初始化
+			return false;
+		}
+		return true;
+	}
 	
 	
 	

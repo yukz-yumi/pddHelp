@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-02 08:33:33
+ * @date 2021-08-02 09:04:23
  */
 public class TaskApplyInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -18,7 +18,7 @@ public class TaskApplyInfoDO implements Serializable {
 	//
 	private Long id;
 	//任务编号
-	private String taskId;
+	private Long taskId;
 	//任务类型id
 	private String taskTypeId;
 	//助力方式
@@ -59,13 +59,13 @@ public class TaskApplyInfoDO implements Serializable {
 	/**
 	 * 设置：任务编号
 	 */
-	public void setTaskId(String taskId) {
+	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
 	/**
 	 * 获取：任务编号
 	 */
-	public String getTaskId() {
+	public Long getTaskId() {
 		return taskId;
 	}
 	/**

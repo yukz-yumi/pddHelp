@@ -64,7 +64,7 @@ CREATE TABLE `ddp_ex_account_type_info` (
 DROP TABLE IF EXISTS `ddp_task_apply_info`;
 CREATE TABLE `ddp_task_apply_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `task_id` varchar(128) NOT NULL COMMENT '任务编号',
+  `task_id` bigint(20) NOT NULL COMMENT '任务编号',
   `task_type_id` varchar(128) NOT NULL COMMENT '任务类型id',
   `assistant_type` varchar(128) NOT NULL COMMENT '助力方式',
   `command` varchar(2048) DEFAULT NULL COMMENT '任务指令',
@@ -89,7 +89,8 @@ CREATE TABLE `ddp_task_type_info` (
   `platform` varchar(32) NOT NULL COMMENT '平台类型',
   `task_type_desc` varchar(256) NOT NULL COMMENT '任务类型说明',
   `task_type` varchar(128) NOT NULL COMMENT '助力方式',
-  `task_img` varchar(2048) DEFAULT NULL COMMENT `任务图片`,
+  `task_img` varchar(2048) DEFAULT NULL COMMENT '任务图片',
+  `task_expire` int NOT NULL COMMENT '任务执行时的延迟时间(单位：分钟)，最大值600'
   `allowed` varchar(16) DEFAULT 'yes' COMMENT '是否启用: yes/no',
   `agent_id` bigint(8)  NOT NULL COMMENT '机构编号',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
@@ -169,7 +170,7 @@ CREATE TABLE `ddp_refund_info` (
 DROP TABLE IF EXISTS `ddp_task_accept_info`;
 CREATE TABLE `ddp_task_accept_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `task_id` bigint(20) NOT NULL COMMENT '退费任务id',
+  `task_id` bigint(20) NOT NULL COMMENT '任务id',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `open_id` varchar(128) NOT NULL COMMENT '用户openid',
   `certification_url` varchar(2048) NOT NULL COMMENT '任务凭证',
@@ -226,7 +227,8 @@ CREATE TABLE `ddp_account_attr` (
 DROP TABLE IF EXISTS `ddp_task_delay_operation_info`;
 CREATE TABLE `ddp_task_delay_operation_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `task_id` bigint(20) NOT NULL COMMENT '用户id',
+  `task_id` bigint(20) NOT NULL COMMENT '任务id',
+  `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `delay_count` int NOT NULL COMMENT '延迟次数',
   `delay_time` datetime NOT NULL COMMENT '延迟时间',
   `expire_time` datetime NOT NULL COMMENT '过期时间',

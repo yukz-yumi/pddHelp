@@ -10,14 +10,14 @@ import java.util.Date;
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-02 08:33:33
+ * @date 2021-08-02 09:04:23
  */
 public class TaskAcceptInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	//
 	private Long id;
-	//退费任务id
+	//任务id
 	private Long taskId;
 	//用户id
 	private Long userId;
@@ -55,13 +55,13 @@ public class TaskAcceptInfoDO implements Serializable {
 		return id;
 	}
 	/**
-	 * 设置：退费任务id
+	 * 设置：任务id
 	 */
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
 	/**
-	 * 获取：退费任务id
+	 * 获取：任务id
 	 */
 	public Long getTaskId() {
 		return taskId;

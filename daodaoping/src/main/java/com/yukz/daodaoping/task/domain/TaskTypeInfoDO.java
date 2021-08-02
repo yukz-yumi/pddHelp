@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-02 08:33:34
+ * @date 2021-08-02 09:04:24
  */
 public class TaskTypeInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
