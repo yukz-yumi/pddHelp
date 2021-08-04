@@ -25,7 +25,9 @@ public class TaskApplyRequest {
 	
 	private Date startTime;
 	
-	private Date endTime;
+	private Date expireTime;
+	
+	private boolean isAppointment;
 
 	public Long getTaskTypeId() {
 		return taskTypeId;
@@ -91,13 +93,23 @@ public class TaskApplyRequest {
 		this.startTime = startTime;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public Date getExpireTime() {
+		return expireTime;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setExpireTime(Date expireTime) {
+		this.expireTime = expireTime;
 	}
+
+	public boolean isAppointment() {
+		return isAppointment;
+	}
+
+	public void setAppointment(boolean isAppointment) {
+		this.isAppointment = isAppointment;
+	}
+
+	
 	
 	
 }

@@ -13,28 +13,23 @@ import org.springframework.context.annotation.Configuration;
 public class RedissonConfig {
 	
 	private static Logger logger= LoggerFactory.getLogger(RedissonConfig.class);
+	
 	  @Value("${spring.redis.host}")
-	  private String redisAddress="127.0.0.1";
+	  private String redisAddress;
 	  
 	  @Value("${spring.redis.port}")
-	  private  String redisPort="6379";
+	  private String redisPort;
 	 
-	  @Value("${spring.redis.database}")
-	  private  Integer database=5;
-
-	public void setRedisAddress(String redisAddress) {
-		this.redisAddress = redisAddress;
-	}
-
-	public void setRedisPort(String redisPort) {
-		this.redisPort = redisPort;
-	}
+	  @Value("${spring.redis.password}")
+	  private String password;
+	  
 
 	private Config config(){
 	    Config config = new Config();
 	    SingleServerConfig singleSerververConfig = config.useSingleServer();
-	    singleSerververConfig.setAddress(redisAddress+":"+redisPort);
-	    singleSerververConfig.setDatabase(database);
+	    singleSerververConfig.setAddress("redis://"+redisAddress+":"+redisPort);
+	    singleSerververConfig.setPassword(password);
+//	    singleSerververConfig.setDatabase(database);
 	    singleSerververConfig.setConnectionPoolSize(64);
 	    //如果当前连接池里的连接数量超过了最小空闲连接数，而同时有连接空闲时间超过了该数值，
 	    // 那么这些连接将会自动被关闭，并从连接池里去掉。时间单位是毫秒。

@@ -52,8 +52,8 @@ function load() {
 									title : '' 
 								},
 																{
-									field : 'taskId', 
-									title : '任务编号' 
+									field : 'userId', 
+									title : '用户编号' 
 								},
 																{
 									field : 'taskTypeId', 

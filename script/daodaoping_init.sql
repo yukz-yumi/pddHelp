@@ -64,7 +64,7 @@ CREATE TABLE `ddp_ex_account_type_info` (
 DROP TABLE IF EXISTS `ddp_task_apply_info`;
 CREATE TABLE `ddp_task_apply_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `task_id` bigint(20) NOT NULL COMMENT '任务编号',
+  `user_id` bigint(20) NOT NULL COMMENT '用户编号',
   `task_type_id` varchar(128) NOT NULL COMMENT '任务类型id',
   `assistant_type` varchar(128) NOT NULL COMMENT '助力方式',
   `command` varchar(2048) DEFAULT NULL COMMENT '任务指令',

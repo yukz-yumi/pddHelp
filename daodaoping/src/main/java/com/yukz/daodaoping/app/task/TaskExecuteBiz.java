@@ -9,6 +9,7 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,6 @@ public class TaskExecuteBiz {
 	 */
 	public boolean initTaskApplyInfo(TaskApplyInfoDO taskApplyInfoDO) {
 		Date taskExpireTime = getTaskExpireTime(taskApplyInfoDO);
-		taskApplyInfoDO.setTaskStatus(TaskStatusEnum.SUSPEND.getStatus()); //未支付时的任务为挂起
 		taskApplyInfoDO.setExpireTime(taskExpireTime);
 		int i = taskApplyInfoService.save(taskApplyInfoDO);
 		// 提交异步任务执行，将任务放入延迟队列
@@ -91,8 +91,11 @@ public class TaskExecuteBiz {
 	
 	
 	public Date getTaskExpireTime(TaskApplyInfoDO taskApplyInfoDO) {
-		TaskTypeInfoDO taskInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getTaskId());
-		int interval = taskInfoDo.getExpirtTime();
+		if(taskApplyInfoDO.getExpireTime() != null) {
+			return taskApplyInfoDO.getExpireTime();
+		}
+		TaskTypeInfoDO taskTypeInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getTaskId());
+		int interval = taskTypeInfoDo.getExpirtTime();
 		Date startTime = taskApplyInfoDO.getStartTime();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
