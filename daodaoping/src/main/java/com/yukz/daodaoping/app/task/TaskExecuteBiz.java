@@ -94,7 +94,7 @@ public class TaskExecuteBiz {
 		if(taskApplyInfoDO.getExpireTime() != null) {
 			return taskApplyInfoDO.getExpireTime();
 		}
-		TaskTypeInfoDO taskTypeInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getTaskId());
+		TaskTypeInfoDO taskTypeInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getId());
 		int interval = taskTypeInfoDo.getExpirtTime();
 		Date startTime = taskApplyInfoDO.getStartTime();
 		Calendar cal = Calendar.getInstance();
