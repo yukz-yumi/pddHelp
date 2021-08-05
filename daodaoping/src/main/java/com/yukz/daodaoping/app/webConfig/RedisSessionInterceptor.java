@@ -1,4 +1,4 @@
-package com.yukz.daodaoping.app.auth;
+package com.yukz.daodaoping.app.webConfig;
 
 import java.io.IOException;
 

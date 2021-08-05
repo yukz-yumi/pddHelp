@@ -34,7 +34,12 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.4</version>
 		</dependency>
-
+		
+		<!-- 消息中间件 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -232,11 +237,11 @@
 		</dependency>
 		<!-- 通过redis实现全局锁的管理 -->
 		<dependency>
-            <groupId>org.redisson</groupId>
-            <artifactId>redisson</artifactId>
-            <version>3.7.4</version>
-        </dependency>
-		
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+			<version>3.7.4</version>
+		</dependency>
+
 		<!-- xss过滤组件 -->
 		<dependency>
 			<groupId>org.jsoup</groupId>
@@ -281,8 +286,8 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		<!-- mybatis 分页插件  -->
+
+		<!-- mybatis 分页插件 -->
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
 			<artifactId>pagehelper-spring-boot-starter</artifactId>

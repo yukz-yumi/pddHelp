@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yukz.daodaoping.app.auth.request.UserExAccountRequest;
 import com.yukz.daodaoping.app.auth.vo.LoginParamVo;
+import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
 import com.yukz.daodaoping.app.enums.UserStatusEnum;
+import com.yukz.daodaoping.app.webConfig.Constants;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.system.config.RedisHandler;
@@ -48,9 +50,6 @@ public class AppUserCtrl {
 	private static final Logger logger = LoggerFactory.getLogger(AppUserCtrl.class);
 	
 	@Autowired
-	private RedisHandler redisHandler;
-	
-	@Autowired
 	private AppUserBiz userBiz;
 
 	@Autowired
@@ -65,7 +64,7 @@ public class AppUserCtrl {
 	 * @return
 	 */
 	@GetMapping("login/{agentId}/{openId}")
-	public UserInfoDO getUser(@PathVariable("agentId") String agentId,@PathVariable("openId") String openId, HttpServletRequest request) {
+	public UserAgent getUser(@PathVariable("agentId") String agentId,@PathVariable("openId") String openId, HttpServletRequest request) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("open_id", openId);
 		param.put("agent_id", Long.parseLong(agentId));
@@ -76,13 +75,13 @@ public class AppUserCtrl {
 		if (userList.size() > 1) {
 			 throw new BDException("more than one userinfo record at same agent");
 		}
-		Long userId = userList.get(0).getUserId();
+		UserInfoDO UserInfo = userList.get(0);
 		
-		HttpSession session = request.getSession();
-		session.setAttribute("loginUserId", userId);
-		redisHandler.set("loginUser:"+userId, session.getId());
+		UserAgent userAgent = convertor(UserInfo);
+		// 向session中传入值
+		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
 		
-		return userList.get(0);
+		return userAgent;
 	}
 
 	/**
@@ -107,17 +106,15 @@ public class AppUserCtrl {
 			userInfoDO.setNickName(nickName);
 			userBiz.initUser(userInfoDO);
 			
-//			Long userId = userInfoDO.getUserId();
-//			HttpSession session = request.getSession();
-//			session.setAttribute("loginUserId", userId);
-//			redisHandler.set("loginUser:"+userId, session.getId());
-//			logger.debug("sessionId",session.getId());
-			
 		} catch (Exception ex) {
 			logger.error(ex.getMessage());
 			return R.error("用户绑定失败");
 		}
-		return R.ok();
+		UserAgent userAgent = convertor(userInfoDO);
+		// 向session中传入值
+		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
+		
+		return R.ok().put("userAgent", userAgent);
 	}
 	
 	/**
@@ -126,9 +123,9 @@ public class AppUserCtrl {
 	 * @return
 	 */
 	@PostMapping("bindExAccount")
-	public R bindExAccount(@RequestBody UserExAccountRequest userExAccountRequest, UserVsExAccountDO userVsAccountDO) {
-		Long userId = userExAccountRequest.getUserId();
-		Long agentId = userExAccountRequest.getAgentId();
+	public R bindExAccount(UserAgent userAgent ,@RequestBody UserExAccountRequest userExAccountRequest, UserVsExAccountDO userVsAccountDO) {
+		Long userId = userAgent.getUserId();
+		Long agentId = userAgent.getAgentId();
 		UserInfoDO userInfo = null;
 		try {
 			 userInfo = userBiz.getUserInfoByUserId(userId, agentId);
@@ -145,9 +142,9 @@ public class AppUserCtrl {
 		return R.ok();
 	}
 	
-	@GetMapping("{id}")
-	public UserInfoDO getUserInfoDO(@PathVariable("id") Long id) {
-		return userInfoService.get(id);
+	@GetMapping()
+	public UserInfoDO getUserInfoDO(UserAgent userAgent) {
+		return userInfoService.get(userAgent.getUserId());
 	}
 	
 	@PutMapping("exAccount/turnOff/{id}")
@@ -171,10 +168,10 @@ public class AppUserCtrl {
 		return R.ok();
 	}
 	
-	@GetMapping("exAccount/{userId}")
-	public List<UserVsExAccountDO> getExAccount(@PathVariable("userId") Long userId) {
+	@GetMapping("exAccount")
+	public List<UserVsExAccountDO> getExAccount(UserAgent userAgent) {
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("userId", userId);
+		map.put("userId", userAgent.getUserId());
 		return userVsExAccountService.list(map);
 	}
 	
@@ -190,5 +187,15 @@ public class AppUserCtrl {
 		return userVsExAccountDO;
 	}
 	
+	
+	public UserAgent convertor(UserInfoDO userInfo) {
+		UserAgent userAgent = new UserAgent(); 
+		try {
+			PropertyUtils.copyProperties(userAgent, userInfo);
+		} catch (Exception e) {
+			logger.error("对象转换失败");
+		}
+		return userAgent;
+	}
 	
 }
