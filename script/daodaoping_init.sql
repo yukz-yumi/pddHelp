@@ -90,7 +90,8 @@ CREATE TABLE `ddp_task_type_info` (
   `task_type_desc` varchar(256) NOT NULL COMMENT '任务类型说明',
   `task_type` varchar(128) NOT NULL COMMENT '助力方式',
   `task_img` varchar(2048) DEFAULT NULL COMMENT '任务图片',
-  `task_expire` int NOT NULL COMMENT '任务执行时的延迟时间(单位：分钟)，最大值600'
+  `task_expire` int NOT NULL COMMENT '任务执行时的延迟时间(单位：分钟)，最大值600',
+  `price` int NOT NULL COMMENT '任务单价',
   `allowed` varchar(16) DEFAULT 'yes' COMMENT '是否启用: yes/no',
   `agent_id` bigint(8)  NOT NULL COMMENT '机构编号',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',

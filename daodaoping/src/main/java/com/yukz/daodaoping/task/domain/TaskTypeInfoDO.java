@@ -1,5 +1,7 @@
 package com.yukz.daodaoping.task.domain;
 
+import com.yukz.daodaoping.task.enums.PlatformEnum;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -35,6 +37,10 @@ public class TaskTypeInfoDO implements Serializable {
 	private Date gmtCreate;
 	//修改时间
 	private Date gmtModify;
+	//平台类型名称
+	private String platformName;
+	//单价
+	private Integer price;
 
 	/**
 	 * 设置：
@@ -155,5 +161,21 @@ public class TaskTypeInfoDO implements Serializable {
 	 */
 	public Date getGmtModify() {
 		return gmtModify;
+	}
+
+	public String getPlatformName() {
+		return PlatformEnum.getDesc(this.platform);
+	}
+
+	public void setPlatformName(String platformName) {
+		this.platformName = platformName;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
 	}
 }

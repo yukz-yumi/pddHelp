@@ -52,7 +52,7 @@ function load() {
 									title : '' 
 								},
 																{
-									field : 'platform', 
+									field : 'platformName',
 									title : '平台类型' 
 								},
 																{
@@ -74,10 +74,6 @@ function load() {
 																{
 									field : 'expirtTime', 
 									title : '' 
-								},
-																{
-									field : 'agentId', 
-									title : '机构编号' 
 								},
 																{
 									field : 'gmtCreate', 
