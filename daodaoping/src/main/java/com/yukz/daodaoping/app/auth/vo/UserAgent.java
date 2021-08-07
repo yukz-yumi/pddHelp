@@ -24,8 +24,6 @@ public class UserAgent {
 	// 用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用
 	private String userStatus;
 
-	private String level;
-
 	private List<UserVsExAccountDO> exAccountList;
 
 	public Long getUserId() {
@@ -98,14 +96,6 @@ public class UserAgent {
 
 	public void setUserStatus(String userStatus) {
 		this.userStatus = userStatus;
-	}
-
-	public String getLevel() {
-		return level;
-	}
-
-	public void setLevel(String level) {
-		this.level = level;
 	}
 
 	public List<UserVsExAccountDO> getExAccountList() {

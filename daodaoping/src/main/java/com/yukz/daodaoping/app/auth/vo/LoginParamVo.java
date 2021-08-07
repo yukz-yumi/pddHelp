@@ -12,7 +12,7 @@ public class LoginParamVo {
 	// 用户输入的验证码
 	private String validateCode;
 	// 当前用户的第三方登录平台编码
-	private String thirdPartUserId;
+	private String openId;
 	// 用户微信昵称
 	private String nickName;
 	// 用户头像
@@ -30,11 +30,12 @@ public class LoginParamVo {
 	public void setValidateCode(String validateCode) {
 		this.validateCode = validateCode;
 	}
-	public String getThirdPartUserId() {
-		return thirdPartUserId;
+	
+	public String getOpenId() {
+		return openId;
 	}
-	public void setThirdPartUserId(String thirdPartUserId) {
-		this.thirdPartUserId = thirdPartUserId;
+	public void setOpenId(String openId) {
+		this.openId = openId;
 	}
 	public String getNickName() {
 		return nickName;

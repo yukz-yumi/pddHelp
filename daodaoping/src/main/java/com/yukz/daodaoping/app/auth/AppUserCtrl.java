@@ -95,7 +95,7 @@ public class AppUserCtrl {
 	public R bindPhone(@RequestBody LoginParamVo loginParam, UserInfoDO userInfoDO, HttpServletRequest request) {
 		String validateCode = loginParam.getValidateCode();
 		String mobile = loginParam.getMobile();
-		String openId = loginParam.getThirdPartUserId();
+		String openId = loginParam.getOpenId();
 		Long agentId = loginParam.getAgentId();
 		String nickName = loginParam.getNickName();
 		try {
