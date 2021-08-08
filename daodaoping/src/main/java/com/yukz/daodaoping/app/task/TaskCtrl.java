@@ -25,6 +25,7 @@ import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
+import com.yukz.daodaoping.task.enums.PlatformEnum;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 import com.yukz.daodaoping.task.service.TaskTypeInfoService;
 
@@ -42,19 +43,29 @@ public class TaskCtrl {
 
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoDOService;
-
-	@GetMapping("platform/{platform}/list/{pageNum}/{pageSize}")
-	public PageInfo<TaskTypeInfoDO> getAllTaskType(@PathVariable("agentId") Long agentId,
-			@PathVariable("platform") String platform, @PathVariable("pageNum") int pageNum,
-			@PathVariable("pageSize") int pageSize,UserAgent userAgent) {
-		PageHelper.startPage(pageNum, pageSize);
+	
+	@GetMapping("supplyPlatform")
+	public R getTaskTypeInfo(UserAgent userAgent) {
+		return R.ok().put("data", PlatformEnum.toMap());
+	}
+	
+	/**
+	 * 查询不同平台所支持的业务
+	 * @param agentId
+	 * @param platform
+	 * @param pageNum
+	 * @param pageSize
+	 * @param userAgent
+	 * @return
+	 */
+	@GetMapping("platform/{platform}/list")
+	public R getAllTaskType(@PathVariable("platform") String platform,UserAgent userAgent) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("agent_id", userAgent.getAgentId());
+		map.put("agentId", userAgent.getAgentId());
 		map.put("platform", platform);
 		map.put("allowed", IsAllowEnum.YES.getStatus());
 		List<TaskTypeInfoDO> taskTypeInfoList = taskTypeInfoService.list(map);
-		PageInfo<TaskTypeInfoDO> pageResult = new PageInfo<TaskTypeInfoDO>(taskTypeInfoList);
-		return pageResult;
+		return R.ok().put("data", taskTypeInfoList);
 	}
 
 	/**
@@ -63,9 +74,9 @@ public class TaskCtrl {
 	 * @param assistantNum
 	 * @return
 	 */
-	@PutMapping("amountCalculate")
-	public String taskAmoutCalculate(int assistantNum) {
-
+	@PutMapping("price/{id}/{num}")
+	public String taskAmoutCalculate(@PathVariable("id") Long taskId, @PathVariable("num") int num) {
+		
 		return "";
 	}
 
