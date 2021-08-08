@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.app.auth.vo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
@@ -25,7 +26,7 @@ public class UserExAccountVo {
 	// 机构编号
 	private Long agentId;
 	
-	private List<UserVsExAccountDO> exAccountList;
+	private List<UserVsExAccountDO> exAccountList = new ArrayList<UserVsExAccountDO>();
 
 	public Long getUserId() {
 		return userId;

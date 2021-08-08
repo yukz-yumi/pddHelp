@@ -41,7 +41,7 @@ public class LoginWebConfig implements WebMvcConfigurer {
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new UserSessionInterceptor()).addPathPatterns("/appInt/**")
-			.excludePathPatterns("/appInt/login/**","/appInt/bindMobile","/appInt/bindExAccount");
+			.excludePathPatterns("/appInt/user/login","/appInt/user/bindMobile","/appInt/user/bindExAccount");
 	}
 	
 	/**

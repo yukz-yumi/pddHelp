@@ -58,10 +58,23 @@ public class AppUserBiz {
 	 */
 	public boolean isUserExisted (String openId, Long agentId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("open_id", openId);
-		params.put("agent_id", agentId);
+		params.put("openId", openId);
+		params.put("agentId", agentId);
 		List<UserInfoDO> list = userInfoService.list(params);
 		return list.isEmpty();
+	}	
+	
+	public UserInfoDO hasMobilebind (String openId, Long agentId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("openId", openId);
+		params.put("agentId", agentId);
+		params.put("userStatus", UserStatusEnum.NORMAL.getUserStatus());
+		List<UserInfoDO> list = userInfoService.list(params);
+		if(!list.isEmpty()) {
+			return list.get(0);
+		}else {
+			return null;
+		}
 	}	
 	
 	public boolean volidateCodeChecked(String validateCode) {
@@ -80,14 +93,14 @@ public class AppUserBiz {
 		userInfoDO.setScores(INIT_SCORE);
 		userInfoDO.setUserGrade(INIT_USER_GRADE);
 		userInfoDO.setGmtCreate(new Date());
-		userInfoDO.setUserStatus(UserStatusEnum.UNBIND.getUserStatus());
+//		userInfoDO.setUserStatus(UserStatusEnum.UNBIND.getUserStatus());
 		return userInfoService.save(userInfoDO) >= 1?true:false;
 	}
 	
 	public UserInfoDO getUserInfoByUserId(Long userId, Long agentId) {
 		Map<String,Object> map = new HashMap<>();
-		map.put("user_id",userId);
-		map.put("agent_id",agentId);
+		map.put("userId",userId);
+		map.put("agentId",agentId);
 		List<UserInfoDO> list = userInfoService.list(map);
 		if(list.isEmpty()) {
 			return null;
@@ -107,7 +120,7 @@ public class AppUserBiz {
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
 	 */
-	public boolean addExAccountRecord(UserInfoDO userInfo, UserExAccountRequest exAccoutRequest) {
+	public UserExAccountVo addExAccountRecord(UserInfoDO userInfo, UserExAccountRequest exAccoutRequest) {
 		boolean validated = exAccountValidate(exAccoutRequest.getAccountType(), exAccoutRequest.getAccount());
 		if(!validated) {
 			throw new BDException("外部账号不合法");
@@ -117,6 +130,7 @@ public class AppUserBiz {
 		userExAccountDO.setAgentId(userInfo.getAgentId());
 		userExAccountDO.setAccountType(exAccoutRequest.getAccountType());
 		userExAccountDO.setAccount(exAccoutRequest.getAccount());
+		userExAccountDO.setAccountImg(exAccoutRequest.getAccountImg());
 		userExAccountDO.setAccountStatus(ExAccountEnum.AVAILABLE.getExAccountStatus()); 
 		userExAccountDO.setAllowed(IsAllowEnum.YES.getStatus());
 		userExAccountDO.setGmtCreate(new Date());
@@ -130,8 +144,9 @@ public class AppUserBiz {
 		}catch(Exception ex) {
 			throw new BDException("对象转换失败");
 		}
-		vo.getExAccountList().add(userExAccountDO);
-		return true;
+		
+		return vo;
+
 	}
 	
 	/**

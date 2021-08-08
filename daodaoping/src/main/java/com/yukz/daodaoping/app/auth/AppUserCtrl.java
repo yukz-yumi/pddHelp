@@ -1,15 +1,14 @@
 package com.yukz.daodaoping.app.auth;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.ibatis.annotations.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yukz.daodaoping.app.auth.request.UserExAccountRequest;
 import com.yukz.daodaoping.app.auth.vo.LoginParamVo;
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
+import com.yukz.daodaoping.app.auth.vo.UserExAccountVo;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
 import com.yukz.daodaoping.app.enums.UserStatusEnum;
 import com.yukz.daodaoping.app.webConfig.Constants;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
-import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.user.domain.UserInfoDO;
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
 import com.yukz.daodaoping.user.service.UserInfoService;
@@ -44,7 +43,7 @@ import com.yukz.daodaoping.user.service.UserVsExAccountService;
  */
 
 @RestController
-@RequestMapping("appInt/user/")
+@RequestMapping("/appInt/user/")
 public class AppUserCtrl {
 	
 	private static final Logger logger = LoggerFactory.getLogger(AppUserCtrl.class);
@@ -59,33 +58,35 @@ public class AppUserCtrl {
 	private UserVsExAccountService userVsExAccountService;
 	
 	/**
+	 * TODO 异常抛出有问题
 	 * 通过openId查询用户是否存在
 	 * @param openId
 	 * @return
 	 */
-	@GetMapping("login/{agentId}/{openId}")
-	public UserAgent getUser(@PathVariable("agentId") String agentId,@PathVariable("openId") String openId, HttpServletRequest request) {
+	@PostMapping("login")
+	public R getUser(@RequestBody LoginParamVo loginParam, HttpServletRequest request) {
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("open_id", openId);
-		param.put("agent_id", Long.parseLong(agentId));
+		param.put("openId", loginParam.getOpenId());
+		param.put("agentId", loginParam.getAgentId());
 		List<UserInfoDO> userList = userInfoService.list(param);
 		if (userList.isEmpty()) {
 			return null;
 		}
 		if (userList.size() > 1) {
-			 throw new BDException("more than one userinfo record at same agent");
+			return R.error("存在重复的openId");
 		}
 		UserInfoDO UserInfo = userList.get(0);
-		
+	
 		UserAgent userAgent = convertor(UserInfo);
 		// 向session中传入值
 		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
-		
-		return userAgent;
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		resultMap.put("data", userAgent);
+		return R.ok(resultMap);
 	}
 
 	/**
-	 * 绑定手机号
+	 * 绑定手机号（注册用户）
 	 * 
 	 * @param loginParam
 	 * @param userInfoDO
@@ -97,24 +98,32 @@ public class AppUserCtrl {
 		String mobile = loginParam.getMobile();
 		String openId = loginParam.getOpenId();
 		Long agentId = loginParam.getAgentId();
+		String headImgUrl = loginParam.getHeadImgUrl();
 		String nickName = loginParam.getNickName();
-		try {
-			userBiz.volidateCodeChecked(validateCode);
-			userInfoDO.setMobile(mobile);
-			userInfoDO.setOpenId(openId);
-			userInfoDO.setAgentId(agentId);
-			userInfoDO.setNickName(nickName);
-			userBiz.initUser(userInfoDO);
-			
-		} catch (Exception ex) {
-			logger.error(ex.getMessage());
-			return R.error("用户绑定失败");
+		if(userBiz.hasMobilebind(openId, agentId) != null ) {
+			userInfoDO = userBiz.hasMobilebind(openId, agentId);
+		}else {			
+			try {
+				userBiz.volidateCodeChecked(validateCode);
+				userInfoDO.setMobile(mobile);
+				userInfoDO.setOpenId(openId);
+				userInfoDO.setHeadImgUrl(headImgUrl);
+				userInfoDO.setAgentId(agentId);
+				userInfoDO.setNickName(nickName);
+				userBiz.initUser(userInfoDO);
+				userInfoDO.setUserStatus(UserStatusEnum.NORMAL.getUserStatus());
+				userInfoService.update(userInfoDO);
+				
+			} catch (Exception ex) {
+				logger.error(ex.getMessage());
+				return R.error("用户绑定失败");
+			}
 		}
 		UserAgent userAgent = convertor(userInfoDO);
 		// 向session中传入值
 		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
 		
-		return R.ok().put("userAgent", userAgent);
+		return R.ok().put("data", userAgent);
 	}
 	
 	/**
@@ -123,7 +132,8 @@ public class AppUserCtrl {
 	 * @return
 	 */
 	@PostMapping("bindExAccount")
-	public R bindExAccount(UserAgent userAgent ,@RequestBody UserExAccountRequest userExAccountRequest, UserVsExAccountDO userVsAccountDO) {
+	public R bindExAccount(UserAgent userAgent ,@RequestBody UserExAccountRequest userExAccountRequest, UserVsExAccountDO userVsAccountDO
+			, HttpServletRequest request) {
 		Long userId = userAgent.getUserId();
 		Long agentId = userAgent.getAgentId();
 		UserInfoDO userInfo = null;
@@ -138,19 +148,28 @@ public class AppUserCtrl {
 		}catch (BDException  ex) {
 			return R.error(ex.getMessage());
 		}
-		userBiz.addExAccountRecord(userInfo, userExAccountRequest);
+		UserExAccountVo vo = userBiz.addExAccountRecord(userInfo, userExAccountRequest);
+		userAgent.setExAccountList(vo.getExAccountList());
+		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
 		return R.ok();
 	}
 	
-	@GetMapping()
-	public UserInfoDO getUserInfoDO(UserAgent userAgent) {
-		return userInfoService.get(userAgent.getUserId());
+	@GetMapping
+	public R getUserInfoDO(UserAgent userAgent) {
+		logger.debug("userId:"+userAgent.getUserId());
+		Long userId = userAgent.getUserId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		List<UserInfoDO> list = userInfoService.list(map);
+		return R.ok().put("data",  list.get(0));
 	}
 	
 	@PutMapping("exAccount/turnOff/{id}")
 	public R turnOffExAccount(@PathVariable("id") Long id) {
 		UserVsExAccountDO currentRecord = userVsExAccountService.get(id);
 		currentRecord.setAllowed(IsAllowEnum.NO.getStatus());
+		currentRecord.setGmtModify(new Date());
+		userVsExAccountService.update(currentRecord);
 		return R.ok();
 	}
 
@@ -158,6 +177,8 @@ public class AppUserCtrl {
 	public R turnOnExAccount(@PathVariable("id") Long id) {
 		UserVsExAccountDO currentRecord = userVsExAccountService.get(id);
 		currentRecord.setAllowed(IsAllowEnum.YES.getStatus());
+		currentRecord.setGmtModify(new Date());
+		userVsExAccountService.update(currentRecord);
 		return R.ok();
 	}
 	
@@ -169,10 +190,10 @@ public class AppUserCtrl {
 	}
 	
 	@GetMapping("exAccount")
-	public List<UserVsExAccountDO> getExAccount(UserAgent userAgent) {
+	public R getExAccount(UserAgent userAgent) {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("userId", userAgent.getUserId());
-		return userVsExAccountService.list(map);
+		return R.ok().put("data", userVsExAccountService.list(map));
 	}
 	
 	@PutMapping("exAccount/{id}")
@@ -192,6 +213,15 @@ public class AppUserCtrl {
 		UserAgent userAgent = new UserAgent(); 
 		try {
 			PropertyUtils.copyProperties(userAgent, userInfo);
+			Long agentId = userInfo.getAgentId();
+			Long userId = userInfo.getUserId();
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("agentId", agentId);
+			List<UserVsExAccountDO> exAccountList = userVsExAccountService.list(map);
+			if(!exAccountList.isEmpty()) {
+				userAgent.setExAccountList(exAccountList);
+			}
 		} catch (Exception e) {
 			logger.error("对象转换失败");
 		}
