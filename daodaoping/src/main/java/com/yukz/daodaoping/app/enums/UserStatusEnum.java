@@ -1,6 +1,6 @@
 package com.yukz.daodaoping.app.enums;
 
-import java.util.Iterator;
+import java.util.*;
 
 import com.yukz.daodaoping.task.enums.PlatformEnum;
 import org.apache.commons.lang3.StringUtils;
@@ -57,5 +57,25 @@ public enum UserStatusEnum {
 			}
 		}
 		return null;
+	}
+
+	public static Map<String, String> toMap() {
+		Map<String, String> enumDataMap = new HashMap<String, String>();
+		for (UserStatusEnum c : values()) {
+			enumDataMap.put(c.getUserStatus(), c.getDesc());
+		}
+		return enumDataMap;
+	}
+
+	// 获取所有集合
+	public static List<Map<String,String>> toList() {
+		List<Map<String,String>> list = new ArrayList<>();
+		for (UserStatusEnum c : UserStatusEnum.values()) {
+			Map<String,String> map = new HashMap<>();
+			map.put("userStatus",c.getUserStatus());
+			map.put("desc",c.getDesc());
+			list.add(map);
+		}
+		return list;
 	}
 }
