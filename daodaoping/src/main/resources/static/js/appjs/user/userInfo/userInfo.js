@@ -32,7 +32,8 @@ function load() {
 							return {
 								//说明：传入后台的参数包括offset开始索引，limit步长，sort排序列，order：desc或者,以及所有列的键值对
 								limit: params.limit,
-								offset:params.offset
+								offset:params.offset,
+								queryWord:$('#queryWord').val()
 					           // name:$('#searchName').val(),
 					           // username:$('#searchName').val()
 							};
@@ -65,7 +66,10 @@ function load() {
 								},
 																{
 									field : 'headImgUrl', 
-									title : '用户头像' 
+									title : '用户头像' ,
+									formatter : function (value, row, index) {
+										return '<img src="'+value+'" style="width: 64px; height: 64px">';
+									}
 								},
 																{
 									field : 'scores', 
@@ -80,8 +84,8 @@ function load() {
 									title : '用户联系方式' 
 								},
 																{
-									field : 'userStatus', 
-									title : '用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用' 
+									field : 'userStatusDesc',
+									title : '用户状态'
 								},
 																{
 									field : 'agentId', 

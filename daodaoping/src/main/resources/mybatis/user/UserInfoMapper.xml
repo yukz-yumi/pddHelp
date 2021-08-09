@@ -22,6 +22,12 @@
 		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+				  <if test="queryWord != null and queryWord != ''">
+					and (
+					(nick_name like concat(concat('%',#{queryWord}),'%'))
+					or (mobile like concat(concat('%',#{queryWord}),'%'))
+					)
+				  </if>
 		  		</where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
@@ -51,6 +57,12 @@
 		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+				  <if test="queryWord != null and queryWord != ''">
+					  and (
+					  (nick_name like concat(concat('%',#{queryWord}),'%'))
+					  or (mobile like concat(concat('%',#{queryWord}),'%'))
+					  )
+				  </if>
 		  		</where>
 	</select>
 	 

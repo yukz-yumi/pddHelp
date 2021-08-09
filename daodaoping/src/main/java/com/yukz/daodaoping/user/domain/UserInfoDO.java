@@ -1,5 +1,7 @@
 package com.yukz.daodaoping.user.domain;
 
+import com.yukz.daodaoping.app.enums.UserStatusEnum;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -39,6 +41,8 @@ public class UserInfoDO implements Serializable {
 	private Date gmtCreate;
 	//修改时间
 	private Date gmtModify;
+	//用户状态描述
+	private String userStatusDesc;
 
 	/**
 	 * 设置：
@@ -183,5 +187,13 @@ public class UserInfoDO implements Serializable {
 	 */
 	public Date getGmtModify() {
 		return gmtModify;
+	}
+
+	public String getUserStatusDesc() {
+		return UserStatusEnum.getDesc(userStatus);
+	}
+
+	public void setUserStatusDesc(String userStatusDesc) {
+		this.userStatusDesc = userStatusDesc;
 	}
 }

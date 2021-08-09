@@ -243,3 +243,7 @@ DROP TABLE IF EXISTS `oa_notify`;
 DROP TABLE IF EXISTS `oa_notify_record`;
 DROP TABLE IF EXISTS `salary`;
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+INSERT INTO `sys_menu` VALUES (106, 0, '业务系统', '', '', 0, 'fa fa-gears', 30, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (107, 106, '会员管理', '/user/userInfo', 'user:userInfo:userInfo', 1, '', 3001, NULL, NULL, '100001');
