@@ -2,6 +2,7 @@ package com.yukz.daodaoping.app.enums;
 
 import java.util.Iterator;
 
+import com.yukz.daodaoping.task.enums.PlatformEnum;
 import org.apache.commons.lang3.StringUtils;
 
 public enum UserStatusEnum {
@@ -47,5 +48,14 @@ public enum UserStatusEnum {
 		}
 		return null;
 	}
-	
+
+	// 普通方法
+	public static String getDesc(String code) {
+		for (UserStatusEnum c : UserStatusEnum.values()) {
+			if (c.getUserStatus().equals(code)) {
+				return c.desc;
+			}
+		}
+		return null;
+	}
 }
