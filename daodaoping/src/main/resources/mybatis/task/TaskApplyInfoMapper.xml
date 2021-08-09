@@ -4,11 +4,11 @@
 <mapper namespace="com.yukz.daodaoping.task.dao.TaskApplyInfoDao">
 
 	<select id="get" resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
-		select `id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_numeber`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_apply_info where id = #{value}
+		select `id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_apply_info where id = #{value}
 	</select>
 
 	<select id="list" resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
-		select `id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_numeber`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_apply_info
+		select `id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_apply_info
         <where>  
 		  		  <if test="id != null and id != ''"> and id = #{id} </if>
 		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
@@ -16,7 +16,7 @@
 		  		  <if test="assistantType != null and assistantType != ''"> and assistant_type = #{assistantType} </if>
 		  		  <if test="command != null and command != ''"> and command = #{command} </if>
 		  		  <if test="taskNumber != null and taskNumber != ''"> and task_number = #{taskNumber} </if>
-		  		  <if test="completedNumeber != null and completedNumeber != ''"> and completed_numeber = #{completedNumeber} </if>
+		  		  <if test="completedNumber != null and completedNumber != ''"> and completed_number = #{completedNumber} </if>
 		  		  <if test="taskResult != null and taskResult != ''"> and task_result = #{taskResult} </if>
 		  		  <if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
 		  		  <if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
@@ -47,7 +47,7 @@
 		  		  <if test="assistantType != null and assistantType != ''"> and assistant_type = #{assistantType} </if>
 		  		  <if test="command != null and command != ''"> and command = #{command} </if>
 		  		  <if test="taskNumber != null and taskNumber != ''"> and task_number = #{taskNumber} </if>
-		  		  <if test="completedNumeber != null and completedNumeber != ''"> and completed_numeber = #{completedNumeber} </if>
+		  		  <if test="completedNumber != null and completedNumber != ''"> and completed_number = #{completedNumber} </if>
 		  		  <if test="taskResult != null and taskResult != ''"> and task_result = #{taskResult} </if>
 		  		  <if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
 		  		  <if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
@@ -66,7 +66,7 @@
 			`assistant_type`, 
 			`command`, 
 			`task_number`, 
-			`completed_numeber`, 
+			`completed_number`, 
 			`task_result`, 
 			`task_status`, 
 			`start_time`, 
@@ -82,7 +82,7 @@
 			#{assistantType}, 
 			#{command}, 
 			#{taskNumber}, 
-			#{completedNumeber}, 
+			#{completedNumber}, 
 			#{taskResult}, 
 			#{taskStatus}, 
 			#{startTime}, 
@@ -101,7 +101,7 @@
 			<if test="assistantType != null">`assistant_type` = #{assistantType}, </if>
 			<if test="command != null">`command` = #{command}, </if>
 			<if test="taskNumber != null">`task_number` = #{taskNumber}, </if>
-			<if test="completedNumeber != null">`completed_numeber` = #{completedNumeber}, </if>
+			<if test="completedNumber != null">`completed_number` = #{completedNumber}, </if>
 			<if test="taskResult != null">`task_result` = #{taskResult}, </if>
 			<if test="taskStatus != null">`task_status` = #{taskStatus}, </if>
 			<if test="startTime != null">`start_time` = #{startTime}, </if>

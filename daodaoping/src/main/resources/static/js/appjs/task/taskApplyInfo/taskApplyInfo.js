@@ -72,7 +72,7 @@ function load() {
 									title : '任务数量' 
 								},
 																{
-									field : 'completedNumeber', 
+									field : 'completedNumber', 
 									title : '已完成数量' 
 								},
 																{

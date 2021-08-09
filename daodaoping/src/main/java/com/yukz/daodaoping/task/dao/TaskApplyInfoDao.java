@@ -11,7 +11,7 @@ import org.apache.ibatis.annotations.Mapper;
  * 任务申请表
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-02 09:04:23
+ * @date 2021-08-09 10:36:56
  */
 @Mapper
 public interface TaskApplyInfoDao {

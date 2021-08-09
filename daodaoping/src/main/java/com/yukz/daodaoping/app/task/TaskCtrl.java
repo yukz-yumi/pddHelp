@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.app.task;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
+import com.yukz.daodaoping.app.common.AssisantTypeEnum;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
+import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.request.TaskApplyRequest;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
@@ -32,7 +37,9 @@ import com.yukz.daodaoping.task.service.TaskTypeInfoService;
 @RequestMapping("appInt/task/")
 @RestController
 public class TaskCtrl {
-
+	
+	private static final Logger logger = LoggerFactory.getLogger(TaskCtrl.class);
+	
 	public static final int LIMITED_INTERVAL = 10;
 
 	@Autowired
@@ -44,42 +51,24 @@ public class TaskCtrl {
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoDOService;
 	
-	@GetMapping("supplyPlatform")
-	public R getTaskTypeInfo(UserAgent userAgent) {
-		return R.ok().put("data", PlatformEnum.toMap());
+	
+
+	/**
+	 * 助力金额计算
+	 * @return
+	 */
+	@GetMapping("price/{taskId}/{num}")
+	public R taskAmoutCalculate(@PathVariable("taskId") Long taskId, @PathVariable("num") int num) {
+		 TaskTypeInfoDO taskTypeInfo = taskTypeInfoService.get(taskId);
+		 Integer price = taskTypeInfo.getPrice();
+		 BigDecimal priceDecimal = new BigDecimal(price);
+		 BigDecimal amountDecimal = priceDecimal.multiply(new BigDecimal(num));
+		 Map<String,Integer> result = new HashMap<String, Integer>();
+		 result.put("price",amountDecimal.intValue());
+		return R.ok().put("data", result);
 	}
 	
-	/**
-	 * 查询不同平台所支持的业务
-	 * @param agentId
-	 * @param platform
-	 * @param pageNum
-	 * @param pageSize
-	 * @param userAgent
-	 * @return
-	 */
-	@GetMapping("platform/{platform}/list")
-	public R getAllTaskType(@PathVariable("platform") String platform,UserAgent userAgent) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("agentId", userAgent.getAgentId());
-		map.put("platform", platform);
-		map.put("allowed", IsAllowEnum.YES.getStatus());
-		List<TaskTypeInfoDO> taskTypeInfoList = taskTypeInfoService.list(map);
-		return R.ok().put("data", taskTypeInfoList);
-	}
-
-	/**
-	 * TODO 助力金额计算
-	 * 
-	 * @param assistantNum
-	 * @return
-	 */
-	@PutMapping("price/{id}/{num}")
-	public String taskAmoutCalculate(@PathVariable("id") Long taskId, @PathVariable("num") int num) {
-		
-		return "";
-	}
-
+	
 	/**
 	 * 保存任务
 	 * 
@@ -91,14 +80,16 @@ public class TaskCtrl {
 			UserAgent userAgent) {
 		boolean flag = checkInternalLimited(taskAppleRequest);
 		if (!flag) {
-			throw new BDException("任务开始时间与当前时间的间隔必须大于10分钟");
+			return R.error("任务开始时间与当前时间的间隔必须大于10分钟");
 		}
 		try {
 			PropertyUtils.copyProperties(taskApplyInfoDO, taskAppleRequest);
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			return R.error("对象复制出现异常");
 		}
-		taskApplyInfoDO.setUserId(userAgent.getAgentId());
+		taskApplyInfoDO.setUserId(userAgent.getUserId());
+		taskApplyInfoDO.setAgentId(userAgent.getAgentId());
 		taskApplyInfoDO.setTaskStatus(TaskStatusEnum.SUSPEND.getStatus()); // 未支付时的任务为挂起
 		taskExecuteBiz.initTaskApplyInfo(taskApplyInfoDO);
 		return R.ok();
@@ -128,11 +119,15 @@ public class TaskCtrl {
 	public R taskcancel(@PathVariable("id") Long taskApplyInfoId) {
 		TaskApplyInfoDO taskApplyInfoDO = taskApplyInfoDOService.get(taskApplyInfoId);
 		String taskStatus = taskApplyInfoDO.getTaskStatus();
-		if (TaskStatusEnum.getEnumByStatus(taskStatus) != TaskStatusEnum.WAIT
-				&& TaskStatusEnum.getEnumByStatus(taskStatus) != TaskStatusEnum.SUSPEND) {
-			throw new BDException("当前任务状态不允许被取消");
+		// 幂等性检查
+		if(TaskStatusEnum.getEnumByStatus(taskStatus) == TaskStatusEnum.CANCEL) {
+			return R.ok();
+		}else if (TaskStatusEnum.getEnumByStatus(taskStatus) == TaskStatusEnum.PENDING
+				|| TaskStatusEnum.getEnumByStatus(taskStatus) == TaskStatusEnum.END) {
+			return R.error("当前任务无法取消");
+		}else {
+			taskExecuteBiz.cancel(taskApplyInfoDO);
 		}
-		taskExecuteBiz.cancel(taskApplyInfoDO);
 		return R.ok();
 	}
 
@@ -143,8 +138,8 @@ public class TaskCtrl {
 	 * @return
 	 */
 	@PostMapping("submit/{id}")
-	public R taskSubmit(@PathVariable("id") Long taskInfoId,UserAgent userAgent) {
-		TaskApplyInfoDO taskApplyInfo = taskApplyInfoDOService.get(taskInfoId);
+	public R taskSubmit(@PathVariable("id") Long taskApplyInfoId,UserAgent userAgent) {
+		TaskApplyInfoDO taskApplyInfo = taskApplyInfoDOService.get(taskApplyInfoId);
 		// 幂等性检查
 		if (TaskStatusEnum.getEnumByStatus(taskApplyInfo.getTaskStatus()) == TaskStatusEnum.WAIT) {
 			return R.ok();

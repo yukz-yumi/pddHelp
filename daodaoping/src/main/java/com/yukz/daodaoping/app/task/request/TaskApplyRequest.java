@@ -13,11 +13,13 @@ public class TaskApplyRequest {
 	
 	private String assistantType;
 	
-	private String command;
+	private boolean isAppointment;
+
+	private String command; // 抽象字段：link，command，picturelink
 	
-	private int taskNum;
-	
-	private int completedNum;
+	private Integer taskNumber;
+	//已完成数量
+	private Integer completedNumber;
 	
 	private String taskResult;
 	
@@ -27,7 +29,6 @@ public class TaskApplyRequest {
 	
 	private Date expireTime;
 	
-	private boolean isAppointment;
 
 	public Long getTaskTypeId() {
 		return taskTypeId;
@@ -53,20 +54,20 @@ public class TaskApplyRequest {
 		this.command = command;
 	}
 
-	public int getTaskNum() {
-		return taskNum;
+	public Integer getTaskNumber() {
+		return taskNumber;
 	}
 
-	public void setTaskNum(int taskNum) {
-		this.taskNum = taskNum;
+	public void setTaskNumber(Integer taskNumber) {
+		this.taskNumber = taskNumber;
 	}
 
-	public int getCompletedNum() {
-		return completedNum;
+	public Integer getCompletedNumber() {
+		return completedNumber;
 	}
 
-	public void setCompletedNum(int completedNum) {
-		this.completedNum = completedNum;
+	public void setCompletedNumber(Integer completedNumber) {
+		this.completedNumber = completedNumber;
 	}
 
 	public String getTaskResult() {
@@ -107,6 +108,11 @@ public class TaskApplyRequest {
 
 	public void setAppointment(boolean isAppointment) {
 		this.isAppointment = isAppointment;
+	}
+
+	public TaskApplyRequest() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
 	
