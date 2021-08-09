@@ -1,11 +1,13 @@
 package com.yukz.daodaoping.user.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.alibaba.fastjson.JSON;
+import com.yukz.daodaoping.app.enums.UserStatusEnum;
 import com.yukz.daodaoping.common.aspect.CleanData;
 import com.yukz.daodaoping.common.config.ConfigKey;
 import com.yukz.daodaoping.common.config.DataRedisKey;
@@ -47,7 +49,8 @@ public class UserInfoController {
 	
 	@GetMapping()
 	@RequiresPermissions("user:userInfo:userInfo")
-	String UserInfo(){
+	String UserInfo(Model model){
+		model.addAttribute("userStatusMap", UserStatusEnum.toList());
 	    return "user/userInfo/userInfo";
 	}
 	
@@ -74,6 +77,7 @@ public class UserInfoController {
 	String edit(@PathVariable("id") Long id,Model model){
 		UserInfoDO userInfo = userInfoService.get(id);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userStatusMap", UserStatusEnum.toList());
 	    return "user/userInfo/edit";
 	}
 	
@@ -85,6 +89,10 @@ public class UserInfoController {
 	@RequiresPermissions("user:userInfo:add")
 	@CleanData(DataRedisKey.REDIS_USER_INFO_DATA)//清除redis缓存
 	public R save( UserInfoDO userInfo){
+		Date now = new Date();
+		userInfo.setGmtCreate(now);
+		userInfo.setGmtModify(now);
+		userInfo.setAgentId(ConfigKey.agentId);
 		if(userInfoService.save(userInfo)>0){
 			setRedis();
 			return R.ok();
@@ -99,6 +107,8 @@ public class UserInfoController {
 	@RequiresPermissions("user:userInfo:edit")
 	@CleanData(DataRedisKey.REDIS_USER_INFO_DATA)//清除redis缓存
 	public R update( UserInfoDO userInfo){
+		Date now = new Date();
+		userInfo.setGmtModify(now);
 		userInfoService.update(userInfo);
 		setRedis();
 		return R.ok();
