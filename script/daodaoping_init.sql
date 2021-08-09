@@ -65,11 +65,11 @@ DROP TABLE IF EXISTS `ddp_task_apply_info`;
 CREATE TABLE `ddp_task_apply_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL COMMENT '用户编号',
-  `task_type_id` varchar(128) NOT NULL COMMENT '任务类型id',
+  `task_type_id` bigint(20) NOT NULL COMMENT '任务类型id',
   `assistant_type` varchar(128) NOT NULL COMMENT '助力方式',
   `command` varchar(2048) DEFAULT NULL COMMENT '任务指令',
   `task_number` int  NOT NULL COMMENT '任务数量',
-  `completed_numeber` int  DEFAULT NULL COMMENT '已完成数量',
+  `completed_number` int  DEFAULT NULL COMMENT '已完成数量',
   `task_result` varchar(16) DEFAULT NULL COMMENT '任务结果 uncompleted/completed',
   `task_status` varchar(16) DEFAULT 'suspend' COMMENT '任务状态 suspend/wait/pending/end/cancel',
   `start_time` datetime DEFAULT NULL COMMENT '任务开启时间',

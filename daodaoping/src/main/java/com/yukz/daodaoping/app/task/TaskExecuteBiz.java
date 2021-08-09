@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
@@ -59,10 +60,8 @@ public class TaskExecuteBiz {
 	public boolean initTaskApplyInfo(TaskApplyInfoDO taskApplyInfoDO) {
 		Date taskExpireTime = getTaskExpireTime(taskApplyInfoDO);
 		taskApplyInfoDO.setExpireTime(taskExpireTime);
+		taskApplyInfoDO.setGmtCreate(new Date());
 		int i = taskApplyInfoService.save(taskApplyInfoDO);
-		// 提交异步任务执行，将任务放入延迟队列
-//		String threadName = Thread.currentThread().getName();
-//		taskExecutor.submit(new SetTaskExecutionThread(threadName,taskApplyInfoDO,redissonClient,mqHandler));
 		return i >= 1 ? true : false ;
 	}
 	
@@ -94,7 +93,7 @@ public class TaskExecuteBiz {
 		if(taskApplyInfoDO.getExpireTime() != null) {
 			return taskApplyInfoDO.getExpireTime();
 		}
-		TaskTypeInfoDO taskTypeInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getId());
+		TaskTypeInfoDO taskTypeInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getTaskTypeId());
 		int interval = taskTypeInfoDo.getExpirtTime();
 		Date startTime = taskApplyInfoDO.getStartTime();
 		Calendar cal = Calendar.getInstance();
@@ -126,6 +125,7 @@ public class TaskExecuteBiz {
 		}else if(TaskStatusEnum.getEnumByStatus(taskStatus) == TaskStatusEnum.SUSPEND) {
 			taskApplyInfoDO.setTaskStatus(TaskStatusEnum.CANCEL.getStatus());
 		}
+		taskApplyInfoDO.setGmtModify(new Date());
 		int i = taskApplyInfoService.update(taskApplyInfoDO);
 		return i >= 1 ? true : false ;
 	}

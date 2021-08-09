@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-04 11:07:00
+ * @date 2021-08-09 10:36:56
  */
 public class TaskApplyInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class TaskApplyInfoDO implements Serializable {
 	//用户编号
 	private Long userId;
 	//任务类型id
-	private String taskTypeId;
+	private Long taskTypeId;
 	//助力方式
 	private String assistantType;
 	//任务指令
@@ -28,7 +28,7 @@ public class TaskApplyInfoDO implements Serializable {
 	//任务数量
 	private Integer taskNumber;
 	//已完成数量
-	private Integer completedNumeber;
+	private Integer completedNumber;
 	//任务结果 uncompleted/completed
 	private String taskResult;
 	//任务状态 suspend/wait/pending/end/cancel
@@ -71,13 +71,13 @@ public class TaskApplyInfoDO implements Serializable {
 	/**
 	 * 设置：任务类型id
 	 */
-	public void setTaskTypeId(String taskTypeId) {
+	public void setTaskTypeId(Long taskTypeId) {
 		this.taskTypeId = taskTypeId;
 	}
 	/**
 	 * 获取：任务类型id
 	 */
-	public String getTaskTypeId() {
+	public Long getTaskTypeId() {
 		return taskTypeId;
 	}
 	/**
@@ -119,14 +119,14 @@ public class TaskApplyInfoDO implements Serializable {
 	/**
 	 * 设置：已完成数量
 	 */
-	public void setCompletedNumeber(Integer completedNumeber) {
-		this.completedNumeber = completedNumeber;
+	public void setCompletedNumber(Integer completedNumber) {
+		this.completedNumber = completedNumber;
 	}
 	/**
 	 * 获取：已完成数量
 	 */
-	public Integer getCompletedNumeber() {
-		return completedNumeber;
+	public Integer getCompletedNumber() {
+		return completedNumber;
 	}
 	/**
 	 * 设置：任务结果 uncompleted/completed
