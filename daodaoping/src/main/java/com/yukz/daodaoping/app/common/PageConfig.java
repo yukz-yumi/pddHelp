@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.app.common;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
+import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.enums.PlatformEnum;
@@ -25,7 +27,7 @@ public class PageConfig {
 	private TaskTypeInfoService taskTypeInfoService;
 	
 	@GetMapping("supplyPlatform")
-	public R getTaskTypeInfo(UserAgent userAgent) {
+	public R getTaskTypeInfo() {
 		return R.ok().put("data", PlatformEnum.toMap());
 	}
 	
@@ -38,10 +40,10 @@ public class PageConfig {
 	 * @param userAgent
 	 * @return
 	 */
-	@GetMapping("platform/{platform}/list")
-	public R getAllTaskType(@PathVariable("platform") String platform,UserAgent userAgent) {
+	@GetMapping("platform/{platform}/list/{agentId}")
+	public R getAllTaskType(@PathVariable("platform") String platform,@PathVariable("agentId") Long agentId) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("agentId", userAgent.getAgentId());
+		map.put("agentId", agentId);
 		map.put("platform", platform);
 		map.put("allowed", IsAllowEnum.YES.getStatus());
 		map.put("sort", "id");
@@ -51,8 +53,37 @@ public class PageConfig {
 	}
 	
 	@GetMapping("assisantType")
-	public R getAssistantTypeList(UserAgent userAgent) {
+	public R getAssistantTypeList() {
 		return R.ok().put("data", AssisantTypeEnum.toList());
+	}
+	
+	@GetMapping("taskStatus")
+	public R getTaskStatusList() {
+		return R.ok().put("data", TaskStatusEnum.toList());
+	}
+	
+	@GetMapping("timeScope")
+	public R getTimeScopeList() {
+		return R.ok().put("data", TimeScopeEnum.toList());
+	}
+	
+	@GetMapping("taskType/{agentId}")
+	public R getTaskTypeList(@PathVariable("agentId") Long agentId) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("agentId", agentId);
+		map.put("allowed", "yes");
+		List<Map<String,String>> resultMapList = new ArrayList<Map<String,String>>();
+		List<TaskTypeInfoDO> list  = taskTypeInfoService.list(map);
+		if(list.isEmpty()) {
+			return  R.ok().put("data", list);
+		}
+		for (TaskTypeInfoDO item : list) {
+			Map<String,String> typeMap = new HashMap<String, String>();
+			typeMap.put("code", item.getTaskType());
+			typeMap.put("desc", item.getTaskTypeDesc());
+			resultMapList.add(typeMap);
+		}
+		return R.ok().put("data", resultMapList);
 	}
 	
 }

@@ -3,98 +3,111 @@
 
 <mapper namespace="com.yukz.daodaoping.task.dao.TaskApplyInfoDao">
 
-	<select id="get" resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
-		select `id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_apply_info where id = #{value}
+	<select id="get"
+		resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
+		select
+		`id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify`
+		from ddp_task_apply_info where id = #{value}
 	</select>
 
-	<select id="list" resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
-		select `id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_task_apply_info
-        <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
-		  		  <if test="taskTypeId != null and taskTypeId != ''"> and task_type_id = #{taskTypeId} </if>
-		  		  <if test="assistantType != null and assistantType != ''"> and assistant_type = #{assistantType} </if>
-		  		  <if test="command != null and command != ''"> and command = #{command} </if>
-		  		  <if test="taskNumber != null and taskNumber != ''"> and task_number = #{taskNumber} </if>
-		  		  <if test="completedNumber != null and completedNumber != ''"> and completed_number = #{completedNumber} </if>
-		  		  <if test="taskResult != null and taskResult != ''"> and task_result = #{taskResult} </if>
-		  		  <if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
-		  		  <if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
-		  		  <if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
-		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
-		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
-		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
-		  		</where>
-        <choose>
-            <when test="sort != null and sort.trim() != ''">
-                order by ${sort} ${order}
-            </when>
+	<select id="list"
+		resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
+		select
+		`id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify`
+		from ddp_task_apply_info
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="taskTypeId != null and taskTypeId != ''"> and task_type_id = #{taskTypeId} </if>
+			<if test="assistantType != null and assistantType != ''"> and assistant_type = #{assistantType} </if>
+			<if test="command != null and command != ''"> and command = #{command} </if>
+			<if test="taskNumber != null and taskNumber != ''"> and task_number = #{taskNumber} </if>
+			<if test="completedNumber != null and completedNumber != ''"> and completed_number = #{completedNumber} </if>
+			<if test="taskResult != null and taskResult != ''"> and task_result = #{taskResult} </if>
+			<if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
+			<if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
+			<if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		</where>
+		<if test="endTime!=null">
+               and DATE_FORMAT(gmt_modify,'%Y-%m-%d')  <![CDATA[ >=  ]]>DATE_FORMAT(#{endTime},'%Y-%m-%d')
+        </if>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
 			<otherwise>
-                order by id desc
+				order by id desc
 			</otherwise>
-        </choose>
+		</choose>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
+		
 	</select>
-	
- 	<select id="count" resultType="int">
+
+	<select id="count" resultType="int">
 		select count(*) from ddp_task_apply_info
-		 <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
-		  		  <if test="taskTypeId != null and taskTypeId != ''"> and task_type_id = #{taskTypeId} </if>
-		  		  <if test="assistantType != null and assistantType != ''"> and assistant_type = #{assistantType} </if>
-		  		  <if test="command != null and command != ''"> and command = #{command} </if>
-		  		  <if test="taskNumber != null and taskNumber != ''"> and task_number = #{taskNumber} </if>
-		  		  <if test="completedNumber != null and completedNumber != ''"> and completed_number = #{completedNumber} </if>
-		  		  <if test="taskResult != null and taskResult != ''"> and task_result = #{taskResult} </if>
-		  		  <if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
-		  		  <if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
-		  		  <if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
-		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
-		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
-		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
-		  		</where>
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="taskTypeId != null and taskTypeId != ''"> and task_type_id = #{taskTypeId} </if>
+			<if test="assistantType != null and assistantType != ''"> and assistant_type = #{assistantType} </if>
+			<if test="command != null and command != ''"> and command = #{command} </if>
+			<if test="taskNumber != null and taskNumber != ''"> and task_number = #{taskNumber} </if>
+			<if test="completedNumber != null and completedNumber != ''"> and completed_number = #{completedNumber} </if>
+			<if test="taskResult != null and taskResult != ''"> and task_result = #{taskResult} </if>
+			<if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
+			<if test="startTime != null and startTime != ''"> and start_time = #{startTime} </if>
+			<if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		</where>
 	</select>
-	 
-	<insert id="save" parameterType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO" useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="save"
+		parameterType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into ddp_task_apply_info
 		(
-			`user_id`, 
-			`task_type_id`, 
-			`assistant_type`, 
-			`command`, 
-			`task_number`, 
-			`completed_number`, 
-			`task_result`, 
-			`task_status`, 
-			`start_time`, 
-			`expire_time`, 
-			`agent_id`, 
-			`gmt_create`, 
-			`gmt_modify`
+		`user_id`,
+		`task_type_id`,
+		`assistant_type`,
+		`command`,
+		`task_number`,
+		`completed_number`,
+		`task_result`,
+		`task_status`,
+		`start_time`,
+		`expire_time`,
+		`agent_id`,
+		`gmt_create`,
+		`gmt_modify`
 		)
 		values
 		(
-			#{userId}, 
-			#{taskTypeId}, 
-			#{assistantType}, 
-			#{command}, 
-			#{taskNumber}, 
-			#{completedNumber}, 
-			#{taskResult}, 
-			#{taskStatus}, 
-			#{startTime}, 
-			#{expireTime}, 
-			#{agentId}, 
-			#{gmtCreate}, 
-			#{gmtModify}
+		#{userId},
+		#{taskTypeId},
+		#{assistantType},
+		#{command},
+		#{taskNumber},
+		#{completedNumber},
+		#{taskResult},
+		#{taskStatus},
+		#{startTime},
+		#{expireTime},
+		#{agentId},
+		#{gmtCreate},
+		#{gmtModify}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
-		update ddp_task_apply_info 
+
+	<update id="update"
+		parameterType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
+		update ddp_task_apply_info
 		<set>
 			<if test="userId != null">`user_id` = #{userId}, </if>
 			<if test="taskTypeId != null">`task_type_id` = #{taskTypeId}, </if>
@@ -112,14 +125,15 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<delete id="remove">
 		delete from ddp_task_apply_info where id = #{value}
 	</delete>
-	
+
 	<delete id="batchRemove">
-		delete from ddp_task_apply_info where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
+		delete from ddp_task_apply_info where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
 			#{id}
 		</foreach>
 	</delete>

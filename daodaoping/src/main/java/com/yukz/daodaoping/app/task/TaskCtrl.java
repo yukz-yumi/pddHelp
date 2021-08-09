@@ -1,16 +1,22 @@
 package com.yukz.daodaoping.app.task;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Case;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.deser.impl.CreatorCandidate.Param;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
@@ -155,35 +162,41 @@ public class TaskCtrl {
 		return R.ok();
 	}
 
-	@GetMapping("taskType/{typeId}/{pageNum}/{pageSize}")
-	public PageInfo<TaskApplyInfoDO> getTaskApplyInfoDOListByTaskType(UserAgent userAgent ,
-			@PathVariable("typeId") Long typeId, @PathVariable("pageNum") int pageNum,
-			@PathVariable("pageSize") int pageSize) {
+	@GetMapping("list")
+	public R getTaskApplyInfoDOListByTaskType(UserAgent userAgent ,
+			HttpServletRequest request) {
 		Map<String,Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("user_id", userAgent.getUserId());
-		paramMap.put("agent_id", userAgent.getAgentId());
-		paramMap.put("task_type_id", typeId);
+		Long agentId = userAgent.getAgentId();
+		String taskType = request.getParameter("type");
+		String taskStatus = request.getParameter("status");
+		String timeScope = request.getParameter("scope");
+		int pageNum =Integer.valueOf(request.getParameter("pageNum"));
+		int pageSize =Integer.valueOf(request.getParameter("pageSize"));
+		if(StringUtils.isNotBlank(taskType)) {
+			Map<String,Object> param = new HashMap<String, Object>();
+			param.put("taskType", taskType);
+			param.put("agentId", agentId);
+			TaskTypeInfoDO taskInfo = taskTypeInfoService.list(param).get(0);
+			paramMap.put("taskTypeId", taskInfo.getId());
+//			paramMap.put("agentId", agentId);
+		}
+		if(StringUtils.isNotBlank(taskStatus)) {
+			paramMap.put("taskStatus", taskStatus);
+		}
+		 Date endDate = new Date();
+		if(StringUtils.isNotBlank(timeScope)) {
+			  endDate = getEndTime(timeScope);
+		}else {
+			  endDate = getEndTime("week");
+		}
+		paramMap.put("endTime", endDate);
+		paramMap.put("userId", userAgent.getUserId());
+		paramMap.put("agentId", agentId);
 		List<TaskApplyInfoDO> list = taskApplyInfoDOService.list(paramMap);
 		PageHelper.startPage(pageNum, pageSize);
 		PageInfo<TaskApplyInfoDO> pageResult = new PageInfo<TaskApplyInfoDO>(list);
-		return pageResult; 
-	}
-	
-	@GetMapping("taskStatus/{taskStatus}/{pageNum}/{pageSize}")
-	public PageInfo<TaskApplyInfoDO> getTaskApplyInfoDOLisByTaskStatus(UserAgent userAgent,
-			@PathVariable("taskStatus") String taskStatus, @PathVariable("pageNum") int pageNum,
-			@PathVariable("pageSize") int pageSize) {
-		Map<String,Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("user_id", userAgent.getUserId());
-		paramMap.put("agent_id", userAgent.getAgentId());
-		paramMap.put("task_status", taskStatus);
-		List<TaskApplyInfoDO> list = taskApplyInfoDOService.list(paramMap);
-		PageHelper.startPage(pageNum, pageSize);
-		PageInfo<TaskApplyInfoDO> pageResult = new PageInfo<TaskApplyInfoDO>(list);
-		return pageResult; 
-	}
-	
-	
+		return R.ok().put("data", pageResult); 
+	}	
 	
 	
 
@@ -193,7 +206,7 @@ public class TaskCtrl {
 	 * @param taskAppleRequest
 	 * @return
 	 */
-	public boolean checkInternalLimited(TaskApplyRequest taskAppleRequest) {
+	private boolean checkInternalLimited(TaskApplyRequest taskAppleRequest) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		if (!taskAppleRequest.isAppointment()) {
@@ -212,5 +225,27 @@ public class TaskCtrl {
 		}
 		return true;
 	}
-
+	
+	public Date getEndTime(String scope) {
+		Calendar cal = Calendar.getInstance();
+		switch (scope) {
+		case "week": // 一周内
+			cal.add(Calendar.DAY_OF_MONTH, -7);
+			break;
+		case "month": //一个月
+			cal.add(Calendar.MONTH, -1);
+			break;
+		case "quarter": 
+			cal.add(Calendar.MONTH, -3);
+			break;
+		case "halfyear":
+			cal.add(Calendar.MONTH, -6);
+			break;
+		default:
+			cal.add(Calendar.DAY_OF_MONTH, -7);
+			break;
+		}
+		return cal.getTime();
+	}
+	
 }

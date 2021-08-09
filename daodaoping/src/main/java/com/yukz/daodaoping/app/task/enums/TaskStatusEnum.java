@@ -1,6 +1,13 @@
 package com.yukz.daodaoping.app.task.enums;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
+
+import com.yukz.daodaoping.app.common.AssisantTypeEnum;
 
 public enum TaskStatusEnum {
 	
@@ -46,6 +53,17 @@ public enum TaskStatusEnum {
 			}
 		}
 		return null;
+	}
+	
+	public static List<Map<String,String>> toList(){
+		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
+		for (TaskStatusEnum item : TaskStatusEnum.values()) {
+			Map<String,String> map = new HashMap<String, String>();
+			map.put("status", item.getStatus());
+			map.put("desc", item.getDesc());
+			list.add(map);
+		}
+		return list;
 	}
 	
 }
