@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yukz.daodaoping.discount.dao.TaskDiscountInfoDao">
+
+	<select id="get" resultType="com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO">
+		select `id`,`discount_config_id`,`task_id`,`discount_rate`,`allowed`,`gmt_create`,`gmt_modify` from ddp_task_discount_info where id = #{value}
+	</select>
+
+	<select id="list" resultType="com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO">
+		select `id`,`discount_config_id`,`task_id`,`discount_rate`,`allowed`,`gmt_create`,`gmt_modify` from ddp_task_discount_info
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="discountConfigId != null and discountConfigId != ''"> and discount_config_id = #{discountConfigId} </if>
+		  		  <if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
+		  		  <if test="discountRate != null and discountRate != ''"> and discount_rate = #{discountRate} </if>
+		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ddp_task_discount_info
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="discountConfigId != null and discountConfigId != ''"> and discount_config_id = #{discountConfigId} </if>
+		  		  <if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
+		  		  <if test="discountRate != null and discountRate != ''"> and discount_rate = #{discountRate} </if>
+		  		  <if test="allowed != null and allowed != ''"> and allowed = #{allowed} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ddp_task_discount_info
+		(
+			`discount_config_id`, 
+			`task_id`, 
+			`discount_rate`, 
+			`allowed`, 
+			`gmt_create`, 
+			`gmt_modify`
+		)
+		values
+		(
+			#{discountConfigId}, 
+			#{taskId}, 
+			#{discountRate}, 
+			#{allowed}, 
+			#{gmtCreate}, 
+			#{gmtModify}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO">
+		update ddp_task_discount_info 
+		<set>
+			<if test="discountConfigId != null">`discount_config_id` = #{discountConfigId}, </if>
+			<if test="taskId != null">`task_id` = #{taskId}, </if>
+			<if test="discountRate != null">`discount_rate` = #{discountRate}, </if>
+			<if test="allowed != null">`allowed` = #{allowed}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ddp_task_discount_info where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ddp_task_discount_info where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>

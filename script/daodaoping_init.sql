@@ -286,3 +286,35 @@ CREATE TABLE `ddp_feedback_info` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='用户反馈记录';
 
 
+-- ----------------------------
+-- Table structure for `ddp_discount_config`
+-- ----------------------------
+DROP TABLE IF EXISTS `ddp_discount_config`;
+CREATE TABLE `ddp_discount_config` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `discount_name` varchar(64)  NOT NULL COMMENT '活动编号不对客户端展示',
+  `start_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `end_time` datetime DEFAULT NULL COMMENT '修改时间',
+  `discount_status` varchar(16) NULL NULL COMMENT 'upcoming，ongoing，end(此状态可以重新开启)，expired(不能再开始)',
+  `agent_id` bigint(8)  NOT NULL COMMENT '机构编号',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modify` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='折扣配置表';
+
+
+-- ----------------------------
+-- Table structure for `ddp_task_discount_info`
+-- ----------------------------
+DROP TABLE IF EXISTS `ddp_task_discount_info`;
+CREATE TABLE `ddp_task_discount_info` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `discount_config_id` bigint(20)  NOT NULL COMMENT '活动编号不对客户端展示',
+  `task_id` bigint(20)  NOT NULL COMMENT '任务编号',
+  `discount_rate` int  NOT NULL COMMENT '活动编号不对客户端展示',
+  `allowed` varchar(8)  NOT NULL COMMENT '是否可用',
+  `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
+  `gmt_modify` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='任务折扣表';
+

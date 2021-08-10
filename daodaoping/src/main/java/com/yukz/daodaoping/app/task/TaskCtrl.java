@@ -139,26 +139,15 @@ public class TaskCtrl {
 	}
 
 	/**
-	 * 任务提交：生成订单并更新任务状态，并计算任务过期时间
-	 * 
+	 * 任务提交：生成订单->生成支付参数->等待支付结果->用户支付
+	 * 	生成任务执行计划<-更新任务状态<-更新订单状态<-更新支付结果
 	 * @param tasksubmit
 	 * @return
 	 */
 	@PostMapping("submit/{id}")
 	public R taskSubmit(@PathVariable("id") Long taskApplyInfoId,UserAgent userAgent) {
 		TaskApplyInfoDO taskApplyInfo = taskApplyInfoDOService.get(taskApplyInfoId);
-		// 幂等性检查
-		if (TaskStatusEnum.getEnumByStatus(taskApplyInfo.getTaskStatus()) == TaskStatusEnum.WAIT) {
-			return R.ok();
-		}
-		try {
-			// TODO 调用支付接口
-			// 调用成功后，更新任务状态
-			taskApplyInfo.setTaskStatus(TaskStatusEnum.WAIT.getStatus());
-			taskApplyInfoDOService.update(taskApplyInfo);
-		} catch (BDException ex) {
-			return R.error("支付失败,原因:" + ex.getMessage());
-		}
+		
 		return R.ok();
 	}
 
