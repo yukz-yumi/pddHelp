@@ -150,7 +150,7 @@ CREATE TABLE `ddp_fund_transfer_info` (
 DROP TABLE IF EXISTS `ddp_refund_info`;
 CREATE TABLE `ddp_refund_info` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `refund_id` bigint(20) NOT NULL COMMENT '退费id',
+  `order_id` bigint(20) NOT NULL COMMENT '退费id',
   `task_id` bigint(20) NOT NULL COMMENT '退费任务id',
   `refund_amount` bigint(20) NOT NULL COMMENT '退费金额',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',

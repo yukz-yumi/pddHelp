@@ -52,7 +52,7 @@ function load() {
 									title : '' 
 								},
 																{
-									field : 'refundId', 
+									field : 'orderId', 
 									title : '退费id' 
 								},
 																{

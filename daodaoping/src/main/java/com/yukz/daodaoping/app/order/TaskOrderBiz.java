@@ -3,18 +3,23 @@ package com.yukz.daodaoping.app.order;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.yukz.daodaoping.app.enums.IsAllowEnum;
 import com.yukz.daodaoping.common.SerialNumGenerator;
+import com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO;
+import com.yukz.daodaoping.discount.service.TaskDiscountInfoService;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.service.TaskTypeInfoService;
-import com.yukz.daodaoping.user.service.UserInfoService;
 
 /**
  * 任务订单处理类
@@ -40,6 +45,9 @@ public class TaskOrderBiz {
 	@Autowired
 	private SerialNumGenerator generator;
 	
+	@Autowired
+	private TaskDiscountInfoService taskDiscountInfoService;
+	
 	public OrderInfoDO initOrder(TaskApplyInfoDO taskApplyInfo) {
 		OrderInfoDO item = new OrderInfoDO();
 		Long orderId =Long.valueOf(generator.getSerialBizId(prefix, TIMEFORMAT, 4));
@@ -49,13 +57,15 @@ public class TaskOrderBiz {
 		item.setTaskId(taskApplyInfo.getId());
 		Long totalAmount = priceCount(taskApplyInfo);
 		item.setTotalAmount(totalAmount);
-		setOrderExpireTime(taskApplyInfo);
 		item.setOrderStatus(OrderEnum.UNPAID.getCode());
+		item.setGmtCreate(new Date());
+		getDiscountPrice(taskApplyInfo.getTaskTypeId(),item);
+		setOrderExpireTime(item);
 		orderInfoService.save(item);
 		return item;
 	}
 	
-	public Long priceCount (TaskApplyInfoDO taskApplyInfo) {
+	private Long priceCount (TaskApplyInfoDO taskApplyInfo) {
 		Long taskTypeId = taskApplyInfo.getTaskTypeId();
 		TaskTypeInfoDO taskTypeInfo = taskTypeInfoService.get(taskTypeId);
 		int price = taskTypeInfo.getPrice();
@@ -64,16 +74,29 @@ public class TaskOrderBiz {
 		return totalAmount.longValue();
 	}
 	
-	public void setOrderExpireTime (TaskApplyInfoDO taskApplyInfo) {
+	private void setOrderExpireTime (OrderInfoDO item) {
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date());
+		cal.setTime(item.getGmtCreate());
 		cal.add(Calendar.HOUR, ORDER_DELAY_CLOSE_HOURS);
-		taskApplyInfo.setExpireTime(cal.getTime());
+		item.setExpireTime(cal.getTime());
 	}
 	
-	public void getOrderDiscountInfo(TaskApplyInfoDO taskApplyInfo) {
-		Long taskId = taskApplyInfo.getId();
-		
+	private void getDiscountPrice(Long taskTypeId,OrderInfoDO orderInfoDO) {
+		Map<String,Object> query = new HashMap<String,Object>();
+		query.put("taskId", taskTypeId);
+		query.put("allowed", IsAllowEnum.YES.getStatus());
+		List<TaskDiscountInfoDO> discountList = taskDiscountInfoService.list(query);
+		int DiscountRate = 0;
+		if(!discountList.isEmpty()) {
+			DiscountRate = discountList.get(0).getDiscountRate();	
+		}
+		Long totalAmount = orderInfoDO.getTotalAmount();
+		Integer subPrice = new BigDecimal(totalAmount).multiply(new BigDecimal(DiscountRate/100))
+				.intValue();
+		orderInfoDO.setDiscount(subPrice);
+		Long paymentPrice = new BigDecimal(orderInfoDO.getTotalAmount())
+				.subtract(new BigDecimal(orderInfoDO.getDiscount())).longValue();
+		orderInfoDO.setPaymentAmount(paymentPrice);
 	}
 	
 }

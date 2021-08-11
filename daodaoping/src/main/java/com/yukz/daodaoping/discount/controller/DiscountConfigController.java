@@ -5,21 +5,20 @@ import java.util.Map;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.yukz.daodaoping.common.utils.PageUtils;
+import com.yukz.daodaoping.common.utils.Query;
+import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.discount.domain.DiscountConfigDO;
 import com.yukz.daodaoping.discount.service.DiscountConfigService;
-import com.bootdo.common.utils.PageUtils;
-import com.bootdo.common.utils.Query;
-import com.bootdo.common.utils.R;
 
 /**
  * 折扣配置表

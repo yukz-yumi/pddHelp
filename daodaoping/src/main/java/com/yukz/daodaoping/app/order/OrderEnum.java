@@ -8,7 +8,7 @@ import java.util.Map;
 public enum OrderEnum {
 	
 	UNPAID("0","unpaid","未支付"),
-	PAYING("1","paying","支付中"),
+	PAYING("1","paying","支付中"), 
 	PAID("2","paid","已支付"),
 	EXPIRED("3","expired","已过期"),
 	CANCELED("4","canceled","已取消");

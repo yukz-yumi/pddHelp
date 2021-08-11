@@ -7,7 +7,11 @@ package com.yukz.daodaoping.common.amqp;
  */
 public class MqConstants {
 	
-	public static final String  DELAY_TASK_EXECUTION_QUEUE = "delay_task_execution.queue";
+	public static final String  DELAY_TASK_EXECUTION_QUEUE = "delay_task_execution_queue";
 	
 	public static final String DELAY_DISPOSE_ROUTER_KEY = "delay_dispose_router";
+	
+	public static final String DELAY_ORDER_EXPIRE_ROUTER_KEY = "delay_order_expire_key";
+	
+//	public static final String  DELAY_ORDER_EXPIRE_QUEUE = "delay_order_expire_queue";
 }

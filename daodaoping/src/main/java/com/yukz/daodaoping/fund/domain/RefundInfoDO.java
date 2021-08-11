@@ -6,11 +6,11 @@ import java.util.Date;
 
 
 /**
- * 退款记录表
  * 
- * @author micezhao
+ * 
+ * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-07-27 07:51:04
+ * @date 2021-08-11 11:00:13
  */
 public class RefundInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -18,7 +18,7 @@ public class RefundInfoDO implements Serializable {
 	//
 	private Long id;
 	//退费id
-	private Long refundId;
+	private Long orderId;
 	//退费任务id
 	private Long taskId;
 	//退费金额
@@ -53,14 +53,14 @@ public class RefundInfoDO implements Serializable {
 	/**
 	 * 设置：退费id
 	 */
-	public void setRefundId(Long refundId) {
-		this.refundId = refundId;
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 	/**
 	 * 获取：退费id
 	 */
-	public Long getRefundId() {
-		return refundId;
+	public Long getOrderId() {
+		return orderId;
 	}
 	/**
 	 * 设置：退费任务id

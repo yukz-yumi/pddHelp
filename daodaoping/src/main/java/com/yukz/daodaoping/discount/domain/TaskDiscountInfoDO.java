@@ -19,7 +19,7 @@ public class TaskDiscountInfoDO implements Serializable {
 	private Long id;
 	//活动编号不对客户端展示
 	private Long discountConfigId;
-	//任务编号
+	//任务类型编号
 	private Long taskId;
 	//活动编号不对客户端展示
 	private Integer discountRate;

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
 import com.yukz.daodaoping.common.exception.BDException;
+import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
@@ -37,6 +38,7 @@ public class TaskExecuteBiz {
 	// 接受延迟任务的处理
 	// 取消任务：是否申请退款
 	
+	private static final int TASK_DELAY_MIN = 20;
 	
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoService;
@@ -58,13 +60,16 @@ public class TaskExecuteBiz {
 	 * @return
 	 */
 	public boolean initTaskApplyInfo(TaskApplyInfoDO taskApplyInfoDO) {
-		Date taskExpireTime = getTaskExpireTime(taskApplyInfoDO);
-		taskApplyInfoDO.setExpireTime(taskExpireTime);
 		taskApplyInfoDO.setGmtCreate(new Date());
+		if(taskApplyInfoDO.getStartTime() != null ) {
+			Date taskExpireTime = getTaskExpireTime(taskApplyInfoDO);
+			taskApplyInfoDO.setExpireTime(taskExpireTime);			
+		}
 		int i = taskApplyInfoService.save(taskApplyInfoDO);
 		return i >= 1 ? true : false ;
 	}
 	
+		
 	public boolean editTaskApplyInfo(TaskApplyInfoDO taskApplyInfoDO ) {
 		String taskStatus = taskApplyInfoDO.getTaskStatus();
 		Date taskExpireTime = getTaskExpireTime(taskApplyInfoDO);
