@@ -5,7 +5,6 @@ public class FundRequest {
 	private Long orderId;
 	
 	private Long taskId;
-	
 	// 用户id
 	private Long userId;
 	// 机构编号
@@ -87,6 +86,10 @@ public class FundRequest {
 		this.transType = transType;
 		this.fundAmount = fundAmount;
 		this.transStatus = transStatus;
+	}
+	public FundRequest() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	
 	

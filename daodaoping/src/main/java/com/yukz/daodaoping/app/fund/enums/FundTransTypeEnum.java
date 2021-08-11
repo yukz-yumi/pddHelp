@@ -1,6 +1,8 @@
 package com.yukz.daodaoping.app.fund.enums;
 
-public enum FundTransType {
+import org.apache.commons.lang3.StringUtils;
+
+public enum FundTransTypeEnum {
 	
 	FUND_IN("fund_in","支付"),
 	FUND_OUT("fund_out","提现"),
@@ -26,9 +28,22 @@ public enum FundTransType {
 		this.desc = desc;
 	}
 
-	private FundTransType(String type, String desc) {
+	private FundTransTypeEnum(String type, String desc) {
 		this.type = type;
 		this.desc = desc;
+	}
+	
+	public static FundTransTypeEnum getByType(String type) {
+		if(StringUtils.isBlank(type)) {
+			return null;
+		}else {
+			for (FundTransTypeEnum item : FundTransTypeEnum.values()) {
+				if(StringUtils.equals(item.getDesc(), type)) {
+					return item;
+				}
+			}
+		}
+		return null;
 	}
 	
 	
