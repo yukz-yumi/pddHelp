@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import org.apache.velocity.runtime.directive.Foreach;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
+import com.yukz.daodaoping.common.amqp.AmqpHandler;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 
@@ -38,7 +38,7 @@ public class DailyTaskSchedule {
 	private RedissonClient redissonClient;
 
 	@Autowired
-	private RabbitMqHandler mqHandler;
+	private AmqpHandler mqHandler;
 
 	public void dailyTaskScanner() {
 		Map<String, Object> paramMap = new HashMap<String, Object>();

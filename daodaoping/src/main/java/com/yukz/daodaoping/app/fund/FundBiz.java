@@ -112,17 +112,19 @@ public class FundBiz {
 	 */
 	public String fundParamGenerator(FundTransferInfoDO fundTransfer) {
 		String paymentParam = "<xml>\n"
-				+ "   <return_code><![CDATA[SUCCESS]]></return_code>\n"
-				+ "   <return_msg><![CDATA[OK]]></return_msg>\n"
-				+ "   <appid><![CDATA[wx2421b1c4370ec43b]]></appid>\n"
-				+ "   <sub_appid><![CDATA[wx2421b1c4370ec11b]]></sub_appid>\n"
-				+ "   <mch_id><![CDATA[10000100]]></mch_id>\n"
-				+ "   <sub_mch_id>![CDATA[10000101]]></sub_mch_id>\n"
-				+ "   <nonce_str><![CDATA[IITRi8Iabbblz1Jc]]></nonce_str>\n"
-				+ "   <sign><![CDATA[7921E432F65EB8ED0CE9755F0E86D72F]]></sign>\n"
-				+ "   <result_code><![CDATA[SUCCESS]]></result_code>\n"
-				+ "   <prepay_id><![CDATA[wx201411101639507cbf6ffd8b0779950874]]></prepay_id>\n"
-				+ "   <trade_type><![CDATA[JSAPI]]></trade_type>\n"
+				+ "   <appid>wx2421b1c4370ec43b</appid>\n"
+				+ "   <attach>支付测试</attach>\n"
+				+ "   <body>JSAPI支付测试</body>\n"
+				+ "   <mch_id>10000100</mch_id>\n"
+				+ "   <detail><![CDATA[{ \"goods_detail\":[ { \"goods_id\":\"iphone6s_16G\", \"wxpay_goods_id\":\"1001\", \"goods_name\":\"iPhone6s 16G\", \"quantity\":1, \"price\":528800, \"goods_category\":\"123456\", \"body\":\"苹果手机\" }, { \"goods_id\":\"iphone6s_32G\", \"wxpay_goods_id\":\"1002\", \"goods_name\":\"iPhone6s 32G\", \"quantity\":1, \"price\":608800, \"goods_category\":\"123789\", \"body\":\"苹果手机\" } ] }]]></detail>\n"
+				+ "   <nonce_str>1add1a30ac87aa2db72f57a2375d8fec</nonce_str>\n"
+				+ "   <notify_url>https://wxpay.wxutil.com/pub_v2/pay/notify.v2.php</notify_url>\n"
+				+ "   <openid>oUpF8uMuAJO_M2pxb1Q9zNjWeS6o</openid>\n"
+				+ "   <out_trade_no>1415659990</out_trade_no>\n"
+				+ "   <spbill_create_ip>14.23.150.211</spbill_create_ip>\n"
+				+ "   <total_fee>1</total_fee>\n"
+				+ "   <trade_type>JSAPI</trade_type>\n"
+				+ "   <sign>0CB01533B8C1EF103065174F50BCA001</sign>\n"
 				+ "</xml>";
 		return paymentParam;
 	}

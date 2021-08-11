@@ -25,7 +25,7 @@ public class AmqpHandler {
 	   * @param excuteDate
 	   */
 	 
-	  public void  sendDelayMessage(Object object,String routeKey,Date excuteDate){
+	  public void sendDelayMessage(Object object,String routeKey,Date excuteDate){
 	    MessagePostProcessor messagePostProcessor = new MessagePostProcessor() {
 	      @Override
 	      public Message postProcessMessage(Message message) throws AmqpException {
@@ -37,4 +37,10 @@ public class AmqpHandler {
 	    };
 	    rabbitTemplate.convertAndSend(MqConstants.DELAY_TASK_EXECUTION_QUEUE,routeKey,object,messagePostProcessor);
 	  }
+	  
+	  public void sendToDirectQueue(String exchange ,String routeKey,Object object) {
+		  rabbitTemplate.convertAndSend(exchange,routeKey, object);
+	  }
+	  
+	  
 }

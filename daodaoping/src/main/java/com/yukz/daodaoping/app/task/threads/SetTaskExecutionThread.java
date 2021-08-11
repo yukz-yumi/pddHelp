@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yukz.daodaoping.app.task.RabbitMqHandler;
+import com.yukz.daodaoping.common.amqp.AmqpHandler;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 
 public class SetTaskExecutionThread implements Callable<Boolean> {
@@ -22,12 +23,12 @@ public class SetTaskExecutionThread implements Callable<Boolean> {
 
 	private RedissonClient redissonClient;
 
-	private RabbitMqHandler mqHandler;
+	private AmqpHandler mqHandler;
 
 	
 
 	public SetTaskExecutionThread(String threadName, List<TaskApplyInfoDO> taskApplyInfoDOList,
-			RedissonClient redissonClient, RabbitMqHandler mqHandler) {
+			RedissonClient redissonClient, AmqpHandler mqHandler) {
 		super();
 		this.threadName = threadName;
 		this.taskApplyInfoDOList = taskApplyInfoDOList;

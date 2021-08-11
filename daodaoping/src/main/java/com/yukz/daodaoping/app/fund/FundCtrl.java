@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yukz.daodaoping.app.fund.enums.FundEnums;
+import com.yukz.daodaoping.common.amqp.AmqpHandler;
+import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.fund.domain.FundTransferInfoDO;
 import com.yukz.daodaoping.fund.service.FundTransferInfoService;
 
@@ -25,6 +27,9 @@ public class FundCtrl {
 
 	@Autowired
 	private FundBiz fundBiz;
+	
+	@Autowired
+	private AmqpHandler amqpHandler;
 
 	private static final String RETURN_OK = "SUCCESS";
 
@@ -56,8 +61,9 @@ public class FundCtrl {
 			fundBiz.reportToWX(RETURN_ERR, RETURN_ERR_MSG);
 		} else {
 			fundBiz.fundInSuccessProcess(fundRecord);
-			fundBiz.reportToWX(RETURN_OK, RETURN_OK_MSG);
-			// TODO 异步更新订单 并 进入发单流程
+//			fundBiz.reportToWX(RETURN_OK, RETURN_OK_MSG);
+			// 推送到消息中间件
+			amqpHandler.sendToDirectQueue(MqConstants.DIRECT_EXCHANGE, MqConstants.ORDER_ROUTER_KEY, fundRecord.getOrderId());
 		}
 
 	}

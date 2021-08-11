@@ -28,6 +28,7 @@ import com.github.wxpay.sdk.WXPayUtil;
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.fund.FundBiz;
 import com.yukz.daodaoping.app.fund.FundRequest;
+import com.yukz.daodaoping.app.fund.enums.FundBizEnum;
 import com.yukz.daodaoping.app.fund.enums.FundEnums;
 import com.yukz.daodaoping.app.fund.enums.FundTransTypeEnum;
 import com.yukz.daodaoping.app.fund.wxpay.DDPWXpayConfig;
@@ -55,8 +56,6 @@ public class OrderCtrl {
 	@Autowired
 	private FundBiz fundBiz;
 	
-	
-
 	@GetMapping
 	public R getOrderList(UserAgent userAgent, HttpServletRequest request) {
 		Long userId = userAgent.getUserId();
@@ -128,6 +127,13 @@ public class OrderCtrl {
 		fundTransferRecord = (FundTransferInfoDO) fundBiz.getTransferReord(FundTransTypeEnum.FUND_IN,
 				orderInfo.getOrderId(), FundEnums.WAIT.getStatus());
 		if (fundTransferRecord == null) {
+			fundRequest.setAgentId(userAgent.getAgentId());
+			fundRequest.setOpenId(userAgent.getOpenId());
+			fundRequest.setUserId(userAgent.getUserId());
+			fundRequest.setBizType(FundBizEnum.FUND_PAY.getBizType());
+			fundRequest.setFundAmount(orderInfo.getPaymentAmount());
+			fundRequest.setTransType(FundTransTypeEnum.FUND_IN.getType());
+			fundRequest.setOrderId(orderInfo.getOrderId());
 			fundTransferRecord = fundBiz.initFundTransRecord(fundRequest);
 		}
 		if (fundTransferRecord == null) {

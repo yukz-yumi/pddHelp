@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
+import com.yukz.daodaoping.common.amqp.AmqpHandler;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
@@ -53,7 +54,7 @@ public class TaskExecuteBiz {
 	private RedissonClient redissonClient;
 	
 	@Autowired
-	private RabbitMqHandler mqHandler;
+	private AmqpHandler mqHandler;
 	
 	/**
 	 * 初始化任务记录
