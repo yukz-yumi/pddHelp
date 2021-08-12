@@ -250,3 +250,7 @@ INSERT INTO `sys_menu` VALUES (107, 106, '会员管理', '/user/userInfo', 'user
 INSERT INTO `sys_menu` VALUES (108, 107, '新增', '', 'user:userInfo:add', 2, '', 1, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (109, 107, '修改', '', 'user:userInfo:edit', 2, '', 2, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (110, 107, '删除', '', 'user:userInfo:remove', 2, '', 3, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (111, 106, '任务类型管理', '/user/userInfo', 'user:userInfo:userInfo', 1, '', 3001, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (112, 111, '新增', '', 'user:userInfo:add', 2, '', 1, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (113, 111, '修改', '', 'user:userInfo:edit', 2, '', 2, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (114, 111, '删除', '', 'user:userInfo:remove', 2, '', 3, NULL, NULL, '100001');

@@ -63,7 +63,7 @@ function load() {
 								},
 																{
 									field : 'nickName', 
-									title : '用户微信昵称' 
+									title : '微信昵称'
 								},
 																{
 									field : 'headImgUrl', 
@@ -74,7 +74,7 @@ function load() {
 								},
 																{
 									field : 'scores', 
-									title : '用户当前积分' 
+									title : '用户积分'
 								},
 																{
 									field : 'userGrade', 
@@ -82,7 +82,7 @@ function load() {
 								},
 																{
 									field : 'mobile', 
-									title : '用户联系方式' 
+									title : '联系方式'
 								},
 																{
 									field : 'userStatusDesc',
