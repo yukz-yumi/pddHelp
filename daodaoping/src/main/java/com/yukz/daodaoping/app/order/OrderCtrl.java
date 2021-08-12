@@ -140,7 +140,6 @@ public class OrderCtrl {
 			R.error("支付记录初始化失败");
 		}
 		String paymentParam = fundBiz.fundParamGenerator(fundTransferRecord);
-
 		return R.ok().put("data", paymentParam);
 	}
 	

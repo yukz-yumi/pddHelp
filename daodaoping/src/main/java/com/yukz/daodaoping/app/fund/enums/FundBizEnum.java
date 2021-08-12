@@ -9,7 +9,9 @@ public enum FundBizEnum {
 	
 	FUND_PAY("fund_pay","现金支付"),
 	
-	BALANCE_PAY("balance_pay","余额支付");
+	BALANCE_PAY("balance_pay","余额支付"),
+	
+	COMMISSION("commission","分佣");
 	
 	private String bizType;
 	

@@ -63,7 +63,7 @@ public class FundCtrl {
 			fundBiz.fundInSuccessProcess(fundRecord);
 //			fundBiz.reportToWX(RETURN_OK, RETURN_OK_MSG);
 			// 推送到消息中间件
-			amqpHandler.sendToDirectQueue(MqConstants.DIRECT_EXCHANGE, MqConstants.ORDER_ROUTER_KEY, fundRecord.getOrderId());
+			amqpHandler.sendToDirectQueue(MqConstants.ORDER_ROUTER_KEY, fundRecord.getOrderId());
 		}
 
 	}

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
 import com.yukz.daodaoping.common.SerialNumGenerator;
+import com.yukz.daodaoping.common.amqp.AmqpHandler;
+import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO;
 import com.yukz.daodaoping.discount.service.TaskDiscountInfoService;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
@@ -48,6 +50,9 @@ public class TaskOrderBiz {
 	@Autowired
 	private TaskDiscountInfoService taskDiscountInfoService;
 	
+	@Autowired
+	private AmqpHandler amqpHandler;
+	
 	public OrderInfoDO initOrder(TaskApplyInfoDO taskApplyInfo) {
 		OrderInfoDO item = new OrderInfoDO();
 		Long orderId =Long.valueOf(generator.getSerialBizId(prefix, TIMEFORMAT, 4));
@@ -62,6 +67,7 @@ public class TaskOrderBiz {
 		getDiscountPrice(taskApplyInfo.getTaskTypeId(),item);
 		setOrderExpireTime(item);
 		orderInfoService.save(item);
+		amqpHandler.sendDelayMessage(item.getId(), MqConstants.ORDER_EXPIRE_ROUTER_KEY, item.getExpireTime());
 		return item;
 	}
 	
@@ -98,5 +104,6 @@ public class TaskOrderBiz {
 				.subtract(new BigDecimal(orderInfoDO.getDiscount())).longValue();
 		orderInfoDO.setPaymentAmount(paymentPrice);
 	}
+	
 	
 }

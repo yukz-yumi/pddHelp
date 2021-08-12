@@ -35,12 +35,11 @@ public class AmqpHandler {
 	        return message;
 	      }
 	    };
-	    rabbitTemplate.convertAndSend(MqConstants.DELAY_TASK_EXECUTION_QUEUE,routeKey,object,messagePostProcessor);
+	    rabbitTemplate.convertAndSend(MqConstants.EXPIRE_EXECUTION_EXCHANGE,routeKey,object,messagePostProcessor);
 	  }
 	  
-	  public void sendToDirectQueue(String exchange ,String routeKey,Object object) {
-		  rabbitTemplate.convertAndSend(exchange,routeKey, object);
+	  public void sendToDirectQueue(String routeKey,Object object) {
+		  rabbitTemplate.convertAndSend(MqConstants.DIRECT_EXCHANGE,routeKey, object);
 	  }
-	  
 	  
 }

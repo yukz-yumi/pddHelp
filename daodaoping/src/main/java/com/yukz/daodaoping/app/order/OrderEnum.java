@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.yukz.daodaoping.app.enums.ExAccountEnum;
+
 public enum OrderEnum {
 	
 	UNPAID("0","unpaid","未支付"),
@@ -61,5 +65,17 @@ public enum OrderEnum {
 		return list;
 	}
 	
+	public static OrderEnum getByCode(String code) {
+		if(StringUtils.isBlank(code)) {
+			return null;
+		}else {
+			for(OrderEnum item : OrderEnum.values()) {
+				if(StringUtils.equals(item.getCode(), code)) {
+					return item;
+				}
+			}
+		}
+		return null;
+	}
 	
 }

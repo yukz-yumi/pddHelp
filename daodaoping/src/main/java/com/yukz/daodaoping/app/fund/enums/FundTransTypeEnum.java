@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum FundTransTypeEnum {
 	
-	FUND_IN("fund_in","支付"),
-	FUND_OUT("fund_out","提现"),
+	FUND_IN("fund_in","入金"),
+	FUND_OUT("fund_out","出金"),
 	REFUND("refund","退费");
 	
 	private String type;

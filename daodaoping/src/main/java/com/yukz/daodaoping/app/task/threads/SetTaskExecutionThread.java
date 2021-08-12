@@ -9,8 +9,8 @@ import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yukz.daodaoping.app.task.RabbitMqHandler;
 import com.yukz.daodaoping.common.amqp.AmqpHandler;
+import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 
 public class SetTaskExecutionThread implements Callable<Boolean> {
@@ -54,8 +54,7 @@ public class SetTaskExecutionThread implements Callable<Boolean> {
 		RLock lock = this.getRedisLock(taskApplyInfoDO.getId(), redissonClient);
 		try {
 			lock.tryLock(3, 10, TimeUnit.SECONDS);
-			// TODO 向rq中发送消息
-			mqHandler.sendTaskApplyInfo2DelayQueue(taskApplyInfoDO);
+			mqHandler.sendDelayMessage(taskApplyInfoDO, MqConstants.DELAY_DISPOSE_ROUTER_KEY, taskApplyInfoDO.getStartTime());
 		} catch (InterruptedException e) {
 			logger.error("redis 加锁失败，线程被打断");
 		} finally {

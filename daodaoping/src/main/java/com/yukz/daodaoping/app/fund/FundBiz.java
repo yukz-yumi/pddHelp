@@ -58,6 +58,7 @@ public class FundBiz {
 		}
 		fundTransfer.setGmtCreate(new Date());
 		fundTransfer.setTransStatus(FundEnums.WAIT.getStatus());
+		
 		fundTransferInfoService.save(fundTransfer);
 		return fundTransfer;
 	}
