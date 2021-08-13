@@ -54,7 +54,7 @@ public class SetTaskExecutionThread implements Callable<Boolean> {
 		RLock lock = this.getRedisLock(taskApplyInfoDO.getId(), redissonClient);
 		try {
 			lock.tryLock(3, 10, TimeUnit.SECONDS);
-			mqHandler.sendDelayMessage(taskApplyInfoDO, MqConstants.DELAY_DISPOSE_ROUTER_KEY, taskApplyInfoDO.getStartTime());
+			mqHandler.sendDelayMessage(taskApplyInfoDO, MqConstants.DELAY_DISPOSE_ROUTER_KEY);
 		} catch (InterruptedException e) {
 			logger.error("redis 加锁失败，线程被打断");
 		} finally {

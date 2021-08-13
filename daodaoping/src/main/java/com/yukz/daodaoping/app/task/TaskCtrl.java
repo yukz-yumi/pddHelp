@@ -29,6 +29,8 @@ import com.yukz.daodaoping.app.order.OrderEnum;
 import com.yukz.daodaoping.app.order.TaskOrderBiz;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.request.TaskApplyRequest;
+import com.yukz.daodaoping.common.amqp.AmqpHandler;
+import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
@@ -60,6 +62,10 @@ public class TaskCtrl {
 
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoDOService;
+	
+	@Autowired
+	private AmqpHandler amqpHandler;
+
 
 	/**
 	 * 助力金额计算
@@ -102,7 +108,7 @@ public class TaskCtrl {
 		taskApplyInfoDO.setAgentId(userAgent.getAgentId());
 		taskApplyInfoDO.setTaskStatus(TaskStatusEnum.SUSPEND.getStatus()); // 未支付时的任务为挂起
 		taskExecuteBiz.initTaskApplyInfo(taskApplyInfoDO);
-		return R.ok();
+		return R.ok().put("data", taskApplyInfoDO);
 	}
 
 	@PutMapping("edit/{id}")
@@ -163,6 +169,7 @@ public class TaskCtrl {
 			orderInfo = orderList.get(0);
 		} else {
 			orderInfo = taskOrderBiz.initOrder(taskApplyInfo);
+			amqpHandler.sendDelayMessage(orderInfo.getId(), MqConstants.ORDER_EXPIRE_ROUTER_KEY);
 		}
 		Map<String, Object> viewMap = new HashMap<String, Object>();
 		viewMap.put("orderInfo", orderInfo);

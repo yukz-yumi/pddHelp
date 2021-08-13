@@ -15,6 +15,7 @@ public enum TaskStatusEnum {
 	WAIT("wait","等待"),
 	PENDING("pending","进行中"),
 	END("end","已结束"),
+	CLOSE("close","已关闭"),
 	CANCEL("cancel","已取消");
 	
 	private String status;

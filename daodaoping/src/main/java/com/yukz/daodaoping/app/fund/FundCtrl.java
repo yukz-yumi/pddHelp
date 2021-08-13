@@ -52,6 +52,7 @@ public class FundCtrl {
 		if (fundRecord == null) {
 			logger.error("资金流水:{}的记录不存在", fundTransferId);
 			fundBiz.reportToWX(RETURN_ERR, RETURN_ERR_MSG);
+			return ;
 		}
 		if (FundEnums.getEnumByStatus(fundRecord.getTransStatus()) == FundEnums.SUCCESS) {
 			logger.error("资金流水:{}的通知结果已经处理，不重复处理", fundTransferId);

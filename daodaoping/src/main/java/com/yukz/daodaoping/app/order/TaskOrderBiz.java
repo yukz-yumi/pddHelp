@@ -33,7 +33,12 @@ public class TaskOrderBiz {
 	
 	private static final String TIMEFORMAT = "yyyyMMddHH";
 
-	private static final int ORDER_DELAY_CLOSE_HOURS = 24;
+//	private static final int ORDER_DELAY_CLOSE_HOURS = 24;
+//	
+//	private static final int ORDER_DELAY_CLOSE_MIN = 10;
+	
+	@Value("${ttl.order}")
+	private int ttl;
 	
 	@Autowired
 	private OrderInfoService orderInfoService;
@@ -50,8 +55,6 @@ public class TaskOrderBiz {
 	@Autowired
 	private TaskDiscountInfoService taskDiscountInfoService;
 	
-	@Autowired
-	private AmqpHandler amqpHandler;
 	
 	public OrderInfoDO initOrder(TaskApplyInfoDO taskApplyInfo) {
 		OrderInfoDO item = new OrderInfoDO();
@@ -67,7 +70,6 @@ public class TaskOrderBiz {
 		getDiscountPrice(taskApplyInfo.getTaskTypeId(),item);
 		setOrderExpireTime(item);
 		orderInfoService.save(item);
-		amqpHandler.sendDelayMessage(item.getId(), MqConstants.ORDER_EXPIRE_ROUTER_KEY, item.getExpireTime());
 		return item;
 	}
 	
@@ -83,7 +85,7 @@ public class TaskOrderBiz {
 	private void setOrderExpireTime (OrderInfoDO item) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(item.getGmtCreate());
-		cal.add(Calendar.HOUR, ORDER_DELAY_CLOSE_HOURS);
+		cal.add(Calendar.MILLISECOND, ttl); 
 		item.setExpireTime(cal.getTime());
 	}
 	

@@ -39,7 +39,7 @@ public class TaskExecuteBiz {
 	// 接受延迟任务的处理
 	// 取消任务：是否申请退款
 	
-	private static final int TASK_DELAY_MIN = 20;
+	private static final int TASK_DELAY_MIN = 2;
 	
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoService;
@@ -55,6 +55,9 @@ public class TaskExecuteBiz {
 	
 	@Autowired
 	private AmqpHandler mqHandler;
+	
+	@Value("${ttl.task}")
+	private int ttl;
 	
 	/**
 	 * 初始化任务记录
@@ -99,14 +102,14 @@ public class TaskExecuteBiz {
 		if(taskApplyInfoDO.getExpireTime() != null) {
 			return taskApplyInfoDO.getExpireTime();
 		}
-		TaskTypeInfoDO taskTypeInfoDo = taskTypeInfoService.get(taskApplyInfoDO.getTaskTypeId());
-		int interval = taskTypeInfoDo.getExpirtTime();
 		Date startTime = taskApplyInfoDO.getStartTime();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		cal.add(Calendar.MINUTE, interval);
+		cal.add(Calendar.MILLISECOND, ttl);
 		return cal.getTime(); 
 	}
+	
+	
 	
 	public boolean isSameDay(TaskApplyInfoDO taskApplyInfoDO) {
 		Calendar cal_task =Calendar.getInstance() ;
@@ -134,6 +137,37 @@ public class TaskExecuteBiz {
 		taskApplyInfoDO.setGmtModify(new Date());
 		int i = taskApplyInfoService.update(taskApplyInfoDO);
 		return i >= 1 ? true : false ;
+	}
+	
+	/**
+	 * 关闭任务，在任务对应的订单过期时执行
+	 * @throws Exception 
+	 */
+	public boolean close(Long taskId) throws Exception {
+		TaskApplyInfoDO taskApplyInfoDO = taskApplyInfoService.get(taskId);
+		taskApplyInfoDO.setTaskStatus(TaskStatusEnum.CLOSE.getStatus());
+		taskApplyInfoDO.setGmtModify(new Date());
+		int i = taskApplyInfoService.update(taskApplyInfoDO);
+		if(i == 1) {
+			logger.info("taskId:{}, 已关闭",taskId);
+			return true;
+		}else {
+			throw new Exception("任务关闭失败");
+		}
+	}
+	
+	/**
+	 * @deprecated
+	 * 开启任务，在订单被确认时调用
+	 * @param taskId
+	 * @return
+	 */
+	public boolean open(Long taskId) {
+		TaskApplyInfoDO taskApplyInfoDO = taskApplyInfoService.get(taskId);
+		taskApplyInfoDO.setTaskStatus(TaskStatusEnum.PENDING.getStatus());
+		taskApplyInfoDO.setGmtModify(new Date());
+		int i = taskApplyInfoService.update(taskApplyInfoDO);
+		return i == 1 ? true : false ;
 	}
 	
 	

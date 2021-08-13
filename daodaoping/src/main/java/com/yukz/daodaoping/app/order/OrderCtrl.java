@@ -120,7 +120,7 @@ public class OrderCtrl {
 	public R payOrder(@PathVariable("id") Long id, UserAgent userAgent) {
 		OrderInfoDO orderInfo = orderInfoService.get(id);
 		if (orderInfo == null) {
-			R.error("订单不存在");
+			return R.error("订单不存在");
 		}
 		FundTransferInfoDO fundTransferRecord = null;
 		FundRequest fundRequest = new FundRequest();
@@ -140,6 +140,7 @@ public class OrderCtrl {
 			R.error("支付记录初始化失败");
 		}
 		String paymentParam = fundBiz.fundParamGenerator(fundTransferRecord);
+		
 		return R.ok().put("data", paymentParam);
 	}
 	
