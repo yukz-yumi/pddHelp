@@ -71,3 +71,9 @@ serial:
 ttl:
  order: 900000
  task: 600000
+
+proportion:
+ task: 55
+ commission:
+  level1: 10
+  level2: 5

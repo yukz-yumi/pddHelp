@@ -6,11 +6,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.Redisson;
+import org.redisson.api.RLock;
+import org.redisson.api.RSet;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +40,7 @@ import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
+import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
@@ -65,6 +71,15 @@ public class TaskCtrl {
 	
 	@Autowired
 	private AmqpHandler amqpHandler;
+	
+	@Autowired
+	private RedissonClient redissonClient;
+	
+	@Autowired
+	private RedisHandler redisHandler;
+	
+	
+	
 
 
 	/**
@@ -211,7 +226,30 @@ public class TaskCtrl {
 		PageInfo<TaskApplyInfoDO> pageResult = new PageInfo<TaskApplyInfoDO>(list);
 		return R.ok().put("data", pageResult);
 	}
-
+	
+	
+	@PutMapping("take/{id}")
+	public R takeTask(@PathVariable("id") Long taskId,UserAgent userAgent){
+		Long agentId = userAgent.getAgentId();
+		Long userId = userAgent.getUserId();
+		String key = "agentId:"+agentId+"task_id:"+taskId;
+		RLock rlock = redissonClient.getLock(key);
+		try {
+			rlock.tryLock(10, TimeUnit.SECONDS);
+			int remainTaskNum = (int)redisHandler.get(key);
+			if(remainTaskNum > 0) {
+				// 先生成一条接单任务记录
+				
+				// 在扣减数量，再更新，并将剩余数量同步到redis
+				
+			}
+			
+		} catch (InterruptedException e) {
+			rlock.unlock();
+		}
+		return R.ok().put("data", null);
+	}
+	
 	/**
 	 * 判断任务执行时间是否符合系统要求 if(isAppointment) {提交的预约时间必须晚于当前时间10分钟} else {立即开始}
 	 * 

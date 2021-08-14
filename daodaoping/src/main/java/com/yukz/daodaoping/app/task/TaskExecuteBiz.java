@@ -3,8 +3,11 @@ package com.yukz.daodaoping.app.task;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +16,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import com.yukz.daodaoping.app.invitation.InvitationBO;
+import com.yukz.daodaoping.app.invitation.InvitationBiz;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
 import com.yukz.daodaoping.common.amqp.AmqpHandler;
 import com.yukz.daodaoping.common.exception.BDException;
+import com.yukz.daodaoping.invitation.service.InvitationService;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
+import com.yukz.daodaoping.order.service.OrderInfoService;
+import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
@@ -48,13 +56,29 @@ public class TaskExecuteBiz {
 	private TaskTypeInfoService taskTypeInfoService;
 	
 	@Autowired
+	private InvitationBiz invitationBiz;
+	
+	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
 	
 	@Autowired
 	private RedissonClient redissonClient;
 	
 	@Autowired
+	private OrderInfoService orderInfo;
+	
+	@Autowired
 	private AmqpHandler mqHandler;
+	
+	@Value("${proportion.task}")
+	private int proportionTask;
+	
+	@Value("${proportion.commission.level1}")
+	private int commissionLevel1;
+	
+	@Value("${proportion.commission.level2}")
+	private int commissionLevel2;
+	
 	
 	@Value("${ttl.task}")
 	private int ttl;
@@ -154,6 +178,21 @@ public class TaskExecuteBiz {
 		}else {
 			throw new Exception("任务关闭失败");
 		}
+	}
+	
+	public TaskAcceptInfoDO takeTask(Long taskId, Long takerId) throws Exception {
+		TaskAcceptInfoDO taskAcceptInfoDO = new TaskAcceptInfoDO();
+		TaskApplyInfoDO taskApplyInfo = taskApplyInfoService.get(taskId);
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("agentId", taskApplyInfo.getAgentId());
+		map.put("taskId", taskApplyInfo.getId());
+		List<OrderInfoDO> orderList= orderInfo.list(map);
+		if(orderList.isEmpty()) {
+			throw new Exception("当前任务对应的订单为空~~~");
+		}
+		OrderInfoDO orderItem = orderList.get(0);
+		
+		return taskAcceptInfoDO;
 	}
 	
 	/**

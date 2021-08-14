@@ -10,7 +10,7 @@ import java.util.Date;
  * 
  * @author chglee
  * @email 1992lcg@163.com
- * @date 2021-08-02 09:04:23
+ * @date 2021-08-14 10:18:25
  */
 public class TaskAcceptInfoDO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -31,6 +31,8 @@ public class TaskAcceptInfoDO implements Serializable {
 	private String verifyStatus;
 	//审核人id
 	private Long workerId;
+	//任务金额
+	private Long amount;
 	//是否放款 0:未放款/1:已放款
 	private String hasPaid;
 	//机构编号
@@ -137,6 +139,18 @@ public class TaskAcceptInfoDO implements Serializable {
 	 */
 	public Long getWorkerId() {
 		return workerId;
+	}
+	/**
+	 * 设置：任务金额
+	 */
+	public void setAmount(Long amount) {
+		this.amount = amount;
+	}
+	/**
+	 * 获取：任务金额
+	 */
+	public Long getAmount() {
+		return amount;
 	}
 	/**
 	 * 设置：是否放款 0:未放款/1:已放款

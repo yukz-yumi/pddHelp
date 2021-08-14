@@ -14,6 +14,8 @@ import org.springframework.util.StopWatch.TaskInfo;
 import com.yukz.daodaoping.app.order.OrderEnum;
 import com.yukz.daodaoping.app.task.TaskExecuteBiz;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
+import com.yukz.daodaoping.common.observer.RealSubject;
+import com.yukz.daodaoping.common.observer.TaskConfirmedObserver;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
@@ -39,27 +41,27 @@ public class Receivers {
 	@RabbitListener(queues = MqConstants.DIRECT_ORDER_QUEUE)
 	public void OrderConfirmQueueListener(Long orderId) throws Exception {
 		logger.info("监听到队列{}的消息,orderId:{}", MqConstants.DIRECT_ORDER_QUEUE, orderId);
-		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("orderId", orderId);
 		if (orderInfoService.list(map).isEmpty()) {
 			logger.warn("待处理的订单id:{}不存在,废弃此消息", orderId);
 			return;
 		}
 		OrderInfoDO orderInfo = orderInfoService.list(map).get(0);
-		if(orderInfo.getOrderStatus().equals(OrderEnum.PAID.getCode())) {
-			logger.info("订单orderId:{}已处理成功,不在重复处理",orderId);
+		if (orderInfo.getOrderStatus().equals(OrderEnum.PAID.getCode())) {
+			logger.info("订单orderId:{}已处理成功,不在重复处理", orderId);
 			return;
-		}else if(orderInfo.getOrderStatus().equals(OrderEnum.UNPAID.getCode())){
-			logger.info("准备更新orderId:{}的订单",orderId);
+		} else if (orderInfo.getOrderStatus().equals(OrderEnum.UNPAID.getCode())) {
+			logger.info("准备更新orderId:{}的订单", orderId);
 			orderInfo.setOrderStatus(OrderEnum.PAID.getCode());
 			orderInfo.setGmtModify(new Date());
 			orderInfoService.update(orderInfo);
-			logger.info("orderId:{}的订单状态更新成功",orderId);
-		}else {
-			logger.info("orderId:{}的订单状态为{},无法处理",OrderEnum.getByCode(orderInfo.getOrderStatus()).getDesc());
+			logger.info("orderId:{}的订单状态更新成功", orderId);
+		} else {
+			logger.info("orderId:{}的订单状态为{},无法处理", OrderEnum.getByCode(orderInfo.getOrderStatus()).getDesc());
 			return;
 		}
-		
+
 		// 交给订单处理类处理
 		amqpHandler.sendToDirectQueue(MqConstants.TASK_ROUTER_KEY, orderInfo.getTaskId());
 	}
@@ -89,6 +91,11 @@ public class Receivers {
 			taskInfo.setExpireTime(expireDate);
 			taskInfo.setGmtModify(new Date());
 			taskApplyInfoService.update(taskInfo);
+			// 向监听者发送消息
+			RealSubject subject = new RealSubject();
+			TaskConfirmedObserver observer = new TaskConfirmedObserver();
+			subject.addObserver(observer);
+			subject.makeChanged(taskInfo);
 			amqpHandler.sendDelayMessage(taskId, MqConstants.TASK_EXPIRE_ROUTER_KEY);
 			logger.info("任务taskId:{}状态更新成功", taskId);
 		} else {
@@ -115,8 +122,8 @@ public class Receivers {
 			orderInfoService.update(orderInfo);
 			logger.info("准备更新订单Id:{}/orderId:{}的订单状态更新成功", orderInfo.getId(), orderInfo.getOrderId());
 			taskExecuteBiz.close(orderInfo.getTaskId());
-		} else  {
-			logger.info("当前订单{}状态为:{},无需处理", orderInfo.getOrderId(),orderInfo.getOrderStatus());
+		} else {
+			logger.info("当前订单{}状态为:{},无需处理", orderInfo.getOrderId(), orderInfo.getOrderStatus());
 		}
 	}
 
@@ -131,14 +138,14 @@ public class Receivers {
 		if (taskInfo.getTaskStatus().equals(TaskStatusEnum.END.getStatus())) {
 			logger.info("任务taskId:{}已结束", id);
 			return;
-		} else if(taskInfo.getTaskStatus().equals(TaskStatusEnum.PENDING.getStatus())) {
+		} else if (taskInfo.getTaskStatus().equals(TaskStatusEnum.PENDING.getStatus())) {
 			logger.info("准备结束taskId{}的任务", id);
 			taskInfo.setTaskStatus(TaskStatusEnum.END.getStatus());
 			taskInfo.setGmtModify(new Date());
 			taskApplyInfoService.update(taskInfo);
 			logger.info("任务taskId:{}已结束", id);
-		} else  {
-			logger.info("任务taskId:{}的状态为:{}无需处理",id,taskInfo.getTaskStatus());
+		} else {
+			logger.info("任务taskId:{}的状态为:{}无需处理", id, taskInfo.getTaskStatus());
 		}
 	}
 }

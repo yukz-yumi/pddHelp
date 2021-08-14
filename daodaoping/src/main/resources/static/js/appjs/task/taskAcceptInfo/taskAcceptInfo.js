@@ -80,6 +80,10 @@ function load() {
 									title : '审核人id' 
 								},
 																{
+									field : 'amount', 
+									title : '任务金额' 
+								},
+																{
 									field : 'hasPaid', 
 									title : '是否放款 0:未放款/1:已放款' 
 								},
