@@ -70,7 +70,7 @@ public enum PlatformEnum {
 	}
 
 	// 获取所有集合
-	public static List<Map<String,String>> toList(String code) {
+	public static List<Map<String,String>> toList() {
 		List<Map<String,String>> list = new ArrayList<>();
 		for (PlatformEnum c : PlatformEnum.values()) {
 			Map<String,String> map = new HashMap<>();

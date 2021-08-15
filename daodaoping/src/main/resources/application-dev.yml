@@ -3,6 +3,8 @@ bootdo:
   username:
   password:
   agentId: 100001
+  ## 图片URL地址
+  imgUrl: https://dazhi-1306753565.cos.ap-nanjing.myqcloud.com
 logging:
   level:
     root: info

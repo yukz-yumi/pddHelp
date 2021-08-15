@@ -300,6 +300,12 @@
 			<version>0.0.3</version>
 		</dependency>
 
+		<!--腾讯cos服务-->
+		<dependency>
+			<groupId>com.qcloud</groupId>
+			<artifactId>cos_api</artifactId>
+			<version>5.6.45</version>
+		</dependency>
 	</dependencies>
 
 	<build>
