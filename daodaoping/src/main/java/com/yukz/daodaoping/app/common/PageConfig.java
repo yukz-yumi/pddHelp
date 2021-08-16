@@ -113,6 +113,7 @@ public class PageConfig extends BaseController {
 	@GetMapping("/taskIsPaid")
 	public R getTaskPaidStatus() {
 		return R.ok().put("data",  TaskIsPaidEnum.toList());
+	}
 
 	/**
 	 * 上传附件
