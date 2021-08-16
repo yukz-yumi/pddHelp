@@ -1,4 +1,4 @@
-package com.yukz.daodaoping.task.enums;
+package com.yukz.daodaoping.system.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public enum PlatformEnum {
+public enum ImgTypeEnum {
 
-	PDD("pdd","拼多多"),
-	DOUYIN("douyin","抖音"),
-	TAOBAO("taobao","淘宝");
+	JPG("jpg","jpg文件"),
+	JPEG("jpeg","jpeg文件"),
+	PNG("png","png文件"),
+	BMP("bmp","bmp文件"),
+	GIF("gif", "gif文件");
 
 	private String code;
 
@@ -33,16 +35,16 @@ public enum PlatformEnum {
 		this.desc = desc;
 	}
 
-	private PlatformEnum(String code, String desc) {
+	private ImgTypeEnum(String code, String desc) {
 		this.code = code;
 		this.desc = desc;
 	}
 	
-	public static PlatformEnum getEnumByCode(String code) {
+	public static ImgTypeEnum getEnumByCode(String code) {
 		if(StringUtils.isBlank(code)) {
 			return null;
 		}else {
-			for(PlatformEnum item : PlatformEnum.values()) {
+			for(ImgTypeEnum item : ImgTypeEnum.values()) {
 				if(StringUtils.equals(item.getCode(), code)) {
 					return item;
 				}
@@ -53,7 +55,7 @@ public enum PlatformEnum {
 
 	public static Map<String, String> toMap() {
 		Map<String, String> enumDataMap = new HashMap<String, String>();
-		for (PlatformEnum tradeType : values()) {
+		for (ImgTypeEnum tradeType : values()) {
 			enumDataMap.put(tradeType.getCode(), tradeType.getDesc());
 		}
 		return enumDataMap;
@@ -61,7 +63,7 @@ public enum PlatformEnum {
 
 	// 普通方法
 	public static String getDesc(String code) {
-		for (PlatformEnum c : PlatformEnum.values()) {
+		for (ImgTypeEnum c : ImgTypeEnum.values()) {
 			if (c.getCode().equals(code)) {
 				return c.desc;
 			}
@@ -72,7 +74,7 @@ public enum PlatformEnum {
 	// 获取所有集合
 	public static List<Map<String,String>> toList() {
 		List<Map<String,String>> list = new ArrayList<>();
-		for (PlatformEnum c : PlatformEnum.values()) {
+		for (ImgTypeEnum c : ImgTypeEnum.values()) {
 			Map<String,String> map = new HashMap<>();
 			map.put("code",c.getCode());
 			map.put("name",c.getDesc());

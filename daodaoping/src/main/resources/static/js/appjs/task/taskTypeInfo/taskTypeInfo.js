@@ -65,11 +65,21 @@ function load() {
 								},
 																{
 									field : 'taskImg', 
-									title : '任务图片' 
+									title : '任务图片',
+									formatter : function (value, row, index) {
+										return '<img src="'+value+'" style="width: 64px; height: 64px">';
+									}
 								},
 																{
 									field : 'allowed', 
-									title : '是否启用: yes/no' 
+									title : '是否启用' ,
+									formatter : function (value, row, index) {
+										if (value == 'no') {
+											return '<span class="label label-danger">禁用</span>';
+										} else if (value == 'yes') {
+											return '<span class="label label-primary">启用</span>';
+										}
+									}
 								},
 																{
 									field : 'expirtTime', 

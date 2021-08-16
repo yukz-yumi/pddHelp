@@ -1,9 +1,14 @@
 package com.yukz.daodaoping.task.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.yukz.daodaoping.common.config.ConfigKey;
+import com.yukz.daodaoping.common.controller.BaseController;
+import com.yukz.daodaoping.task.enums.PlatformEnum;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.redisson.client.codec.BaseCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +35,7 @@ import com.yukz.daodaoping.task.service.TaskTypeInfoService;
  
 @Controller
 @RequestMapping("/task/taskTypeInfo")
-public class TaskTypeInfoController {
+public class TaskTypeInfoController extends BaseController {
 	@Autowired
 	private TaskTypeInfoService taskTypeInfoService;
 	
@@ -48,6 +53,10 @@ public class TaskTypeInfoController {
         Query query = new Query(params);
 		List<TaskTypeInfoDO> taskTypeInfoList = taskTypeInfoService.list(query);
 		int total = taskTypeInfoService.count(query);
+		//给图片地址加上url前缀
+		for (TaskTypeInfoDO taskType : taskTypeInfoList) {
+			taskType.setTaskImg(ConfigKey.imgUrl+taskType.getTaskImg());
+		}
 		PageUtils pageUtils = new PageUtils(taskTypeInfoList, total);
 		return pageUtils;
 	}
@@ -63,6 +72,8 @@ public class TaskTypeInfoController {
 	String edit(@PathVariable("id") Long id,Model model){
 		TaskTypeInfoDO taskTypeInfo = taskTypeInfoService.get(id);
 		model.addAttribute("taskTypeInfo", taskTypeInfo);
+		model.addAttribute("platformList", PlatformEnum.toList());
+		model.addAttribute("picServerUrl", ConfigKey.imgUrl);
 	    return "task/taskTypeInfo/edit";
 	}
 	
@@ -73,6 +84,9 @@ public class TaskTypeInfoController {
 	@PostMapping("/save")
 	@RequiresPermissions("task:taskTypeInfo:add")
 	public R save( TaskTypeInfoDO taskTypeInfo){
+		Date now = new Date();
+		taskTypeInfo.setGmtCreate(now);
+		taskTypeInfo.setGmtModify(now);
 		if(taskTypeInfoService.save(taskTypeInfo)>0){
 			return R.ok();
 		}
@@ -85,6 +99,8 @@ public class TaskTypeInfoController {
 	@RequestMapping("/update")
 	@RequiresPermissions("task:taskTypeInfo:edit")
 	public R update( TaskTypeInfoDO taskTypeInfo){
+		Date now = new Date();
+		taskTypeInfo.setGmtModify(now);
 		taskTypeInfoService.update(taskTypeInfo);
 		return R.ok();
 	}
