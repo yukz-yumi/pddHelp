@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class CosApiUtil {
 	/**
 	 * 简单上传对象-本地文件
 	 */
-	public static void putObject(FileInputStream fileInputStream, String key) throws InterruptedException, IOException, NoSuchAlgorithmException {
+	public static void putObject(InputStream fileInputStream, String key) throws InterruptedException, IOException, NoSuchAlgorithmException {
 		initClient();
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		// 设置输入流长度为500
