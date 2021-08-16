@@ -1,5 +1,6 @@
 $().ready(function() {
 	validateRule();
+	initSwitch();
 });
 
 $.validator.setDefaults({
@@ -44,6 +45,19 @@ function validateRule() {
 			name : {
 				required : icon + "请输入名字"
 			}
+		}
+	})
+}
+
+function initSwitch(){
+	$('#allowed').bootstrapSwitch({
+		onText : "启用",      // 设置ON文本
+		offText : "禁用",    // 设置OFF文本
+		onColor : "success",// 设置ON文本颜色(info/success/warning/danger/primary)
+		offColor : "warning",  // 设置OFF文本颜色 (info/success/warning/danger/primary)
+		size : "small",    // 设置控件大小,从小到大  (mini/small/normal/large)
+		// 当开关状态改变时触发
+		onSwitchChange : function(event, state) {
 		}
 	})
 }

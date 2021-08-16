@@ -12,7 +12,15 @@
 							<div class="form-group">	
 								<label class="col-sm-3 control-label">平台类型：</label>
 								<div class="col-sm-8">
-									<input id="platform" name="platform" class="form-control" type="text">
+									<select   class="form-control"
+											  tabindex="2" style="width: 100%" name="platform" id="platform">
+										<option value="">-请选择平台-</option>
+										<div th:each="platform : ${platformList}">
+											<option th:value="${platform.code}">
+												<label class="custom-control-label" th:text="${platform.name}"></label>
+											</option>
+										</div>
+									</select>
 								</div>
 							</div>
 														<div class="form-group">	
@@ -27,40 +35,32 @@
 									<input id="taskType" name="taskType" class="form-control" type="text">
 								</div>
 							</div>
-														<div class="form-group">	
-								<label class="col-sm-3 control-label">任务图片：</label>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">任务图片<span style="color: red">*</span>：</label>
 								<div class="col-sm-8">
-									<input id="taskImg" name="taskImg" class="form-control" type="text">
+									<div class="upload-widget product">
+										<div class="file-box" data-server="/common/upAttachFile/taskType" style="">
+											<input class="file-btn fileupload" type="file" name="file" data-form-data="">
+											<div class="progress">
+												<div class="progress-bar" style="width: 0%;"></div>
+											</div>
+											<div class="reminder"></div>
+											<input type="hidden" class="file_url" id="taskImg" name="taskImg"
+												   placeholder="" value="">
+										</div>
+									</div>
 								</div>
 							</div>
 														<div class="form-group">	
 								<label class="col-sm-3 control-label">是否启用: yes/no：</label>
 								<div class="col-sm-8">
-									<input id="allowed" name="allowed" class="form-control" type="text">
+									<input id="allowed" name="allowed" checked value="yes" class="form-control" type="checkbox">
 								</div>
 							</div>
-														<div class="form-group">	
-								<label class="col-sm-3 control-label">：</label>
+							<div class="form-group">
+								<label class="col-sm-3 control-label">任务单价：</label>
 								<div class="col-sm-8">
-									<input id="expirtTime" name="expirtTime" class="form-control" type="text">
-								</div>
-							</div>
-														<div class="form-group">	
-								<label class="col-sm-3 control-label">机构编号：</label>
-								<div class="col-sm-8">
-									<input id="agentId" name="agentId" class="form-control" type="text">
-								</div>
-							</div>
-														<div class="form-group">	
-								<label class="col-sm-3 control-label">创建时间：</label>
-								<div class="col-sm-8">
-									<input id="gmtCreate" name="gmtCreate" class="form-control" type="text">
-								</div>
-							</div>
-														<div class="form-group">	
-								<label class="col-sm-3 control-label">修改时间：</label>
-								<div class="col-sm-8">
-									<input id="gmtModify" name="gmtModify" class="form-control" type="text">
+									<input id="priceYuan" name="priceYuan" class="form-control" type="text">
 								</div>
 							</div>
 																					<div class="form-group">

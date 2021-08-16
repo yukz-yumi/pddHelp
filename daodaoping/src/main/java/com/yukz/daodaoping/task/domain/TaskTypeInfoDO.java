@@ -3,6 +3,7 @@ package com.yukz.daodaoping.task.domain;
 import com.yukz.daodaoping.task.enums.PlatformEnum;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 
@@ -39,8 +40,10 @@ public class TaskTypeInfoDO implements Serializable {
 	private Date gmtModify;
 	//平台类型名称
 	private String platformName;
-	//单价
+	//单价-单位fen
 	private Integer price;
+	//单价-单位元
+	private BigDecimal priceYuan;
 
 	/**
 	 * 设置：
@@ -177,5 +180,13 @@ public class TaskTypeInfoDO implements Serializable {
 
 	public void setPrice(Integer price) {
 		this.price = price;
+	}
+
+	public BigDecimal getPriceYuan() {
+		return priceYuan;
+	}
+
+	public void setPriceYuan(BigDecimal priceYuan) {
+		this.priceYuan = priceYuan;
 	}
 }
