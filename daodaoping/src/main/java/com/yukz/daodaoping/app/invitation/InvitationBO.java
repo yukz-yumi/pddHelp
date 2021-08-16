@@ -42,6 +42,18 @@ public class InvitationBO {
 	public void setDirectUserId(Long directUserId) {
 		this.directUserId = directUserId;
 	}
+	public InvitationBO(Long userId, int invitorNum, Long agentId, Long indirectUserId, Long directUserId) {
+		super();
+		this.userId = userId;
+		this.invitorNum = invitorNum;
+		AgentId = agentId;
+		this.indirectUserId = indirectUserId;
+		this.directUserId = directUserId;
+	}
+	public InvitationBO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 	
 	

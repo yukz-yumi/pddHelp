@@ -7,13 +7,18 @@ import java.util.Date;
  * @author micezhao
  *
  */
-public class TaskApplyRequest {
+public class TaskRequest {
+	
+	private Long id;
 	
 	private Long taskTypeId;
 	
 	private String assistantType;
 	
 	private boolean isAppointment;
+	
+	//如果是多个地址，就用,隔开
+	private String certificationUrl;
 
 	private String command; // 抽象字段：link，command，picturelink
 	
@@ -29,6 +34,22 @@ public class TaskApplyRequest {
 	
 	private Date expireTime;
 	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCertificationUrl() {
+		return certificationUrl;
+	}
+
+	public void setCertificationUrl(String certificationUrl) {
+		this.certificationUrl = certificationUrl;
+	}
 
 	public Long getTaskTypeId() {
 		return taskTypeId;
@@ -110,10 +131,13 @@ public class TaskApplyRequest {
 		this.isAppointment = isAppointment;
 	}
 
-	public TaskApplyRequest() {
+
+	public TaskRequest() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+
+	
 
 	
 	

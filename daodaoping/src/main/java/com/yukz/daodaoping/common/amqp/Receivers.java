@@ -13,12 +13,15 @@ import org.springframework.util.StopWatch.TaskInfo;
 
 import com.yukz.daodaoping.app.order.OrderEnum;
 import com.yukz.daodaoping.app.task.TaskExecuteBiz;
+import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.common.observer.RealSubject;
 import com.yukz.daodaoping.common.observer.TaskConfirmedObserver;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
+import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import com.yukz.daodaoping.task.service.TaskAcceptInfoService;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 
 @Service
@@ -31,6 +34,9 @@ public class Receivers {
 
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoService;
+	
+	@Autowired
+	private TaskAcceptInfoService taskAcceptInfoService;
 
 	@Autowired
 	private AmqpHandler amqpHandler;
@@ -148,4 +154,28 @@ public class Receivers {
 			logger.info("任务taskId:{}的状态为:{}无需处理", id, taskInfo.getTaskStatus());
 		}
 	}
+	
+	@RabbitListener(queues = MqConstants.TASK_TAKE_EXPIRE_QUEUE)
+	public void ExpireTaskTakeListener(Long id){
+		 TaskAcceptInfoDO takeInfo = taskAcceptInfoService.get(id);
+		 if(takeInfo == null) {
+			 logger.warn("待处理的接单id:{}不存在,废弃此消息", id);
+			 return;
+		 }
+		 if(takeInfo.getTaskStatus().equals( TaskAcceptionStatusEunm.EXPIRED.getStatus())) {
+			 logger.info("接单任务taskAcceptionId:{}已过期,不再重复处理", id);
+			 return;
+		 } else if(takeInfo.getTaskStatus().equals( TaskAcceptionStatusEunm.PENDING.getStatus())) {
+			 logger.info("准备过期接单任务id{}的任务", id);
+			 takeInfo.setTaskStatus(TaskAcceptionStatusEunm.EXPIRED.getStatus());
+			 takeInfo.setGmtModify(new Date());
+			 taskAcceptInfoService.update(takeInfo);
+			 logger.info("接单任务id{}已设置为过期", id);
+			 logger.info("准备进行偿还...");
+			 taskExecuteBiz.repay(takeInfo.getAgentId(), takeInfo.getTaskId());
+		 }else {
+			 logger.info("接单任务id{}的状态为:{}无需处理", id, takeInfo.getTaskStatus()); 
+		 }
+	}
+	
 }

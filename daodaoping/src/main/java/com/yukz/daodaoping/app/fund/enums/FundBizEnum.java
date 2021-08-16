@@ -11,6 +11,8 @@ public enum FundBizEnum {
 	
 	BALANCE_PAY("balance_pay","余额支付"),
 	
+	TASK_TRANSFER("task_transfer","任务奖金"),
+	
 	COMMISSION("commission","分佣");
 	
 	private String bizType;

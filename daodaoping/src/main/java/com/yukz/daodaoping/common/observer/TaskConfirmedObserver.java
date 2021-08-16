@@ -2,13 +2,17 @@ package com.yukz.daodaoping.common.observer;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.TimeUnit;
 
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yukz.daodaoping.app.task.TaskConstants;
+import com.yukz.daodaoping.app.task.TaskExecuteBiz;
 import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 
@@ -22,6 +26,8 @@ public class TaskConfirmedObserver implements Observer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TaskConfirmedObserver.class);
 	
+	@Autowired
+	private RedissonClient redissonClient;
 	
 	@Autowired
 	private RedisHandler redisHandler;
@@ -35,9 +41,17 @@ public class TaskConfirmedObserver implements Observer {
 		TaskApplyInfoDO taskInfo = (TaskApplyInfoDO)arg;
 		logger.info("监听到 任务 [taskId:{}]已经被确认,准备进入通知发单流程",taskInfo.getId());
 		String key = getStoreKey(taskInfo);
-		redisHandler.set(key, taskInfo.getTaskNumber());
-		logger.debug("已将待完成的数量同步到redis,并准备开始发单");
-		// TODO 走微信的通知流程
+		RLock rlock = redissonClient.getLock(key);
+		try {
+			rlock.tryLock(10, TimeUnit.SECONDS);
+			redisHandler.hmSet(TaskConstants.MAP_REMAIN, key, taskInfo.getTaskNumber());
+			logger.debug("已将待完成的数量同步到redis,并准备开始发单");
+			// TODO 走微信的通知流程
+			logger.info("向用户进行任务发布通知");
+		}catch(InterruptedException exn) {
+			rlock.unlock();
+			logger.error("加锁失败，释放锁");
+		}
 	}
 
 }

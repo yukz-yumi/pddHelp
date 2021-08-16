@@ -12,9 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.redisson.Redisson;
 import org.redisson.api.RLock;
-import org.redisson.api.RSet;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,7 @@ import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.order.OrderEnum;
 import com.yukz.daodaoping.app.order.TaskOrderBiz;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
-import com.yukz.daodaoping.app.task.request.TaskApplyRequest;
+import com.yukz.daodaoping.app.task.request.TaskRequest;
 import com.yukz.daodaoping.common.amqp.AmqpHandler;
 import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.common.exception.BDException;
@@ -41,6 +39,7 @@ import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
 import com.yukz.daodaoping.system.config.RedisHandler;
+import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
@@ -62,6 +61,7 @@ public class TaskCtrl {
 
 	@Autowired
 	private TaskOrderBiz taskOrderBiz;
+	
 
 	@Autowired
 	private OrderInfoService orderInfoService;
@@ -105,7 +105,7 @@ public class TaskCtrl {
 	 * @return
 	 */
 	@PostMapping("save")
-	public R taskApply(@RequestBody TaskApplyRequest taskAppleRequest, TaskApplyInfoDO taskApplyInfoDO,
+	public R taskApply(@RequestBody TaskRequest taskAppleRequest, TaskApplyInfoDO taskApplyInfoDO,
 			UserAgent userAgent) {
 		if(taskAppleRequest.isAppointment()) {
 			boolean flag = checkInternalLimited(taskAppleRequest);
@@ -127,7 +127,7 @@ public class TaskCtrl {
 	}
 
 	@PutMapping("edit/{id}")
-	public R taskEdit(@PathVariable("id") Long taskApplyInfoId, @RequestBody TaskApplyRequest taskAppleRequest,
+	public R taskEdit(@PathVariable("id") Long taskApplyInfoId, @RequestBody TaskRequest taskAppleRequest,
 			TaskApplyInfoDO taskApplyInfoDO) {
 		taskApplyInfoDO = taskApplyInfoDOService.get(taskApplyInfoId);
 		if (taskApplyInfoDO == null) {
@@ -227,28 +227,49 @@ public class TaskCtrl {
 		return R.ok().put("data", pageResult);
 	}
 	
-	
-	@PutMapping("take/{id}")
+	/**
+	 * 用户接单
+	 * @param taskId
+	 * @param userAgent
+	 * @return
+	 */
+	@PostMapping("take/{id}")
 	public R takeTask(@PathVariable("id") Long taskId,UserAgent userAgent){
 		Long agentId = userAgent.getAgentId();
-		Long userId = userAgent.getUserId();
 		String key = "agentId:"+agentId+"task_id:"+taskId;
 		RLock rlock = redissonClient.getLock(key);
+		TaskAcceptInfoDO tasktakeInfo = null;
 		try {
 			rlock.tryLock(10, TimeUnit.SECONDS);
-			int remainTaskNum = (int)redisHandler.get(key);
-			if(remainTaskNum > 0) {
+			int remain =  taskExecuteBiz.getTaskRemain(key);
+			if(remain > 0) {
+				// 在扣减数量
+				taskExecuteBiz.subTaskRemainNum(key);
 				// 先生成一条接单任务记录
-				
-				// 在扣减数量，再更新，并将剩余数量同步到redis
-				
+				tasktakeInfo = taskExecuteBiz.takeTask(taskId, userAgent);
 			}
-			
 		} catch (InterruptedException e) {
 			rlock.unlock();
+			logger.error("接单过程中加锁失败");
+			return R.error("接单失败:加锁失败");
+		} catch (Exception e) {
+			return R.error("接单失败:"+e.getMessage());
 		}
-		return R.ok().put("data", null);
+		return R.ok().put("data", tasktakeInfo);
 	}
+	
+	@PostMapping("take/comfirm")
+	public R taskTakeConfirm(@RequestBody TaskRequest taskRequst,UserAgent userAgent) {
+		TaskAcceptInfoDO takeInfo = null;
+		try {
+			takeInfo = taskExecuteBiz.taskTakeConfirm(taskRequst);
+		} catch (Exception e) {
+			return R.error(e.getMessage());
+		}
+		return R.ok().put("data", takeInfo);
+	}
+
+	
 	
 	/**
 	 * 判断任务执行时间是否符合系统要求 if(isAppointment) {提交的预约时间必须晚于当前时间10分钟} else {立即开始}
@@ -256,7 +277,7 @@ public class TaskCtrl {
 	 * @param taskAppleRequest
 	 * @return
 	 */
-	private boolean checkInternalLimited(TaskApplyRequest taskAppleRequest) {
+	private boolean checkInternalLimited(TaskRequest taskAppleRequest) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.add(LIMITED_INTERVAL, Calendar.MINUTE);

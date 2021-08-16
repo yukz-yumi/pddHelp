@@ -71,6 +71,7 @@ serial:
 ttl:
  order: 900000
  task: 600000
+ completed: 300000
 
 proportion:
  task: 55

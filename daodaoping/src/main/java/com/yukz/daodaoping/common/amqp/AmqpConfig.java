@@ -25,6 +25,10 @@ public class AmqpConfig {
 
 	@Value("${ttl.task}")
 	private int task_ttl;
+	
+	@Value("${ttl.completed}")
+	private int task_take_ttl;
+
 
 	@Bean
 	public DirectExchange directExchange() {
@@ -43,6 +47,12 @@ public class AmqpConfig {
 		Queue queue = new Queue(MqConstants.DIRECT_TASK_QUEUE);
 		return queue;
 	}
+	
+	@Bean
+	public Queue directTaskTakeQueue() {
+		Queue queue = new Queue(MqConstants.DIRECT_TASK_TAKE_QUEUE);
+		return queue;
+	}
 
 	@Bean
 	public DirectExchange expireExchange() {
@@ -50,6 +60,7 @@ public class AmqpConfig {
 		return directExchange;
 	}
 
+	//任务执行过期时间队列
 	@Bean
 	public Queue expireTaskQueue() {
 		Map<String, Object> argsMap = new HashMap<String, Object>();
@@ -59,7 +70,8 @@ public class AmqpConfig {
 		Queue queue = new Queue(MqConstants.TASK_EXPIRE_QUEUE, true, false, false, argsMap);
 		return queue;
 	}
-
+	
+	//订单过期时间队列
 	@Bean
 	public Queue expireOrderQueue() {
 		Map<String, Object> argsMap = new HashMap<String, Object>();
@@ -67,6 +79,17 @@ public class AmqpConfig {
 		argsMap.put("x-dead-letter-routing-key", MqConstants.ORDER_TTL_KEY);
 		argsMap.put("x-message-ttl", order_ttl);
 		Queue queue = new Queue(MqConstants.ORDER_EXPIRE_QUEUE, true, false, false, argsMap);
+		return queue;
+	}
+	
+	//任务订单过期时间队列
+	@Bean
+	public Queue expireTaskTakeQueue() {
+		Map<String, Object> argsMap = new HashMap<String, Object>();
+		argsMap.put("x-dead-letter-exchange", MqConstants.EXPIRE_EXECUTION_EXCHANGE);
+		argsMap.put("x-dead-letter-routing-key", MqConstants.TASK_TAKE_TTL_KEY);
+		argsMap.put("x-message-ttl", task_take_ttl);
+		Queue queue = new Queue(MqConstants.TASK_TAKE_EXPIRE_QUEUE, true, false, false, argsMap);
 		return queue;
 	}
 
@@ -81,7 +104,19 @@ public class AmqpConfig {
 		Queue queue = new Queue(MqConstants.TASK_TTL_QUEUE);
 		return queue;
 	}
+	
+	@Bean
+	public Queue ttlTaskTakeQueue() {
+		Queue queue = new Queue(MqConstants.TASK_TAKE_TTL_QUEUE);
+		return queue;
+	}
 
+	@Bean
+	public Binding bindingTTLTaskTaKe() {
+		Binding binding = BindingBuilder.bind(ttlTaskTakeQueue()).to(expireExchange()).with(MqConstants.TASK_TAKE_TTL_KEY);
+		return binding;
+	}
+	
 	@Bean
 	public Binding bindingTTLOrder() {
 		Binding binding = BindingBuilder.bind(ttlOrderQueue()).to(expireExchange()).with(MqConstants.ORDER_TTL_KEY);
@@ -107,6 +142,13 @@ public class AmqpConfig {
 				.with(MqConstants.TASK_ROUTER_KEY);
 		return binding;
 	}
+	
+	@Bean
+	public Binding bindingTaskTake() {
+		Binding binding = BindingBuilder.bind(directTaskTakeQueue()).to(directExchange())
+				.with(MqConstants.TASK_TAKE_ROUTER_KEY);
+		return binding;
+	}
 
 	@Bean
 	public Binding bindingTaskExpire() {
@@ -119,6 +161,13 @@ public class AmqpConfig {
 	public Binding bindingOrderExpire() {
 		Binding binding = BindingBuilder.bind(expireOrderQueue()).to(expireExchange())
 				.with(MqConstants.ORDER_EXPIRE_ROUTER_KEY);
+		return binding;
+	}
+	
+	@Bean
+	public Binding bindingTaskTakeExpire() {
+		Binding binding = BindingBuilder.bind(expireTaskTakeQueue()).to(expireExchange())
+				.with(MqConstants.TASK_TAKE_EXPIRE_ROUTER_KEY);
 		return binding;
 	}
 

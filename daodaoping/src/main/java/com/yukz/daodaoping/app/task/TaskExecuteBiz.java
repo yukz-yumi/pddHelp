@@ -1,13 +1,15 @@
 package com.yukz.daodaoping.app.task;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.collections.map.HashedMap;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,20 +18,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
-import com.yukz.daodaoping.app.invitation.InvitationBO;
-import com.yukz.daodaoping.app.invitation.InvitationBiz;
+import com.yukz.daodaoping.app.auth.vo.UserAgent;
+import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
+import com.yukz.daodaoping.app.task.enums.TaskIsPaidEnum;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
+import com.yukz.daodaoping.app.task.request.TaskRequest;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
 import com.yukz.daodaoping.common.amqp.AmqpHandler;
+import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.common.exception.BDException;
-import com.yukz.daodaoping.invitation.service.InvitationService;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
+import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
-import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
+import com.yukz.daodaoping.task.service.TaskAcceptInfoService;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
-import com.yukz.daodaoping.task.service.TaskTypeInfoService;
 
 /**
  * 发单/接单 业务处理类
@@ -47,16 +51,13 @@ public class TaskExecuteBiz {
 	// 接受延迟任务的处理
 	// 取消任务：是否申请退款
 	
-	private static final int TASK_DELAY_MIN = 2;
+//	private static final int TASK_DELAY_MIN = 2;
 	
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoService;
 	
 	@Autowired
-	private TaskTypeInfoService taskTypeInfoService;
-	
-	@Autowired
-	private InvitationBiz invitationBiz;
+	private TaskAcceptInfoService taskAcceptInfoService;
 	
 	@Autowired
 	private ThreadPoolTaskExecutor taskExecutor;
@@ -65,10 +66,17 @@ public class TaskExecuteBiz {
 	private RedissonClient redissonClient;
 	
 	@Autowired
+	private RedisHandler redisHandler;
+	
+	@Autowired
 	private OrderInfoService orderInfo;
 	
 	@Autowired
 	private AmqpHandler mqHandler;
+	
+	
+	@Value("${ttl.completed}")
+	private int interval;
 	
 	@Value("${proportion.task}")
 	private int proportionTask;
@@ -180,7 +188,7 @@ public class TaskExecuteBiz {
 		}
 	}
 	
-	public TaskAcceptInfoDO takeTask(Long taskId, Long takerId) throws Exception {
+	public TaskAcceptInfoDO takeTask(Long taskId,UserAgent userAgent) throws Exception {
 		TaskAcceptInfoDO taskAcceptInfoDO = new TaskAcceptInfoDO();
 		TaskApplyInfoDO taskApplyInfo = taskApplyInfoService.get(taskId);
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -191,7 +199,22 @@ public class TaskExecuteBiz {
 			throw new Exception("当前任务对应的订单为空~~~");
 		}
 		OrderInfoDO orderItem = orderList.get(0);
-		
+		Long orderAmout = orderItem.getTotalAmount();
+		long taskAmount = new BigDecimal(orderAmout).multiply(new BigDecimal(proportionTask/100)).longValue();
+		taskAcceptInfoDO.setAgentId(userAgent.getAgentId());
+		taskAcceptInfoDO.setUserId(userAgent.getUserId());
+		taskAcceptInfoDO.setTaskId(taskId);
+		taskAcceptInfoDO.setAmount(taskAmount);
+		taskAcceptInfoDO.setTaskStatus(TaskAcceptionStatusEunm.PENDING.getStatus());
+		taskAcceptInfoDO.setHasPaid(TaskIsPaidEnum.UNPAID.getStatus());
+		taskAcceptInfoDO.setGmtCreate(new Date());
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(taskAcceptInfoDO.getGmtCreate());
+		cal.add(Calendar.MINUTE, interval);
+		taskAcceptInfoDO.setExpireTime(cal.getTime());
+		taskAcceptInfoService.save(taskAcceptInfoDO);
+		// 发送消息延迟队列
+		mqHandler.sendDelayMessage(taskAcceptInfoDO.getId(), MqConstants.TASK_TAKE_EXPIRE_ROUTER_KEY);
 		return taskAcceptInfoDO;
 	}
 	
@@ -210,6 +233,78 @@ public class TaskExecuteBiz {
 	}
 	
 	
+	public void repay(Long agentId,Long taskId) {
+		String key = "agentId:"+agentId+"task_id:"+taskId;
+		RLock rlock = redissonClient.getLock(key);
+		try {
+			rlock.tryLock(10, TimeUnit.SECONDS);
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("agentId", agentId);
+			map.put("id", taskId);
+			map.put("taskStatus", TaskStatusEnum.PENDING.getStatus());
+			List<TaskApplyInfoDO> list = taskApplyInfoService.list(map);
+			if(list.isEmpty()) {
+				logger.info("无需补偿");
+				return ;
+			}
+			boolean flag = addTaskRemainNum(key,taskId);
+			if(flag) {
+				logger.info("任务未执行数量补偿成功");
+			}else {
+				logger.warn("任务未执行数量补偿失败");
+			}
+		} catch (InterruptedException e) {
+			rlock.unlock();
+		}
+	}
+	
+	
+	public boolean subTaskRemainNum(String key) {
+		int remain =  getTaskRemain(key);
+		if(remain>0) {			
+			redisHandler.hmSet(TaskConstants.MAP_REMAIN, key, remain--);
+			logger.info("任务:{} 剩余任务数扣减成功,当前剩余任务数量:{}",remain);
+			return true;
+		}
+		logger.info("任务:{} 剩余任务数扣减失败,当前剩余任务数量:{}",remain);
+		return false;
+	}
+	
+	public boolean addTaskRemainNum(String key,Long taskId) {
+		TaskApplyInfoDO taskApplyInfo = taskApplyInfoService.get(taskId);
+		int  totalTaskNum = taskApplyInfo.getTaskNumber();
+		int remain = getTaskRemain(key);
+		if(remain == totalTaskNum) {
+			logger.error("任务:{} 数量的待执行数量已达到上限",remain);
+			return false;
+		}
+		redisHandler.hmSet(TaskConstants.MAP_REMAIN, key, remain++);
+		return true;
+	}
+	
+	public int getTaskRemain(String key) {
+		int remain = (int)redisHandler.hmGet(TaskConstants.MAP_REMAIN, key);
+		return remain;
+	}
+	
+	public TaskAcceptInfoDO taskTakeConfirm(TaskRequest taskRequst) throws Exception {
+		TaskAcceptInfoDO takeInfo = taskAcceptInfoService.get(taskRequst.getId());
+		if(!takeInfo.getTaskStatus().equals(TaskAcceptionStatusEunm.PENDING.getStatus())) {
+			throw new Exception("当前接单任务状态为:"+takeInfo.getTaskStatus()+"无法继续操作");
+		}
+		String certificationUrl = taskRequst.getCertificationUrl();
+		takeInfo.setCertificationUrl(certificationUrl);
+		takeInfo.setTaskStatus(TaskAcceptionStatusEunm.END.getStatus());
+		takeInfo.setGmtModify(new Date());
+		int i = taskAcceptInfoService.update(takeInfo);
+		if(i >=1 ) {
+			return takeInfo;
+		}else {
+			throw new Exception("接单确认失败");
+		}
+		
+		
+	}
 	
 	
 }

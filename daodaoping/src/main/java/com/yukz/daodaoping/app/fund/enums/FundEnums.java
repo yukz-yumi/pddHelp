@@ -1,7 +1,5 @@
 package com.yukz.daodaoping.app.fund.enums;
 
-import java.util.Iterator;
-
 import org.apache.commons.lang3.StringUtils;
 
 public enum FundEnums {

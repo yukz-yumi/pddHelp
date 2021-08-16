@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
+import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
+import com.yukz.daodaoping.app.task.enums.TaskIsPaidEnum;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
+import com.yukz.daodaoping.app.task.enums.TaskVerifyStatusEnum;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
 import com.yukz.daodaoping.task.enums.PlatformEnum;
@@ -86,4 +89,19 @@ public class PageConfig {
 		return R.ok().put("data", resultMapList);
 	}
 	
+	
+	@GetMapping("/taskAcceptionStatus")
+	public R getTaskApplyList() {
+		return R.ok().put("data",  TaskAcceptionStatusEunm.toList());
+	}
+	
+	@GetMapping("/taskVerifyStatus")
+	public R getTaskVerifyStatus() {
+		return R.ok().put("data",  TaskVerifyStatusEnum.toList());
+	}
+	
+	@GetMapping("/taskIsPaid")
+	public R getTaskPaidStatus() {
+		return R.ok().put("data",  TaskIsPaidEnum.toList());
+	}
 }

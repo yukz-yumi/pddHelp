@@ -17,6 +17,8 @@ public class MqConstants {
 	public static final String TASK_EXPIRE_ROUTER_KEY = "task_expire_router_key";
 	// 订单过期
 	public static final String ORDER_EXPIRE_ROUTER_KEY = "order_expire_key";
+	// 接单处理过期时间
+	public static final String TASK_TAKE_EXPIRE_ROUTER_KEY = "task_take_expire_key";
 	
 	public static final String ORDER_TTL_KEY = "order_ttl_key";
 	
@@ -30,11 +32,12 @@ public class MqConstants {
 	
 	public static final String ORDER_EXPIRE_QUEUE = "order_expire_queue";
 	
-//	// 订单支付的过期时间 15分钟(900000mm)
-//	public static final int ORDER_TTL = 900000;
-//	
-//	// 任务执行过期时间 10分钟(600000mm)
-//	public static final int TASK_TTL = 600000;
+	public static final String TASK_TAKE_EXPIRE_QUEUE = "task_take_expire_queue";
+	
+	public static final String TASK_TAKE_TTL_KEY = "task_take_ttl_key"; 
+	
+	public static final String TASK_TAKE_TTL_QUEUE = "task_take_ttl_queue";
+	
 	/**
 	 * 订单队列
 	 */
@@ -55,6 +58,15 @@ public class MqConstants {
 	 */
 	public static final String TASK_ROUTER_KEY = "task_router_key";
 	
+	/**
+	 * 任务路邮键
+	 */
+	public static final String TASK_TAKE_ROUTER_KEY = "task_take_router_key";
+	
+	/**
+	 * 任务接单队列
+	 */
+	public static final String DIRECT_TASK_TAKE_QUEUE = "direct_task_take_queue";
 	
 	/**
 	 * 直连交换机
