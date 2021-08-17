@@ -251,7 +251,7 @@ public class DeptServiceImpl implements DeptService {
     }
 
     DeptDO topParentDeptQuery(DeptDO selfDept, List<DeptDO> deptList) {
-        if (StringUtils.isNotEmpty(selfDept.getSegmentCode())){
+        if (null != selfDept.getAgentId()){
             return selfDept;
         }
         for (DeptDO dept : deptList) {

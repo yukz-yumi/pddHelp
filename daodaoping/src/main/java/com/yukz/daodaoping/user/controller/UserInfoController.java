@@ -11,6 +11,7 @@ import com.yukz.daodaoping.app.enums.UserStatusEnum;
 import com.yukz.daodaoping.common.aspect.CleanData;
 import com.yukz.daodaoping.common.config.ConfigKey;
 import com.yukz.daodaoping.common.config.DataRedisKey;
+import com.yukz.daodaoping.common.controller.BaseController;
 import com.yukz.daodaoping.system.config.RedisHandler;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ import com.yukz.daodaoping.user.service.UserInfoService;
  
 @Controller
 @RequestMapping("/user/userInfo")
-public class UserInfoController {
+public class UserInfoController extends BaseController {
 	@Autowired
 	private UserInfoService userInfoService;
 	@Autowired
@@ -92,7 +93,7 @@ public class UserInfoController {
 		Date now = new Date();
 		userInfo.setGmtCreate(now);
 		userInfo.setGmtModify(now);
-		userInfo.setAgentId(ConfigKey.agentId);
+		userInfo.setAgentId(getAgentId());
 		if(userInfoService.save(userInfo)>0){
 			setRedis();
 			return R.ok();

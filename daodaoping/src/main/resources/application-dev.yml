@@ -16,7 +16,7 @@ spring:
     #url: jdbc:mysql://183.92.32.154:3306/gotoo_zz?useUnicode=true&characterEncoding=utf8
     #username: root
     #password: SJFM21!@#9867
-    url: jdbc:mysql://39.100.131.79:3306/daodaoping_dev?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://39.100.131.79:3306/daodaoping_dev?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
     username: root
     password: 123456
     #url: jdbc:mysql://47.111.188.210:3306/gotoo_wh-ys?useUnicode=true&characterEncoding=utf8

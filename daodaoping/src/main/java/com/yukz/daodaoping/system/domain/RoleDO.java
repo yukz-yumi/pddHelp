@@ -13,7 +13,7 @@ public class RoleDO {
 	private Timestamp gmtCreate;
 	private Timestamp gmtModified;
 	private List<Long> menuIds;
-	private String segmentCode;
+	private Long agentId;
 
 	public Long getRoleId() {
 		return roleId;
@@ -79,12 +79,12 @@ public class RoleDO {
 		this.menuIds = menuIds;
 	}
 
-	public String getSegmentCode() {
-		return segmentCode;
+	public Long getAgentId() {
+		return agentId;
 	}
 
-	public void setSegmentCode(String segmentCode) {
-		this.segmentCode = segmentCode;
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class RoleDO {
 				", gmtCreate=" + gmtCreate +
 				", gmtModified=" + gmtModified +
 				", menuIds=" + menuIds +
-				", segmentCode=" + segmentCode +
+				", agentId=" + agentId +
 				'}';
 	}
 }

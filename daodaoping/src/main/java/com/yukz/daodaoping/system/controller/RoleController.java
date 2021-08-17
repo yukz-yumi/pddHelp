@@ -36,10 +36,10 @@ public class RoleController extends BaseController {
 	List<RoleDO> list() {
 		//只查询登陆用户所属的客户编码的数据
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		String segmentCode = getSegmentCode();
+		Long agentId = getAgentId();
 		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属segmentCode的数据
-		if (!StringUtils.equals(segmentCode, "0")) {
-			queryMap.put("segmentCode", getSegmentCode());
+		if (agentId.longValue() != 0) {
+			queryMap.put("agentId", getAgentId());
 		}
 		List<RoleDO> roles = roleService.list(queryMap);
 		return roles;
@@ -70,7 +70,7 @@ public class RoleController extends BaseController {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
 		//从登陆用户获取客户编码segmentCode，并保存到角色表中
-		role.setSegmentCode(getSegmentCode());
+		role.setAgentId(getAgentId());
 		if (roleService.save(role) > 0) {
 			return R.ok();
 		} else {
@@ -87,7 +87,7 @@ public class RoleController extends BaseController {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
 		//从登陆用户获取客户编码segmentCode，并保存到角色表中
-		role.setSegmentCode(getSegmentCode());
+		role.setAgentId(getAgentId());
 		if (roleService.update(role) > 0) {
 			return R.ok();
 		} else {

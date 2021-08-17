@@ -86,7 +86,7 @@ public class MenuController extends BaseController {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
 		//从登陆用户获取客户编码segmentCode并保存
-		menu.setSegmentCode(getSegmentCode());
+		menu.setAgentId(getAgentId());
 		if (menuService.save(menu) > 0) {
 			return R.ok();
 		} else {
@@ -103,7 +103,7 @@ public class MenuController extends BaseController {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
 		//从登陆用户获取客户编码segmentCode并保存
-		menu.setSegmentCode(getSegmentCode());
+		menu.setAgentId(getAgentId());
 		if (menuService.update(menu) > 0) {
 			return R.ok();
 		} else {

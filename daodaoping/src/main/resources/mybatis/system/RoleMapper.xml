@@ -5,13 +5,13 @@
 
 	<select id="get" resultType="com.yukz.daodaoping.system.domain.RoleDO">
 		select
-		`role_id`,`role_name`,`role_sign`,`remark`,`user_id_create`,`gmt_create`,`gmt_modified`, `segment_code` as segmentCode
+		`role_id`,`role_name`,`role_sign`,`remark`,`user_id_create`,`gmt_create`,`gmt_modified`, `agent_id` as agentId
 		from sys_role where role_id = #{value}
 	</select>
 
 	<select id="list" resultType="com.yukz.daodaoping.system.domain.RoleDO">
 		select
-		`role_id`,`role_name`,`role_sign`,`remark`,`user_id_create`,`gmt_create`,`gmt_modified`, `segment_code` as segmentCode
+		`role_id`,`role_name`,`role_sign`,`remark`,`user_id_create`,`gmt_create`,`gmt_modified`, `agent_id` as agentId
 		from sys_role
 		<where>
 			<if test="roleId != null and roleId != ''"> and role_id = #{roleId} </if>
@@ -21,7 +21,7 @@
 			<if test="userIdCreate != null and userIdCreate != ''"> and user_id_create = #{userIdCreate} </if>
 			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 			<if test="gmtModified != null and gmtModified != ''"> and gmt_modified = #{gmtModified} </if>
-			<if test="segmentCode != null and segmentCode != ''"> and segment_code = #{segmentCode} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 		</where>
 		<choose>
 			<when test="sort != null and sort.trim() != ''">
@@ -46,7 +46,7 @@
 			<if test="userIdCreate != null and userIdCreate != ''"> and user_id_create = #{userIdCreate} </if>
 			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 			<if test="gmtModified != null and gmtModified != ''"> and gmt_modified = #{gmtModified} </if>
-			<if test="segmentCode != null and segmentCode != ''"> and segment_code = #{segmentCode} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 		</where>
 	</select>
 
@@ -60,7 +60,7 @@
 		`user_id_create`,
 		`gmt_create`,
 		`gmt_modified`,
-		`segment_code`
+		`agent_id`
 		)
 		values
 		(
@@ -70,7 +70,7 @@
 		#{userIdCreate},
 		#{gmtCreate},
 		#{gmtModified},
-		#{segmentCode}
+		#{agentId}
 		)
 	</insert>
 
@@ -83,7 +83,7 @@
 			<if test="userIdCreate != null">`user_id_create` = #{userIdCreate}, </if>
 			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
 			<if test="gmtModified != null">`gmt_modified` = #{gmtModified}</if>
-			<if test="segmentCode != null">`segment_code` = #{segmentCode}</if>
+			<if test="agentId != null">`agent_id` = #{agentId}</if>
 		</set>
 		where role_id = #{roleId}
 	</update>

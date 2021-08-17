@@ -43,10 +43,10 @@ public class DictController extends BaseController {
 		// 查询列表数据
 		Query query = new Query(params);
 		//只查询登陆用户所属的客户编码的数据
-		String segmentCode = getSegmentCode();
+		Long agentId = getAgentId();
 		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属segmentCode的数据
 		/*if (!StringUtils.equals(segmentCode, "0")) {
-			query.put("segmentCode", getSegmentCode());
+			query.put("agentId", agentId);
 		}*/
 		List<DictDO> dictList = dictService.list(query);
 		int total = dictService.count(query);
@@ -90,8 +90,8 @@ public class DictController extends BaseController {
 		if (Constant.DEMO_ACCOUNT.equals(getUsername())) {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
-		//从登陆用户获取客户编码segmentCode并保存
-		dict.setSegmentCode(getSegmentCode());
+		//从登陆用户获取客户编码agent_id并保存
+		dict.setAgentId(getAgentId());
 		if (dictService.save(dict) > 0) {
 			return R.ok();
 		}
@@ -108,8 +108,8 @@ public class DictController extends BaseController {
 		if (Constant.DEMO_ACCOUNT.equals(getUsername())) {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
-		//从登陆用户获取客户编码segmentCode并保存
-		dict.setSegmentCode(getSegmentCode());
+		//从登陆用户获取客户编码并保存
+		dict.setAgentId(getAgentId());
 		dictService.update(dict);
 		return R.ok();
 	}
@@ -149,10 +149,10 @@ public class DictController extends BaseController {
 	public List<DictDO> listType() {
 		//只查询登陆用户所属的客户编码的数据
 		Map<String, Object> params = new HashMap<>();
-		String segmentCode = getSegmentCode();
-		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属segmentCode的数据
-		if (!StringUtils.equals(segmentCode, "0")) {
-			params.put("segmentCode", getSegmentCode());
+		Long agentId = getAgentId();
+		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属的数据
+		if (agentId.longValue() != 0) {
+			params.put("agentId", getAgentId());
 		}
 		return dictService.listType(params);
 	};
@@ -173,10 +173,10 @@ public class DictController extends BaseController {
 		Map<String, Object> map = new HashMap<>(16);
 		map.put("type", type);
 		//只查询登陆用户所属的客户编码的数据
-		String segmentCode = getSegmentCode();
-		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属segmentCode的数据
-		if (!StringUtils.equals(segmentCode, "0")) {
-			map.put("segmentCode", getSegmentCode());
+		Long agentId = getAgentId();
+		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属的数据
+		if (agentId.longValue() != 0) {
+			map.put("agentId", getAgentId());
 		}
 		List<DictDO> dictList = dictService.list(map);
 		return dictList;

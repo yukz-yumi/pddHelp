@@ -55,8 +55,8 @@ function load() {
 									title : '权限'
 								},
 								{
-									field : 'segmentCode',
-									title : '客户编码'
+									field : 'agentId',
+									title : '机构编码'
 								},
 								{
 									title : '操作',

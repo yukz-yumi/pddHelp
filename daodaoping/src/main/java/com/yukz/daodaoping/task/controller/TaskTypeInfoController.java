@@ -102,7 +102,7 @@ public class TaskTypeInfoController extends BaseController {
 		Date now = new Date();
 		taskTypeInfo.setGmtCreate(now);
 		taskTypeInfo.setGmtModify(now);
-		taskTypeInfo.setAgentId(ConfigKey.agentId);
+		taskTypeInfo.setAgentId(getAgentId());
 		String allowed = taskTypeInfo.getAllowed();
 		if (StringUtils.equals(allowed, IsAllowEnum.YES.getStatus())) {
 			taskTypeInfo.setAllowed(allowed);

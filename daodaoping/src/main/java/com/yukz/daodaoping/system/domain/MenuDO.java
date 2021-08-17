@@ -26,7 +26,7 @@ public class MenuDO implements Serializable {
 	// 修改时间
 	private Date gmtModified;
 	// 客户编码
-	private String segmentCode;
+	private Long agentId;
 
 	/**
 	 * 设置：
@@ -168,12 +168,12 @@ public class MenuDO implements Serializable {
 		return gmtModified;
 	}
 
-	public String getSegmentCode() {
-		return segmentCode;
+	public Long getAgentId() {
+		return agentId;
 	}
 
-	public void setSegmentCode(String segmentCode) {
-		this.segmentCode = segmentCode;
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class MenuDO implements Serializable {
 				", orderNum=" + orderNum +
 				", gmtCreate=" + gmtCreate +
 				", gmtModified=" + gmtModified +
-				", segmentCode=" + segmentCode +
+				", agentId=" + agentId +
 				'}';
 	}
 }

@@ -24,6 +24,8 @@ public interface TaskAcceptInfoService {
 	
 	int update(TaskAcceptInfoDO taskAcceptInfo);
 	
+	int batchUpdate(List<TaskAcceptInfoDO> taskAcceptInfoList);
+
 	int remove(Long id);
 	
 	int batchRemove(Long[] ids);

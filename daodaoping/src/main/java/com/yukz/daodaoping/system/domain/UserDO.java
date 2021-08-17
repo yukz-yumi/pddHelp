@@ -50,8 +50,8 @@ public class UserDO implements Serializable {
     private String city;
     //所在地区
     private String district;
-    //段编码
-    private String segmentCode;
+    //机构编码
+    private Long agentId;
 
     public Long getUserId() {
         return userId;
@@ -221,12 +221,12 @@ public class UserDO implements Serializable {
         this.district = district;
     }
 
-    public String getSegmentCode() {
-        return segmentCode;
+    public Long getAgentId() {
+        return agentId;
     }
 
-    public void setSegmentCode(String segmentCode) {
-        this.segmentCode = segmentCode;
+    public void setAgentId(Long agentId) {
+        this.agentId = agentId;
     }
 
     @Override
@@ -253,7 +253,7 @@ public class UserDO implements Serializable {
                 ", province='" + province + '\'' +
                 ", city='" + city + '\'' +
                 ", district='" + district + '\'' +
-                ", segmentCode='" + segmentCode + '\'' +
+                ", agentId='" + agentId + '\'' +
                 '}';
     }
 }
