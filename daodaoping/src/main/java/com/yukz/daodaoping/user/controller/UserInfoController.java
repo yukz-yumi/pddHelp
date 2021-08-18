@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.user.controller;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,9 @@ import com.yukz.daodaoping.common.utils.Query;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.user.domain.UserInfoDO;
 import com.yukz.daodaoping.user.service.UserInfoService;
+
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 
 /**
  * 用户信息表
@@ -151,4 +155,5 @@ public class UserInfoController {
 		String dataJson = JSON.toJSONString(userInfoList);
 		this.redisHandler.set(DataRedisKey.REDIS_USER_INFO_DATA+agentId, dataJson, 30L, TimeUnit.DAYS);
 	}
+	
 }

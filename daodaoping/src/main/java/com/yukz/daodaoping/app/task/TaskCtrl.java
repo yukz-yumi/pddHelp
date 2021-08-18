@@ -78,9 +78,6 @@ public class TaskCtrl {
 	@Autowired
 	private RedisHandler redisHandler;
 	
-	
-	
-
 
 	/**
 	 * 助力金额计算
