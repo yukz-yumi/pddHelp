@@ -26,7 +26,7 @@ spring:
       enabled: true
       exclude: static/**
   cache:
-    type: ehcache
+    type: redis
     ehcache:
       config: classpath:config/ehcache.xml
   session: redis #session 共享的方案

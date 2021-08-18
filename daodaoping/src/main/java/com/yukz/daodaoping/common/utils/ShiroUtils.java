@@ -1,7 +1,9 @@
 package com.yukz.daodaoping.common.utils;
 
+import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.system.domain.UserToken;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
@@ -24,7 +26,13 @@ public class ShiroUtils {
     }
     public static UserDO getUser() {
         Object object = getSubjct().getPrincipal();
-        return (UserDO)object;
+        UserDO userDo = new UserDO();
+        try {
+            PropertyUtils.copyProperties(userDo,object);
+        }catch(Exception ex) {
+            throw new BDException("对象转换失败");
+        }
+        return userDo;
     }
     public static Long getUserId() {
         return getUser().getUserId();

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yukz.daodaoping.system.dao.SysSetDao">
+
+	<select id="get" resultType="com.yukz.daodaoping.system.domain.SysSetDO">
+		select `id`,`set_key`,`set_value`,`agent_id`,`platform`,`set_type`,`ext1`,`ext2`,`gmt_create`,`gmt_modify` from ddp_sys_set where id = #{value}
+	</select>
+
+	<select id="getByKey" resultType="com.yukz.daodaoping.system.domain.SysSetDO">
+		select `id`,`set_key`,`set_value`,`agent_id`,`platform`,`set_type`,`ext1`,`ext2`,`gmt_create`,`gmt_modify` from ddp_sys_set where set_key = #{setKey}
+		<if test="platform != null and platform != ''"> and platform = #{platform} </if>
+		<if test="setType != null and setType != ''"> and set_type = #{setType} </if>
+		<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+	</select>
+
+	<select id="list" resultType="com.yukz.daodaoping.system.domain.SysSetDO">
+		select `id`,`set_key`,`set_value`,`agent_id`,`platform`,`set_type`,`ext1`,`ext2`,`gmt_create`,`gmt_modify` from ddp_sys_set
+        <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="setKey != null and setKey != ''"> and set_key = #{setKey} </if>
+		  		  <if test="setValue != null and setValue != ''"> and set_value = #{setValue} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="platform != null and platform != ''"> and platform = #{platform} </if>
+		  		  <if test="setType != null and setType != ''"> and set_type = #{setType} </if>
+		  		  <if test="ext1 != null and ext1 != ''"> and ext1 = #{ext1} </if>
+		  		  <if test="ext2 != null and ext2 != ''"> and ext2 = #{ext2} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+        <choose>
+            <when test="sort != null and sort.trim() != ''">
+                order by ${sort} ${order}
+            </when>
+			<otherwise>
+                order by id desc
+			</otherwise>
+        </choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+ 	<select id="count" resultType="int">
+		select count(*) from ddp_sys_set
+		 <where>  
+		  		  <if test="id != null and id != ''"> and id = #{id} </if>
+		  		  <if test="setKey != null and setKey != ''"> and set_key = #{setKey} </if>
+		  		  <if test="setValue != null and setValue != ''"> and set_value = #{setValue} </if>
+		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+		  		  <if test="platform != null and platform != ''"> and platform = #{platform} </if>
+		  		  <if test="setType != null and setType != ''"> and set_type = #{setType} </if>
+		  		  <if test="ext1 != null and ext1 != ''"> and ext1 = #{ext1} </if>
+		  		  <if test="ext2 != null and ext2 != ''"> and ext2 = #{ext2} </if>
+		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		  		</where>
+	</select>
+	 
+	<insert id="save" parameterType="com.yukz.daodaoping.system.domain.SysSetDO" useGeneratedKeys="true" keyProperty="id">
+		insert into ddp_sys_set
+		(
+			`set_key`, 
+			`set_value`, 
+			`agent_id`, 
+			`platform`, 
+			`set_type`, 
+			`ext1`, 
+			`ext2`, 
+			`gmt_create`, 
+			`gmt_modify`
+		)
+		values
+		(
+			#{setKey}, 
+			#{setValue}, 
+			#{agentId}, 
+			#{platform}, 
+			#{setType}, 
+			#{ext1}, 
+			#{ext2}, 
+			#{gmtCreate}, 
+			#{gmtModify}
+		)
+	</insert>
+	 
+	<update id="update" parameterType="com.yukz.daodaoping.system.domain.SysSetDO">
+		update ddp_sys_set 
+		<set>
+			<if test="setKey != null">`set_key` = #{setKey}, </if>
+			<if test="setValue != null">`set_value` = #{setValue}, </if>
+			<if test="agentId != null">`agent_id` = #{agentId}, </if>
+			<if test="platform != null">`platform` = #{platform}, </if>
+			<if test="setType != null">`set_type` = #{setType}, </if>
+			<if test="ext1 != null">`ext1` = #{ext1}, </if>
+			<if test="ext2 != null">`ext2` = #{ext2}, </if>
+			<if test="gmtCreate != null">`gmt_create` = #{gmtCreate}, </if>
+			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
+		</set>
+		where id = #{id}
+	</update>
+	
+	<delete id="remove">
+		delete from ddp_sys_set where id = #{value}
+	</delete>
+	
+	<delete id="batchRemove">
+		delete from ddp_sys_set where id in 
+		<foreach item="id" collection="array" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</delete>
+
+</mapper>
