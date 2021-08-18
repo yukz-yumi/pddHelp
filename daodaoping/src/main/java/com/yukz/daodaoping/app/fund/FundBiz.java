@@ -163,13 +163,16 @@ public class FundBiz {
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
 			fundRecord.setTransStatus(FundEnums.FAIL.getStatus());
 			fundTransferInfoService.update(fundRecord);
+			logger.error("对象赋值失败");
+			logger.info("更新出金资金流水状态为:【失败】");
 			throw new Exception("对象赋值失败");
 		}
 		logger.info("调用外部接口...开始转账");
 		// TODO 调用外部接口
-		logger.info("开始向用户转账...");
+		logger.info("转账成功...");
 		fundRecord.setTransStatus(FundEnums.SUCCESS.getStatus());
 		fundTransferInfoService.update(fundRecord);
+		logger.info("更新出金资金流水状态为:【成功】");
 	}
 	
 	
