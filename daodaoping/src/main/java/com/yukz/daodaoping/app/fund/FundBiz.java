@@ -151,6 +151,14 @@ public class FundBiz {
 
 	}
 	
+	//TODO 微信出金接口
+	public boolean WXfundOut(FundTransferInfoDO fundRecord) {
+		logger.info("调用外部接口...开始转账");
+		// TODO 调用外部接口
+		logger.info("转账成功...");
+		return true;
+	}
+	
 	public void fundOutProcess(FundRequest fundRequest,FundBizEnum fundBiz) throws Exception {
 		logger.info("业务类型{}准备开始出金转账...", fundBiz.getBizType());
 		logger.info("初始化出金资金流水...");
@@ -167,11 +175,13 @@ public class FundBiz {
 			logger.info("更新出金资金流水状态为:【失败】");
 			throw new Exception("对象赋值失败");
 		}
-		logger.info("调用外部接口...开始转账");
-		// TODO 调用外部接口
-		logger.info("转账成功...");
+		if(!WXfundOut(fundRecord)) {
+			fundRecord.setTransStatus(FundEnums.FAIL.getStatus());
+			fundTransferInfoService.update(fundRecord);			
+			logger.info("更新出金资金流水状态为:【失败】");
+		}
 		fundRecord.setTransStatus(FundEnums.SUCCESS.getStatus());
-		fundTransferInfoService.update(fundRecord);
+		fundTransferInfoService.update(fundRecord);			
 		logger.info("更新出金资金流水状态为:【成功】");
 	}
 	
