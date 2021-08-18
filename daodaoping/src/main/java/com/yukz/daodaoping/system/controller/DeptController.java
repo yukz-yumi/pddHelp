@@ -102,7 +102,7 @@ public class DeptController extends BaseController {
 		} else {
 			DeptDO parent = sysDeptService.get(pId);
 			model.addAttribute("pName", parent.getName());
-			model.addAttribute("segmentCode", parent.getSegmentCode());
+			model.addAttribute("agentId", parent.getAgentId());
 		}
 		return  prefix + "/add";
 	}
@@ -131,10 +131,10 @@ public class DeptController extends BaseController {
 		if (Constant.DEMO_ACCOUNT.equals(getUsername())) {
 			return R.error(1, "演示系统不允许修改,完整体验请部署程序");
 		}
-		//获取父部门的segmentCode，并保存到当前部门中
+		//获取父部门的agentId，并保存到当前部门中
 		if (null != sysDept.getParentId() && 0 != sysDept.getParentId()){
 			DeptDO parentDept = sysDeptService.get(sysDept.getParentId());
-			sysDept.setSegmentCode(parentDept.getSegmentCode());
+			sysDept.setAgentId(parentDept.getAgentId());
 		}
 		if (sysDeptService.save(sysDept) > 0) {
 			return R.ok();

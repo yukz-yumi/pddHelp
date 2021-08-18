@@ -25,7 +25,7 @@ CREATE TABLE `sys_dept` (
   `name` varchar(50) DEFAULT NULL COMMENT '部门名称',
   `order_num` int(11) DEFAULT NULL COMMENT '排序',
   `del_flag` tinyint(4) DEFAULT '0' COMMENT '是否删除  -1：已删除  0：正常',
-  `segment_code` varchar(100) DEFAULT NULL COMMENT '客户编码',
+  `agent_id` bigint(8)  NOT NULL COMMENT '机构编号',
   `ext1` varchar(200) DEFAULT NULL COMMENT '备用字段',
   `ext2` varchar(200) DEFAULT NULL COMMENT '备用字段',
   `ext3` varchar(200) DEFAULT NULL COMMENT '备用字段',
@@ -35,7 +35,7 @@ CREATE TABLE `sys_dept` (
 -- ----------------------------
 -- Records of sys_dept
 -- ----------------------------
-INSERT INTO `sys_dept` VALUES (null, '0', '总站', '1', '1', 'wh_main', null, null, null);
+INSERT INTO `sys_dept` VALUES (null, '0', '总站', '1', '1', '100001', null, null, null);
 
 
 -- ----------------------------
@@ -61,15 +61,15 @@ CREATE TABLE `sys_role` (
   `user_id_create` bigint(255) DEFAULT NULL COMMENT '创建用户id',
   `gmt_create` datetime DEFAULT NULL COMMENT '创建时间',
   `gmt_modified` datetime DEFAULT NULL COMMENT '创建时间',
-  `segment_code` varchar(100) DEFAULT NULL COMMENT '客户编码',
+  `agent_id` bigint(8)  NOT NULL COMMENT '机构编号',
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8 COMMENT='角色';
 
 -- ----------------------------
 -- Records of sys_role
 -- ----------------------------
-INSERT INTO `sys_role` VALUES ('1', '超级用户角色', 'admin', '拥有最高权限', '2', '2017-08-12 00:43:52', '2017-08-12 19:14:59', 'wh_main');
-INSERT INTO `sys_role` VALUES (null, '前端角色-全部', null, '前端角色-全部', null, null, null, 'wh_main');
+INSERT INTO `sys_role` VALUES ('1', '超级用户角色', 'admin', '拥有最高权限', '2', '2017-08-12 00:43:52', '2017-08-12 19:14:59', '100001');
+INSERT INTO `sys_role` VALUES (null, '前端角色-全部', null, '前端角色-全部', null, null, null, '100001');
 
 -- ----------------------------
 -- Table structure for `sys_user`
@@ -95,7 +95,7 @@ CREATE TABLE `sys_user` (
   `province` varchar(255) DEFAULT NULL COMMENT '省份',
   `city` varchar(255) DEFAULT NULL COMMENT '所在城市',
   `district` varchar(255) DEFAULT NULL COMMENT '所在地区',
-  `segment_code` varchar(100) DEFAULT NULL COMMENT '客户编码',
+  `agent_id` bigint(8)  NOT NULL COMMENT '机构编号',
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=utf8;
 
@@ -144,8 +144,8 @@ begin
   commit;
 end;
 
-call add_table_column('sys_dict','segment_code','varchar(100)');
-call add_table_column('sys_menu','segment_code','varchar(100)');
+call add_table_column('sys_dict','agent_id','bigint(8)');
+call add_table_column('sys_menu','agent_id','bigint(8)');
 
 
 -- ----------------------------
@@ -254,3 +254,15 @@ INSERT INTO `sys_menu` VALUES (111, 106, '任务类型管理', '/task/taskTypeIn
 INSERT INTO `sys_menu` VALUES (112, 111, '新增', '', 'task:taskTypeInfo:add', 2, '', 1, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (113, 111, '修改', '', 'task:taskTypeInfo:edit', 2, '', 2, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (114, 111, '删除', '', 'task:taskTypeInfo:remove', 2, '', 3, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (115, 106, '任务申请管理', '/task/taskApplyInfo', 'task:taskApplyInfo:taskApplyInfo', 1, '', 3003, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (116, 115, '新增', '', 'task:taskApplyInfo:add', 2, '', 1, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (117, 115, '修改', '', 'task:taskApplyInfo:edit', 2, '', 2, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (118, 115, '删除', '', 'task:taskApplyInfo:remove', 2, '', 3, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (119, 106, '任务接单管理', '/task/taskAcceptInfo', 'task:taskAcceptInfo:taskAcceptInfo', 1, '', 3004, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (120, 119, '新增', '', 'task:taskAcceptInfo:add', 2, '', 1, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (121, 119, '修改', '', 'task:taskAcceptInfo:edit', 2, '', 2, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (122, 119, '删除', '', 'task:taskAcceptInfo:remove', 2, '', 3, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (123, 106, '订单管理', '/order/orderInfo', 'order:orderInfo:orderInfo', 1, '', 3005, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (124, 123, '新增', '', 'order:orderInfo:add', 2, '', 1, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (125, 123, '修改', '', 'order:orderInfo:edit', 2, '', 2, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (126, 123, '删除', '', 'order:orderInfo:remove', 2, '', 3, NULL, NULL, '100001');

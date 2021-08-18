@@ -21,6 +21,12 @@
 		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
 		  		  <if test="price != null and price != ''"> and price = #{price} </if>
+				  <if test="queryWord != null and queryWord != ''">
+					  and (
+					  (task_type_desc like concat(concat('%',#{queryWord}),'%'))
+					  or (task_type like concat(concat('%',#{queryWord}),'%'))
+					  )
+				  </if>
 		  		</where>
         <choose>
             <when test="sort != null and sort.trim() != ''">
@@ -49,6 +55,12 @@
 		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
 		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
 		  		  <if test="price != null and price != ''"> and price = #{price} </if>
+				  <if test="queryWord != null and queryWord != ''">
+					 and (
+					 (task_type_desc like concat(concat('%',#{queryWord}),'%'))
+					 or (task_type like concat(concat('%',#{queryWord}),'%'))
+					 )
+				  </if>
 		  		</where>
 	</select>
 	 

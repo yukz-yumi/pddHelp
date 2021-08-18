@@ -25,7 +25,7 @@ public class DeptDO implements Serializable {
 	//是否删除  -1：已删除  0：正常
 	private Integer delFlag;
 	//段编码
-	private String segmentCode;
+	private Long agentId;
 	//扩展字段1
 	private String ext1;
 	//扩展字段2
@@ -94,12 +94,12 @@ public class DeptDO implements Serializable {
 		return delFlag;
 	}
 
-	public String getSegmentCode() {
-		return segmentCode;
+	public Long getAgentId() {
+		return agentId;
 	}
 
-	public void setSegmentCode(String segmentCode) {
-		this.segmentCode = segmentCode;
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
 	}
 
 	public String getExt1() {
@@ -134,7 +134,7 @@ public class DeptDO implements Serializable {
 				", name='" + name + '\'' +
 				", orderNum=" + orderNum +
 				", delFlag=" + delFlag +
-				", segmentCode=" + segmentCode +
+				", agentId=" + agentId +
 				", ext1=" + ext1 +
 				", ext2=" + ext2 +
 				", ext3=" + ext3 +

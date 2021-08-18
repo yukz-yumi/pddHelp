@@ -43,7 +43,7 @@ public class DictDO implements Serializable {
 	//删除标记
 	private String delFlag;
 	//客户编码
-	private String segmentCode;
+	private Long agentId;
 
 	/**
 	 * 设置：编号
@@ -202,12 +202,12 @@ public class DictDO implements Serializable {
 		return delFlag;
 	}
 
-	public String getSegmentCode() {
-		return segmentCode;
+	public Long getAgentId() {
+		return agentId;
 	}
 
-	public void setSegmentCode(String segmentCode) {
-		this.segmentCode = segmentCode;
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class DictDO implements Serializable {
 				", updateDate=" + updateDate +
 				", remarks='" + remarks + '\'' +
 				", delFlag='" + delFlag + '\'' +
-				", segmentCode='" + segmentCode + '\'' +
+				", agentId='" + agentId + '\'' +
 				'}';
 	}
 }

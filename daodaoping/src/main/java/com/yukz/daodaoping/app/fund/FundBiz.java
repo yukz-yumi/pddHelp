@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.github.wxpay.sdk.WXPay;
 import com.github.wxpay.sdk.WXPayConfig;
 import com.github.wxpay.sdk.WXPayUtil;
+import com.yukz.daodaoping.app.fund.enums.FundBizEnum;
 import com.yukz.daodaoping.app.fund.enums.FundEnums;
 import com.yukz.daodaoping.app.fund.enums.FundTransTypeEnum;
 import com.yukz.daodaoping.app.fund.wxpay.DDPWXpayConfig;
@@ -148,6 +149,27 @@ public class FundBiz {
 		Map<String, String> reportResult = wxpay.report(reqData);
 		logger.info("报告完成....报告结果:{}", WXPayUtil.mapToXml(reportResult));
 
+	}
+	
+	public void fundOutProcess(FundRequest fundRequest,FundBizEnum fundBiz) throws Exception {
+		logger.info("业务类型{}准备开始出金转账...", fundBiz.getBizType());
+		logger.info("初始化出金资金流水...");
+		FundTransferInfoDO fundRecord = new FundTransferInfoDO();
+		fundRecord.setTransStatus(FundEnums.WAIT.getStatus());
+		fundRecord.setTransType(FundTransTypeEnum.FUND_OUT.getType());
+		try {
+			PropertyUtils.copyProperties(fundRecord, fundRequest);
+			fundTransferInfoService.save(fundRecord);		
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+			fundRecord.setTransStatus(FundEnums.FAIL.getStatus());
+			fundTransferInfoService.update(fundRecord);
+			throw new Exception("对象赋值失败");
+		}
+		logger.info("调用外部接口...开始转账");
+		// TODO 调用外部接口
+		logger.info("开始向用户转账...");
+		fundRecord.setTransStatus(FundEnums.SUCCESS.getStatus());
+		fundTransferInfoService.update(fundRecord);
 	}
 	
 	

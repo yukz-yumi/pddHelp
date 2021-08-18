@@ -7,6 +7,7 @@ public class FundRequest {
 	private Long taskId;
 	// 用户id
 	private Long userId;
+	
 	// 机构编号
 	private Long agentId;
 	// 用户openid
@@ -74,19 +75,7 @@ public class FundRequest {
 	public void setTaskId(Long taskId) {
 		this.taskId = taskId;
 	}
-	public FundRequest(Long orderId, Long taskId, Long userId, Long agentId, String openId, String bizType,
-			String transType, Long fundAmount, String transStatus) {
-		super();
-		this.orderId = orderId;
-		this.taskId = taskId;
-		this.userId = userId;
-		this.agentId = agentId;
-		this.openId = openId;
-		this.bizType = bizType;
-		this.transType = transType;
-		this.fundAmount = fundAmount;
-		this.transStatus = transStatus;
-	}
+	
 	public FundRequest() {
 		super();
 		// TODO Auto-generated constructor stub

@@ -17,6 +17,7 @@
 		  		  <if test="certificationUrl != null and certificationUrl != ''"> and certification_url = #{certificationUrl} </if>
 		  		  <if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
 		  		  <if test="verifyStatus != null and verifyStatus != ''"> and verify_status = #{verifyStatus} </if>
+		  		  <if test="verifyStatusIsnull != null and verifyStatusIsnull == '1'"> and verify_status is null </if>
 		  		  <if test="workerId != null and workerId != ''"> and worker_id = #{workerId} </if>
 		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
 		  		  <if test="hasPaid != null and hasPaid != ''"> and has_paid = #{hasPaid} </if>
@@ -48,6 +49,7 @@
 		  		  <if test="certificationUrl != null and certificationUrl != ''"> and certification_url = #{certificationUrl} </if>
 		  		  <if test="taskStatus != null and taskStatus != ''"> and task_status = #{taskStatus} </if>
 		  		  <if test="verifyStatus != null and verifyStatus != ''"> and verify_status = #{verifyStatus} </if>
+			 	  <if test="verifyStatusIsnull != null and verifyStatusIsnull == '1'"> and verify_status is null </if>
 		  		  <if test="workerId != null and workerId != ''"> and worker_id = #{workerId} </if>
 		  		  <if test="amount != null and amount != ''"> and amount = #{amount} </if>
 		  		  <if test="hasPaid != null and hasPaid != ''"> and has_paid = #{hasPaid} </if>
@@ -111,6 +113,28 @@
 			<if test="gmtModify != null">`gmt_modify` = #{gmtModify}</if>
 		</set>
 		where id = #{id}
+	</update>
+
+	<update id="batchUpdate" parameterType="list">
+		<foreach collection="list" item="item" separator=";">
+			update ddp_task_accept_info
+				<set>
+					<if test="taskId != null">`task_id` = #{item.taskId}, </if>
+					<if test="userId != null">`user_id` = #{item.userId}, </if>
+					<if test="openId != null">`open_id` = #{item.openId}, </if>
+					<if test="certificationUrl != null">`certification_url` = #{item.certificationUrl}, </if>
+					<if test="taskStatus != null">`task_status` = #{item.taskStatus}, </if>
+					<if test="verifyStatus != null">`verify_status` = #{item.verifyStatus}, </if>
+					<if test="workerId != null">`worker_id` = #{item.workerId}, </if>
+					<if test="amount != null">`amount` = #{item.amount}, </if>
+					<if test="hasPaid != null">`has_paid` = #{item.hasPaid}, </if>
+					<if test="agentId != null">`agent_id` = #{item.agentId}, </if>
+					<if test="expireTime != null">`expire_time` = #{item.expireTime}, </if>
+					<if test="gmtCreate != null">`gmt_create` = #{item.gmtCreate}, </if>
+					<if test="gmtModify != null">`gmt_modify` = #{item.gmtModify}</if>
+				</set>
+				where id = #{item.id}
+		</foreach>
 	</update>
 	
 	<delete id="remove">

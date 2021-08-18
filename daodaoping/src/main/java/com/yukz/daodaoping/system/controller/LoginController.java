@@ -78,7 +78,7 @@ public class LoginController extends BaseController {
             for (int n=0; n<segmentListE.size(); n++) {
                 Attribute codeAttr = XmlParser.getAttribute(segmentListE.get(n),"code");
                 if (null != codeAttr) {
-                    if (org.apache.commons.lang.StringUtils.equals(codeAttr.getValue(), getSegmentCode())) {
+                    if (org.apache.commons.lang.StringUtils.equals(codeAttr.getValue(), String.valueOf(getAgentId()))) {
                         Attribute nameAttr = XmlParser.getAttribute(segmentListE.get(n),"name");
                         segmentName = nameAttr.getValue();
                     }

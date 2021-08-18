@@ -45,8 +45,8 @@ public class BaseController {
 		return UuidUtil.get32UUID();
 	}
 
-	public String getSegmentCode() {
-		return getUser().getSegmentCode();
+	public Long getAgentId() {
+		return getUser().getAgentId();
 	}
 
 	public R commonImport(String filePath, String fileName, String path, Logger logger, PddHelpCommonService gotooCommonService) {
@@ -206,9 +206,9 @@ public class BaseController {
 		fieldValues.append(",'");
 		fieldValues.append(nowDateStr);
 		fieldValues.append("'");
-		fieldsb.append(",SEGMENT_CODE");
+		fieldsb.append(",AGENT_ID");
 		fieldValues.append(",'");
-		fieldValues.append(getSegmentCode());
+		fieldValues.append(getAgentId());
 		fieldValues.append("'");
 	}
 }

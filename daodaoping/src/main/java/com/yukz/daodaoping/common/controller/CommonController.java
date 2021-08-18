@@ -53,8 +53,9 @@ public class CommonController extends BaseController {
 		if (null != multipartFile && !multipartFile.isEmpty()) {
 			String upFileName = multipartFile.getOriginalFilename();
 			String fileExt = upFileName.substring(upFileName.lastIndexOf("."));
+			String fileSuffix = upFileName.substring(upFileName.lastIndexOf(".")+1);
 			//校验文件类型
-			ImgTypeEnum imgTypeEnum = ImgTypeEnum.getEnumByCode(fileExt);
+			ImgTypeEnum imgTypeEnum = ImgTypeEnum.getEnumByCode(fileSuffix);
 			if (null == imgTypeEnum) {
 				fileMap.put("status", false);
 				fileMap.put("message", "不支持的文件类型");

@@ -5,12 +5,12 @@
 
 	<select id="get" resultType="com.yukz.daodaoping.system.domain.DeptDO">
 		select
-		`dept_id`,`parent_id`,`name`,`order_num`,`del_flag`, segment_code as segmentCode, ext1, ext2, ext3 from sys_dept
+		`dept_id`,`parent_id`,`name`,`order_num`,`del_flag`, agent_id as agentId, ext1, ext2, ext3 from sys_dept
 		where dept_id = #{value}
 	</select>
 
 	<select id="list" resultType="com.yukz.daodaoping.system.domain.DeptDO">
-		select `dept_id`,`parent_id`,`name`,`order_num`,`del_flag`, segment_code as segmentCode, ext1, ext2, ext3 from
+		select `dept_id`,`parent_id`,`name`,`order_num`,`del_flag`, agent_id as agentId, ext1, ext2, ext3 from
 		sys_dept
 		<where>
 			<if test="deptId != null and deptId != ''"> and dept_id = #{deptId} </if>
@@ -23,7 +23,7 @@
 			<if test="name != null and name != ''"> and name = #{name} </if>
 			<if test="orderNum != null and orderNum != ''"> and order_num = #{orderNum} </if>
 			<if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
-			<if test="segmentCode != null and segmentCode != ''"> and segment_code = #{segmentCode} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 			<if test="ext1 != null and ext1 != ''"> and ext1 = #{ext1} </if>
 			<if test="ext2 != null and ext2 != ''"> and ext2 = #{ext2} </if>
 			<if test="ext3 != null and ext3 != ''"> and ext3 = #{ext3} </if>
@@ -54,7 +54,7 @@
 			<if test="name != null and name != ''"> and name = #{name} </if>
 			<if test="orderNum != null and orderNum != ''"> and order_num = #{orderNum} </if>
 			<if test="delFlag != null and delFlag != ''"> and del_flag = #{delFlag} </if>
-			<if test="segmentCode != null and segmentCode != ''"> and segment_code = #{segmentCode} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
 			<if test="ext1 != null and ext1 != ''"> and ext1 = #{ext1} </if>
 			<if test="ext2 != null and ext2 != ''"> and ext2 = #{ext2} </if>
 			<if test="ext3 != null and ext3 != ''"> and ext3 = #{ext3} </if>
@@ -69,7 +69,7 @@
 		`name`,
 		`order_num`,
 		`del_flag`,
-		`segment_code`,
+		`agent_id`,
 		`ext1`,
 		`ext2`,
 		`ext3`
@@ -80,7 +80,7 @@
 		#{name},
 		#{orderNum},
 		#{delFlag},
-		#{segmentCode},
+		#{agentId},
 		#{ext1},
 		#{ext2},
 		#{ext3}
@@ -94,7 +94,7 @@
 			<if test="name != null">`name` = #{name}, </if>
 			<if test="orderNum != null">`order_num` = #{orderNum}, </if>
 			<if test="delFlag != null">`del_flag` = #{delFlag}</if>
-			<if test="segmentCode != null">`segment_code` = #{segmentCode}</if>
+			<if test="agentId != null">`agent_id` = #{agentId}</if>
 			<if test="ext1 != null">`ext1` = #{ext1}</if>
 			<if test="ext2 != null">`ext2` = #{ext2}</if>
 			<if test="ext3 != null">`ext3` = #{ext3}</if>

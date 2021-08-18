@@ -86,10 +86,10 @@ public class UserController extends BaseController {
 	String add(Model model) {
 		//只查询登陆用户所属的客户编码的数据
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		String segmentCode = getSegmentCode();
-		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属segmentCode的数据
-		if (!StringUtils.equals(segmentCode, "0")) {
-			queryMap.put("segmentCode", getSegmentCode());
+		Long agentId = getAgentId();
+		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属的数据
+		if (agentId.longValue() != 0) {
+			queryMap.put("agentId", getAgentId());
 		}
 		List<RoleDO> roles = roleService.list(queryMap);
 		model.addAttribute("roles", roles);
@@ -105,10 +105,10 @@ public class UserController extends BaseController {
 
 		//只查询登陆用户所属的客户编码的数据
 		Map<String, Object> queryMap = new HashMap<String, Object>();
-		String segmentCode = getSegmentCode();
+		Long agentId = getAgentId();
 		//  admin可以查询所有数据，故除admin外其他用户都只能查看自己所属segmentCode的数据
-		if (!StringUtils.equals(segmentCode, "0")) {
-			queryMap.put("segmentCode", getSegmentCode());
+		if (agentId.longValue() != 0) {
+			queryMap.put("agentId", getAgentId());
 		}
 		List<RoleDO> roles = roleService.list(queryMap);
 		model.addAttribute("roles", roles);
@@ -128,7 +128,7 @@ public class UserController extends BaseController {
 		//根据用户所属部门获取段级编码，并保存到用户表中
 		DeptDO segmentDept = deptService.get(user.getDeptId());
 		if (null != segmentDept) {
-			user.setSegmentCode(segmentDept.getSegmentCode());
+			user.setAgentId(segmentDept.getAgentId());
 		}
 		if (userService.save(user) > 0) {
 			return R.ok();
@@ -148,7 +148,7 @@ public class UserController extends BaseController {
 		if(null != user.getDeptId()) {
 			DeptDO segmentDept = deptService.get(user.getDeptId());
 			if (null != segmentDept) {
-				user.setSegmentCode(segmentDept.getSegmentCode());
+				user.setAgentId(segmentDept.getAgentId());
 			}
 		}
 		if (userService.update(user) > 0) {
@@ -170,7 +170,7 @@ public class UserController extends BaseController {
 		if(null != user.getDeptId()) {
 			DeptDO segmentDept = deptService.get(user.getDeptId());
 			if (null != segmentDept) {
-				user.setSegmentCode(segmentDept.getSegmentCode());
+				user.setAgentId(segmentDept.getAgentId());
 			}
 		}
 		if (userService.updatePersonal(user) > 0) {

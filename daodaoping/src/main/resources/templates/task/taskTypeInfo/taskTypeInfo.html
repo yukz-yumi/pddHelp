@@ -21,8 +21,30 @@
 							<button class="btn btn-success" onclick="reLoad()">查询</button>
 						</div>
 						<div class="columns pull-right col-md-2 nopadding">
-							<input id="searchName" type="text" class="form-control"
-								placeholder="">
+							<input id="queryWord" type="text" class="form-control"
+								   placeholder="任务类型说明、助力方式">
+						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<select   class="form-control"
+									  tabindex="2" style="width: 100%" name="allowed" id="allowed">
+								<option value="">-请选择是否启用-</option>
+								<div th:each="isAllow : ${isAllowList}">
+									<option th:value="${isAllow.status}">
+										<label class="custom-control-label" th:text="${isAllow.desc}"></label>
+									</option>
+								</div>
+							</select>
+						</div>
+						<div class="columns pull-right col-md-2 nopadding">
+							<select   class="form-control"
+									  tabindex="2" style="width: 100%" name="platform" id="platform">
+								<option value="">-请选择平台-</option>
+								<div th:each="platform : ${platformList}">
+									<option th:value="${platform.code}">
+										<label class="custom-control-label" th:text="${platform.name}"></label>
+									</option>
+								</div>
+							</select>
 						</div>
 					</div>
 					<table id="exampleTable" data-mobile-responsive="true">

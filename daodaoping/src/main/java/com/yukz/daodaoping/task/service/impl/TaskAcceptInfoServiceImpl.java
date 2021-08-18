@@ -43,6 +43,11 @@ public class TaskAcceptInfoServiceImpl implements TaskAcceptInfoService {
 	}
 	
 	@Override
+	public int batchUpdate(List<TaskAcceptInfoDO> taskAcceptInfoList){
+		return taskAcceptInfoDao.batchUpdate(taskAcceptInfoList);
+	}
+
+	@Override
 	public int remove(Long id){
 		return taskAcceptInfoDao.remove(id);
 	}

@@ -4,12 +4,12 @@
 <mapper namespace="com.yukz.daodaoping.system.dao.UserDao">
 
     <select id="get" resultType="com.yukz.daodaoping.system.domain.UserDO">
-		select `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`,`segment_code` as segmentCode from sys_user where user_id = #{value}
+		select `user_id`,`username`,`name`,`password`,`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`,`agent_id` as agentId from sys_user where user_id = #{value}
 	</select>
 
     <select id="list" resultType="com.yukz.daodaoping.system.domain.UserDO">
         select
-        u.`user_id`,u.`username`,u.`name`,u.`password`,u.`dept_id`,u.`email`,u.`mobile`,u.`status`,u.`user_id_create`,u.`gmt_create`,u.`gmt_modified`,u.`sex`,u.`birth`,u.`pic_id`,u.`live_address`,u.`hobby`,u.`province`,u.`city`,u.`district`,u.`segment_code` as segmentCode
+        u.`user_id`,u.`username`,u.`name`,u.`password`,u.`dept_id`,u.`email`,u.`mobile`,u.`status`,u.`user_id_create`,u.`gmt_create`,u.`gmt_modified`,u.`sex`,u.`birth`,u.`pic_id`,u.`live_address`,u.`hobby`,u.`province`,u.`city`,u.`district`,u.`agent_id` as agentId
         ,d.name as deptName
         from sys_user u left join sys_dept d on u.dept_id = d.dept_id
         <where>
@@ -37,7 +37,7 @@
             <if test="province != null and province != ''">and u.province = #{province}</if>
             <if test="city != null and city != ''">and u.city = #{city}</if>
             <if test="district != null and district != ''">and u.district = #{district}</if>
-            <if test="segmentCode != null and segmentCode != ''">and u.segment_code = #{segmentCode}</if>
+            <if test="agentId != null and agentId != ''">and u.agent_id = #{agentId}</if>
             <if test="queryWord != null and queryWord != ''">
                 and (
                 (u.name like concat(concat('%',#{queryWord}),'%'))
@@ -86,7 +86,7 @@
             <if test="province != null and province != ''">and u.province = #{province}</if>
             <if test="city != null and city != ''">and u.city = #{city}</if>
             <if test="district != null and district != ''">and u.district = #{district}</if>
-            <if test="segmentCode != null and segmentCode != ''">and u.segment_code = #{segmentCode}</if>
+            <if test="agentId != null and agentId != ''">and u.agent_id = #{agentId}</if>
             <if test="queryWord != null and queryWord != ''">
                 and (
                 (u.name like concat(concat('%',#{queryWord}),'%'))
@@ -118,7 +118,7 @@
 			`province`, 
 			`city`, 
 			`district`,
-			`segment_code`
+			`agent_id`
 		)
 		values
 		(
@@ -140,7 +140,7 @@
 			#{province}, 
 			#{city}, 
 			#{district},
-			#{segmentCode}
+			#{agentId}
 		)
 	</insert>
 
@@ -165,7 +165,7 @@
             <if test="province != null">`province` = #{province},</if>
             <if test="city != null">`city` = #{city},</if>
             <if test="district != null">`district` = #{district}</if>
-            <if test="segmentCode != null">`segment_code` = #{segmentCode}</if>
+            <if test="agentId != null">`agent_id` = #{agentId}</if>
         </set>
         where user_id = #{userId}
     </update>
@@ -186,7 +186,7 @@
 	</select>
 
     <select id="getByUsernameAndPass" parameterType="com.yukz.daodaoping.system.domain.UserDO" resultType="com.yukz.daodaoping.system.domain.UserDO">
-        select `user_id`,`username`,u.`name`,`password`,u.`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`,dept.`name` as deptName,u.`segment_code` as segmentCode
+        select `user_id`,`username`,u.`name`,`password`,u.`dept_id`,`email`,`mobile`,`status`,`user_id_create`,`gmt_create`,`gmt_modified`,`sex`,`birth`,`pic_id`,`live_address`,`hobby`,`province`,`city`,`district`,dept.`name` as deptName,u.`agent_id` as agentId
         from sys_user u, sys_dept dept where u.dept_id = dept.dept_id
         <if test="username != null and username != ''">and u.username = #{username}</if>
         <if test="password != null and password != ''">and u.password = #{password}</if>
