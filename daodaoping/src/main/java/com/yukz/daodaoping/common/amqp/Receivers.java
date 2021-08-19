@@ -102,7 +102,6 @@ public class Receivers {
 			taskApplyInfoService.update(taskInfo);
 			// 向监听者发送消息
 			RealSubject subject = new RealSubject();
-//			TaskConfirmedObserver observer = new TaskConfirmedObserver();
 			subject.addObserver(observer);
 			subject.makeChanged(taskInfo);
 			amqpHandler.sendDelayMessage(taskId, MqConstants.TASK_EXPIRE_ROUTER_KEY);
@@ -158,7 +157,7 @@ public class Receivers {
 		}
 	}
 	
-	@RabbitListener(queues = MqConstants.TASK_TAKE_EXPIRE_QUEUE)
+	@RabbitListener(queues = MqConstants.TASK_TAKE_TTL_QUEUE)
 	public void ExpireTaskTakeListener(Long id){
 		 TaskAcceptInfoDO takeInfo = taskAcceptInfoService.get(id);
 		 if(takeInfo == null) {

@@ -1,10 +1,16 @@
 package com.yukz.daodaoping.app.auth.vo;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
 
-public class UserAgent {
+public class UserAgent implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5710919441152048062L;
 
 	private Long userId;
 
@@ -104,6 +110,26 @@ public class UserAgent {
 
 	public void setExAccountList(List<UserVsExAccountDO> exAccountList) {
 		this.exAccountList = exAccountList;
+	}
+
+	public UserAgent(Long userId, Long agentId, String openId, String nickName, String headImgUrl, Long scores,
+			String userGrade, String mobile, String userStatus, List<UserVsExAccountDO> exAccountList) {
+		super();
+		this.userId = userId;
+		this.agentId = agentId;
+		this.openId = openId;
+		this.nickName = nickName;
+		this.headImgUrl = headImgUrl;
+		this.scores = scores;
+		this.userGrade = userGrade;
+		this.mobile = mobile;
+		this.userStatus = userStatus;
+		this.exAccountList = exAccountList;
+	}
+
+	public UserAgent() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	
 	

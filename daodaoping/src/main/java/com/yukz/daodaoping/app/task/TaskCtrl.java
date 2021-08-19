@@ -42,6 +42,7 @@ import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
+import com.yukz.daodaoping.task.service.TaskAcceptInfoService;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 import com.yukz.daodaoping.task.service.TaskTypeInfoService;
 
@@ -68,6 +69,9 @@ public class TaskCtrl {
 
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoDOService;
+	
+	@Autowired
+	private TaskAcceptInfoService taskAcceptInfoService;
 	
 	@Autowired
 	private AmqpHandler amqpHandler;
@@ -188,7 +192,13 @@ public class TaskCtrl {
 		viewMap.put("taskApplyInfo", taskApplyInfo);
 		return R.ok().put("orderDetail", viewMap);
 	}
-
+	
+	/**
+	 * 发单流水记录
+	 * @param userAgent
+	 * @param request
+	 * @return
+	 */
 	@GetMapping("list")
 	public R getTaskApplyInfoDOListByTaskType(UserAgent userAgent, HttpServletRequest request) {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -257,7 +267,7 @@ public class TaskCtrl {
 		return R.ok().put("data", tasktakeInfo);
 	}
 	
-	@PostMapping("take/comfirm")
+	@PostMapping("take/confirm")
 	public R taskTakeConfirm(@RequestBody TaskRequest taskRequst,UserAgent userAgent) {
 		TaskAcceptInfoDO takeInfo = null;
 		try {
@@ -266,6 +276,38 @@ public class TaskCtrl {
 			return R.error(e.getMessage());
 		}
 		return R.ok().put("data", takeInfo);
+	}
+	
+	/**
+	 * 接单流水记录
+	 * @param userAgent
+	 * @param request
+	 * @return
+	 */
+	@GetMapping("/acception/list")
+	public R taskTakeList(UserAgent userAgent,HttpServletRequest request) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		Long agentId = userAgent.getAgentId();
+		String taskStatus = request.getParameter("status");
+		String timeScope = request.getParameter("scope");
+		int pageNum = Integer.valueOf(request.getParameter("pageNum"));
+		int pageSize = Integer.valueOf(request.getParameter("pageSize"));
+		if (StringUtils.isNotBlank(taskStatus)) {
+			paramMap.put("taskStatus", taskStatus);
+		}
+		Date endDate = new Date();
+		if (StringUtils.isNotBlank(timeScope)) {
+			endDate = getEndTime(timeScope);
+		} else {
+			endDate = getEndTime("week");
+		}
+		paramMap.put("endTime", endDate);
+		paramMap.put("userId", userAgent.getUserId());
+		paramMap.put("agentId", agentId);
+		List<TaskAcceptInfoDO> list = taskAcceptInfoService.list(paramMap);
+		PageHelper.startPage(pageNum, pageSize);
+		PageInfo<TaskAcceptInfoDO> pageResult = new PageInfo<TaskAcceptInfoDO>(list);
+		return R.ok().put("data", pageResult);
 	}
 
 	

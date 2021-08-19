@@ -20,13 +20,13 @@ public class SysSetServiceImpl implements SysSetService {
 	private SysSetDao sysSetDao;
 	
 	@Override
-	@Cacheable(value="sysSet", key = "'sysSet-'+#p0")
+//	@Cacheable(value="sysSet", key = "'sysSet-'+#p0")
 	public SysSetDO get(Long id){
 		return sysSetDao.get(id);
 	}
 	
 	@Override
-	@Cacheable(value="sysSet", key = "'sysSet-'+#p0+'-'+#p1+'-'+#p2+'-'+#p3")
+//	@Cacheable(value="sysSet", key = "'sysSet-'+#p0+'-'+#p1+'-'+#p2+'-'+#p3")
 	public SysSetDO getByKey(String setKey, String platform, String setType, Long agentId){
 		return sysSetDao.getByKey(setKey, platform, setType, agentId);
 	}
@@ -42,19 +42,19 @@ public class SysSetServiceImpl implements SysSetService {
 	}
 	
 	@Override
-	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.id")
+//	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.id")
 	public int save(SysSetDO sysSet){
 		return sysSetDao.save(sysSet);
 	}
 	
 	@Override
-	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.id")
+//	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.id")
 	public int update(SysSetDO sysSet){
 		return sysSetDao.update(sysSet);
 	}
 	
 	@Override
-	@CacheEvict(value="sysSet", key = "'sysSet-'+#p0")
+//	@CacheEvict(value="sysSet", key = "'sysSet-'+#p0")
 	public int remove(Long id){
 		return sysSetDao.remove(id);
 	}
