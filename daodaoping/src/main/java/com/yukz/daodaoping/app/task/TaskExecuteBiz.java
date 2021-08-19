@@ -240,7 +240,11 @@ public class TaskExecuteBiz {
 		return i == 1 ? true : false ;
 	}
 	
-	
+	/**
+	 * 任务偿还
+	 * @param agentId
+	 * @param taskId
+	 */
 	public void repay(Long agentId,Long taskId) {
 		String key = taskRemaminKeyGenerator(agentId, taskId);
 		RLock rlock = redissonClient.getLock(key);
