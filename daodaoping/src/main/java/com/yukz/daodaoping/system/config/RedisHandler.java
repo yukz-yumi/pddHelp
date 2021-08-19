@@ -1,12 +1,22 @@
 package com.yukz.daodaoping.system.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -21,10 +31,40 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisHandler {
 	
-    @Autowired
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<Object, Object> redisTemplate;
 
     private Jedis jedis;
+
+    /**
+     * 设置 redisTemplate 的序列化设置
+     * @param redisConnectionFactory
+     * @return
+     */
+    @Bean
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+        // 1.创建 redisTemplate 模版
+        redisTemplate = new RedisTemplate<>();
+        // 2.关联 redisConnectionFactory
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+        // 3.创建 序列化类
+        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+        ObjectMapper om = new ObjectMapper();
+        // 4.设置可见度
+        om.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        om.configure(MapperFeature.USE_ANNOTATIONS, false);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        // 5.启动默认的类型,此项必须配置，否则会报java.lang.ClassCastException: java.util.LinkedHashMap cannot be cast to XXX
+        om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
+        om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // 6.序列化类，对象映射设置
+        jackson2JsonRedisSerializer.setObjectMapper(om);
+        // 7.设置 value 的转化格式和 key 的转化格式
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
+    }
 
     /**
      * 写入缓存
@@ -36,7 +76,7 @@ public class RedisHandler {
     public boolean set(final String key, Object value) {
         boolean result = false;
         try {
-            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+            ValueOperations<Object, Object> operations = redisTemplate.opsForValue();
             operations.set(key, value);
             result = true;
         } catch (Exception e) {
@@ -55,7 +95,7 @@ public class RedisHandler {
     public boolean set(final String key, Object value, Long expireTime, TimeUnit timeUnit) {
         boolean result = false;
         try {
-            ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+            ValueOperations<Object, Object> operations = redisTemplate.opsForValue();
             operations.set(key, value);
             redisTemplate.expire(key, expireTime, timeUnit);
             result = true;
@@ -82,7 +122,7 @@ public class RedisHandler {
      * @param pattern
      */
     public void removePattern(final String pattern) {
-        Set<Serializable> keys = redisTemplate.keys(pattern);
+        Set<Object> keys = redisTemplate.keys(pattern);
         if (keys.size() > 0) {
             redisTemplate.delete(keys);
         }
@@ -117,7 +157,7 @@ public class RedisHandler {
      */
     public Object get(final String key) {
         Object result = null;
-        ValueOperations<Serializable, Object> operations = redisTemplate.opsForValue();
+        ValueOperations<Object, Object> operations = redisTemplate.opsForValue();
         result = operations.get(key);
         return result;
     }
@@ -130,7 +170,7 @@ public class RedisHandler {
      * @param value
      */
     public void hmSet(String key, Object hashKey, Object value) {
-        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        HashOperations<Object, Object, Object> hash = redisTemplate.opsForHash();
         hash.put(key, hashKey, value);
     }
 
@@ -142,7 +182,7 @@ public class RedisHandler {
      * @return
      */
     public Object hmGet(String key, Object hashKey) {
-        HashOperations<String, Object, Object> hash = redisTemplate.opsForHash();
+        HashOperations<Object, Object, Object> hash = redisTemplate.opsForHash();
         return hash.get(key, hashKey);
     }
 
@@ -153,7 +193,7 @@ public class RedisHandler {
      * @param v
      */
     public void lPush(String k, Object v) {
-        ListOperations<String, Object> list = redisTemplate.opsForList();
+        ListOperations<Object, Object> list = redisTemplate.opsForList();
         list.rightPush(k, v);
     }
 
@@ -166,7 +206,7 @@ public class RedisHandler {
      * @return
      */
     public List<Object> lRange(String k, long l, long l1) {
-        ListOperations<String, Object> list = redisTemplate.opsForList();
+        ListOperations<Object, Object> list = redisTemplate.opsForList();
         return list.range(k, l, l1);
     }
 
@@ -178,7 +218,7 @@ public class RedisHandler {
      * @return
      */
     public Long listRemove(String k, Object v) {
-        ListOperations<String, Object> list = redisTemplate.opsForList();
+        ListOperations<Object, Object> list = redisTemplate.opsForList();
         return list.remove(k,0L,v);
     }
 
@@ -189,7 +229,7 @@ public class RedisHandler {
      */
     public Long listSize(String k)
     {
-        ListOperations<String, Object> list = redisTemplate.opsForList();
+        ListOperations<Object, Object> list = redisTemplate.opsForList();
         return list.size(k);
     }
 
@@ -200,7 +240,7 @@ public class RedisHandler {
      * @param value
      */
     public void add(String key, Object value) {
-        SetOperations<String, Object> set = redisTemplate.opsForSet();
+        SetOperations<Object, Object> set = redisTemplate.opsForSet();
         set.add(key, value);
     }
 
@@ -211,7 +251,7 @@ public class RedisHandler {
      * @return
      */
     public Set<Object> setMembers(String key) {
-        SetOperations<String, Object> set = redisTemplate.opsForSet();
+        SetOperations<Object, Object> set = redisTemplate.opsForSet();
         return set.members(key);
     }
 
@@ -223,7 +263,7 @@ public class RedisHandler {
      * @param scoure
      */
     public void zAdd(String key, Object value, double scoure) {
-        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        ZSetOperations<Object, Object> zset = redisTemplate.opsForZSet();
         zset.add(key, value, scoure);
     }
 
@@ -236,7 +276,7 @@ public class RedisHandler {
      * @return
      */
     public Set<Object> rangeByScore(String key, double scoure, double scoure1) {
-        ZSetOperations<String, Object> zset = redisTemplate.opsForZSet();
+        ZSetOperations<Object, Object> zset = redisTemplate.opsForZSet();
         return zset.rangeByScore(key, scoure, scoure1);
     }
 
@@ -277,7 +317,7 @@ public class RedisHandler {
      */
     public void writeRedisQueue(final String key, Object value)
     {
-        ListOperations<String, Object> list = redisTemplate.opsForList();
+        ListOperations<Object, Object> list = redisTemplate.opsForList();
         list.remove(key,0L,value);
         list.leftPush(key,value);
     }
@@ -289,7 +329,7 @@ public class RedisHandler {
      */
     public Object readRedisQueue(final String key)
     {
-        ListOperations<String, Object> list = redisTemplate.opsForList();
+        ListOperations<Object, Object> list = redisTemplate.opsForList();
         Object obj = list.rightPop(key);
         return obj;
     }

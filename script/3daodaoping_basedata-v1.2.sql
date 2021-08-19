@@ -266,3 +266,7 @@ INSERT INTO `sys_menu` VALUES (123, 106, '订单管理', '/order/orderInfo', 'or
 INSERT INTO `sys_menu` VALUES (124, 123, '新增', '', 'order:orderInfo:add', 2, '', 1, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (125, 123, '修改', '', 'order:orderInfo:edit', 2, '', 2, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (126, 123, '删除', '', 'order:orderInfo:remove', 2, '', 3, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (127, 106, '系统配置', '/system/sysSet', 'system:sysSet:sysSet', 1, '', 3020, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (128, 127, '新增', '', 'system:sysSet:add', 2, '', 1, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (129, 127, '修改', '', 'system:sysSet:edit', 2, '', 2, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (130, 127, '删除', '', 'system:sysSet:remove', 2, '', 3, NULL, NULL, '100001');
