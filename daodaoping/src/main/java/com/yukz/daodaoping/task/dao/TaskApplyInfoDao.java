@@ -1,11 +1,10 @@
 package com.yukz.daodaoping.task.dao;
 
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Mapper;
 
 /**
  * 任务申请表
@@ -18,6 +17,8 @@ public interface TaskApplyInfoDao {
 
 	TaskApplyInfoDO get(Long id);
 	
+	TaskApplyInfoDO getByIdForupdate(Long id);
+
 	List<TaskApplyInfoDO> list(Map<String,Object> map);
 	
 	int count(Map<String,Object> map);

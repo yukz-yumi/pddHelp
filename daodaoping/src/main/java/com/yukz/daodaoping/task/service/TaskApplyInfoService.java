@@ -16,6 +16,8 @@ public interface TaskApplyInfoService {
 	
 	TaskApplyInfoDO get(Long id);
 	
+	TaskApplyInfoDO getByIdForupdate(Long id);
+
 	List<TaskApplyInfoDO> list(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);
