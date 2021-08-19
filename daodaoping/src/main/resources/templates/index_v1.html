@@ -249,19 +249,19 @@
 <script type="text/javascript">
     var stompClient = null;
     $(function () {
-        connect();
+        //connect();
         //使用方法名字执行方法 setTimeout只执行一次
         //window.setInterval(queryUnusualNofity,30000);
     });
 
-    function connect() {
+    /*function connect() {
         var sock = new SockJS("/endpointChat");
         var stomp = Stomp.over(sock);
         stomp.connect('guest', 'guest', function(frame) {
 
-            /**  订阅了/user/queue/notifications 发送的消息,这里雨在控制器的 convertAndSendToUser 定义的地址保持一致, 
+            /!**  订阅了/user/queue/notifications 发送的消息,这里雨在控制器的 convertAndSendToUser 定义的地址保持一致, 
              *  这里多用了一个/user,并且这个user 是必须的,使用user 才会发送消息到指定的用户。 
-             *  */
+             *  *!/
             stomp.subscribe("/user/queue/notifications", handleNotification);
             stomp.subscribe('/topic/getResponse', function (response) { //订阅/topic/getResponse 目标发送的消息。这个是在控制器的@SendTo中定义的。
                 toastr.options = {
@@ -286,9 +286,9 @@
             wrapper.notify();
             toastr.info(message.body);
         }
-    }
+    }*/
 
-    var wrapper = new Vue({
+    /*var wrapper = new Vue({
         el: '#wrapper',
         data: {
             total: '',
@@ -315,9 +315,9 @@
         created: function () {
             this.notify()
         }
-    })
+    })*/
 
-    function queryUnusualNofity(){
+    /*function queryUnusualNofity(){
         $.ajax({
             cache : true,
             type : "GET",
@@ -361,7 +361,7 @@
             area : [ '95%', '90%' ],
             content : '/gotoo/workOrder/toUnusualWorkOrderList' // iframe的url
         });
-    }
+    }*/
 </script>
 </body>
 </html>
