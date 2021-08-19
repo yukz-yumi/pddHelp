@@ -270,3 +270,7 @@ INSERT INTO `sys_menu` VALUES (127, 106, '系统配置', '/system/sysSet', 'syst
 INSERT INTO `sys_menu` VALUES (128, 127, '新增', '', 'system:sysSet:add', 2, '', 1, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (129, 127, '修改', '', 'system:sysSet:edit', 2, '', 2, NULL, NULL, '100001');
 INSERT INTO `sys_menu` VALUES (130, 127, '删除', '', 'system:sysSet:remove', 2, '', 3, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (131, 106, '外部账号管理', '/user/userVsExAccount', 'user:userVsExAccount:userVsExAccount', 1, '', 3006, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (132, 131, '新增', '', 'user:userVsExAccount:add', 2, '', 1, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (133, 131, '修改', '', 'user:userVsExAccount:edit', 2, '', 2, NULL, NULL, '100001');
+INSERT INTO `sys_menu` VALUES (134, 131, '删除', '', 'user:userVsExAccount:remove', 2, '', 3, NULL, NULL, '100001');

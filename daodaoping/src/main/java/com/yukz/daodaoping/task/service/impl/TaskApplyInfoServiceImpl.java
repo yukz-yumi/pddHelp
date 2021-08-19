@@ -1,14 +1,13 @@
 package com.yukz.daodaoping.task.service.impl;
 
+import com.yukz.daodaoping.task.dao.TaskApplyInfoDao;
+import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-
-import com.yukz.daodaoping.task.dao.TaskApplyInfoDao;
-import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
-import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 
 
 
@@ -22,6 +21,11 @@ public class TaskApplyInfoServiceImpl implements TaskApplyInfoService {
 		return taskApplyInfoDao.get(id);
 	}
 	
+	@Override
+	public TaskApplyInfoDO getByIdForupdate(Long id){
+		return taskApplyInfoDao.getByIdForupdate(id);
+	}
+
 	@Override
 	public List<TaskApplyInfoDO> list(Map<String, Object> map){
 		return taskApplyInfoDao.list(map);

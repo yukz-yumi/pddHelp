@@ -10,6 +10,13 @@
 		from ddp_task_apply_info where id = #{value}
 	</select>
 
+	<select id="getByIdForupdate"
+			resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
+		select
+		`id`,`user_id`,`task_type_id`,`assistant_type`,`command`,`task_number`,`completed_number`,`task_result`,`task_status`,`start_time`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify`
+		from ddp_task_apply_info where id = #{value} for update
+	</select>
+
 	<select id="list"
 		resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
 		select
