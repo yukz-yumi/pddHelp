@@ -1,6 +1,7 @@
 package com.yukz.daodaoping.common.task;
 
 import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
+import com.yukz.daodaoping.app.task.enums.TaskVerifyStatusEnum;
 import com.yukz.daodaoping.common.task.service.CheckTaskAcceptJobService;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.service.TaskAcceptInfoService;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,10 +31,9 @@ public class CheckTaskAcceptJob implements Job{
         try {
             Map<String, Object> query = new HashMap<String, Object>();
             query.put("taskStatus", TaskAcceptionStatusEunm.END.getStatus());
-            query.put("verifyStatusIsnull", "1");
+            query.put("verifyStatus", TaskVerifyStatusEnum.UNVERIFIED.getStatus());
             List<TaskAcceptInfoDO> taskAcceptInfoList = taskAcceptInfoService.list(query);
             if (null != taskAcceptInfoList && taskAcceptInfoList.size()>0) {
-                List<TaskAcceptInfoDO> upList = new ArrayList<>();
                 for (TaskAcceptInfoDO taskAccept : taskAcceptInfoList) {
                     checkTaskAcceptJobService.checkTaskAccept(taskAccept);
                 }

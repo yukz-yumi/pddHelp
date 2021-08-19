@@ -32,11 +32,14 @@ public class CheckTaskAcceptJobServiceImpl implements CheckTaskAcceptJobService 
         } else {
             upTaskAccept.setVerifyStatus(TaskVerifyStatusEnum.REJECTED.getStatus());
         }
+        upTaskAccept.setWorkerId(0l);
         taskAcceptInfoService.update(upTaskAccept);
 
         //查询任务申请记录，锁定任务申请，防止更新数量时并发
         TaskApplyInfoDO taskApplyInfo = taskApplyInfoService.getByIdForupdate(taskAccept.getTaskId());
         Integer completeNum = taskApplyInfo.getCompletedNumber();
+        if (null == completeNum)
+            completeNum = 0;
         completeNum += 1;
         TaskApplyInfoDO upTaskApply = new TaskApplyInfoDO();
         upTaskApply.setId(taskApplyInfo.getId());
