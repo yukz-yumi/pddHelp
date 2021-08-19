@@ -19,8 +19,11 @@ import com.yukz.daodaoping.discount.domain.TaskDiscountInfoDO;
 import com.yukz.daodaoping.discount.service.TaskDiscountInfoService;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
+import com.yukz.daodaoping.system.domain.SysSetDO;
+import com.yukz.daodaoping.system.service.SysSetService;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;
+import com.yukz.daodaoping.task.enums.PlatformEnum;
 import com.yukz.daodaoping.task.service.TaskTypeInfoService;
 
 /**
@@ -51,6 +54,11 @@ public class TaskOrderBiz {
 	
 	@Autowired
 	private SerialNumGenerator generator;
+	
+	@Autowired
+	private SysSetService sysSetService;
+	
+	private static final String TTL_ORDER = "ttl_order";
 	
 	@Autowired
 	private TaskDiscountInfoService taskDiscountInfoService;
@@ -85,7 +93,8 @@ public class TaskOrderBiz {
 	private void setOrderExpireTime (OrderInfoDO item) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(item.getGmtCreate());
-		cal.add(Calendar.MILLISECOND, ttl); 
+		SysSetDO sysSet = sysSetService.getByKey(TTL_ORDER, PlatformEnum.PDD.getCode(), null,item.getAgentId() );
+		cal.add(Calendar.MILLISECOND, Integer.valueOf(sysSet.getSetValue())); 
 		item.setExpireTime(cal.getTime());
 	}
 	

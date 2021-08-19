@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +31,11 @@ import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
 import com.yukz.daodaoping.system.config.RedisHandler;
+import com.yukz.daodaoping.system.domain.SysSetDO;
+import com.yukz.daodaoping.system.service.SysSetService;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import com.yukz.daodaoping.task.enums.PlatformEnum;
 import com.yukz.daodaoping.task.service.TaskAcceptInfoService;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 
@@ -77,8 +79,9 @@ public class TaskExecuteBiz {
 	private AmqpHandler mqHandler;
 	
 	
-	@Value("${ttl.completed}")
-	private int interval;
+	private static final String TTL_COMPLETED = "ttl_completed";
+	
+	private static final String TTL_TASK = "ttl_task";
 	
 	@Value("${proportion.task}")
 	private int proportionTask;
@@ -88,10 +91,12 @@ public class TaskExecuteBiz {
 	
 	@Value("${proportion.commission.level2}")
 	private int commissionLevel2;
+
 	
 	
-	@Value("${ttl.task}")
-	private int ttl;
+	
+	@Autowired
+	private SysSetService sysSetService;
 	
 	public String taskRemaminKeyGenerator(Long agentId,Long taskId) {
 		return "agent_" + agentId + ":task_id:" + taskId;
@@ -143,7 +148,8 @@ public class TaskExecuteBiz {
 		Date startTime = taskApplyInfoDO.getStartTime();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(startTime);
-		cal.add(Calendar.MILLISECOND, ttl);
+		SysSetDO sysSet = sysSetService.getByKey(TTL_TASK, PlatformEnum.PDD.getCode(), null, taskApplyInfoDO.getAgentId());
+		cal.add(Calendar.MILLISECOND, Integer.valueOf(sysSet.getSetValue()));
 		return cal.getTime(); 
 	}
 	
@@ -218,7 +224,8 @@ public class TaskExecuteBiz {
 		taskAcceptInfoDO.setGmtCreate(new Date());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(taskAcceptInfoDO.getGmtCreate());
-		cal.add(Calendar.MINUTE, interval);
+		SysSetDO sysSet = sysSetService.getByKey(TTL_COMPLETED, PlatformEnum.PDD.getCode(), null,userAgent.getAgentId() );
+		cal.add(Calendar.MINUTE, Integer.valueOf(sysSet.getSetValue()));
 		taskAcceptInfoDO.setExpireTime(cal.getTime());
 		taskAcceptInfoService.save(taskAcceptInfoDO);
 		// 发送消息延迟队列
