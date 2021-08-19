@@ -5,7 +5,6 @@ import com.yukz.daodaoping.common.utils.Query;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.system.domain.SysSetDO;
 import com.yukz.daodaoping.system.service.SysSetService;
-import com.yukz.daodaoping.task.enums.PlatformEnum;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -56,8 +55,8 @@ public class SysSetController {
 	@GetMapping("/edit/{id}")
 	@RequiresPermissions("system:sysSet:edit")
 	String edit(@PathVariable("id") Long id,Model model){
-		//SysSetDO sysSet = sysSetService.get(id);
-		SysSetDO sysSet = sysSetService.getByKey("ttl_order", PlatformEnum.PDD.getCode(), null, 100001L);
+		SysSetDO sysSet = sysSetService.get(id);
+		//SysSetDO sysSet = sysSetService.getByKey("ttl_order", PlatformEnum.PDD.getCode(), null, 100001L);
 		model.addAttribute("sysSet", sysSet);
 	    return "system/sysSet/edit";
 	}

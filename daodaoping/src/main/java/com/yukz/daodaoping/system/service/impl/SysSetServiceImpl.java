@@ -42,13 +42,13 @@ public class SysSetServiceImpl implements SysSetService {
 	}
 	
 	@Override
-	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.id")
+	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.setKey+'-'+#sysSet.platform+'-'+sysSet.setType+'-'+sysSet.agentId")
 	public int save(SysSetDO sysSet){
 		return sysSetDao.save(sysSet);
 	}
 	
 	@Override
-	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.id")
+	@CachePut(value="sysSet", key = "'sysSet-'+ #sysSet.setKey+'-'+#sysSet.platform+'-'+sysSet.setType+'-'+sysSet.agentId")
 	public int update(SysSetDO sysSet){
 		return sysSetDao.update(sysSet);
 	}
