@@ -8,7 +8,6 @@ import com.yukz.daodaoping.system.domain.MenuDO;
 import com.yukz.daodaoping.system.service.MenuService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,7 @@ public class MenuServiceImpl implements MenuService {
 	 * @param
 	 * @return 树形菜单
 	 */
-	@Cacheable
+	//@Cacheable
 	@Override
 	public Tree<MenuDO> getSysMenuTree(Long id) {
 		List<Tree<MenuDO>> trees = new ArrayList<Tree<MenuDO>>();
