@@ -40,6 +40,9 @@ public class Receivers {
 
 	@Autowired
 	private AmqpHandler amqpHandler;
+	
+	@Autowired
+	private TaskConfirmedObserver observer;
 
 	@Autowired
 	private TaskExecuteBiz taskExecuteBiz;
@@ -99,7 +102,7 @@ public class Receivers {
 			taskApplyInfoService.update(taskInfo);
 			// 向监听者发送消息
 			RealSubject subject = new RealSubject();
-			TaskConfirmedObserver observer = new TaskConfirmedObserver();
+//			TaskConfirmedObserver observer = new TaskConfirmedObserver();
 			subject.addObserver(observer);
 			subject.makeChanged(taskInfo);
 			amqpHandler.sendDelayMessage(taskId, MqConstants.TASK_EXPIRE_ROUTER_KEY);

@@ -174,7 +174,7 @@ CREATE TABLE `ddp_task_accept_info` (
   `task_id` bigint(20) NOT NULL COMMENT '任务id',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
   `open_id` varchar(128) NOT NULL COMMENT '用户openid',
-  `certification_url` varchar(2048) NOT NULL COMMENT '任务凭证',
+  `certification_url` varchar(2048) DEFAULT NULL COMMENT '任务凭证',
   `task_status` varchar(16) NOT NULL COMMENT '任务状态 pending:接受执行中/expire:已过期/end:已完成',
   `verify_status` varchar(16) NOT NULL COMMENT '审核结果 verifying:审核中/unverified:未通过/verified:已审核 ',
   `worker_id` bigint(20) DEFAULT NULL COMMENT '审核人id',

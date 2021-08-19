@@ -51,15 +51,17 @@ public class FundCtrl {
 		FundTransferInfoDO fundRecord = fundTransferInfoService.get(fundTransferId);
 		if (fundRecord == null) {
 			logger.error("资金流水:{}的记录不存在", fundTransferId);
-			fundBiz.reportToWX(RETURN_ERR, RETURN_ERR_MSG);
+//			fundBiz.reportToWX(RETURN_ERR, RETURN_ERR_MSG);
 			return ;
 		}
 		if (FundEnums.getEnumByStatus(fundRecord.getTransStatus()) == FundEnums.SUCCESS) {
 			logger.error("资金流水:{}的通知结果已经处理，不重复处理", fundTransferId);
-			fundBiz.reportToWX(RETURN_OK, RETURN_OK_MSG);
+//			fundBiz.reportToWX(RETURN_OK, RETURN_OK_MSG);
+			return;
 		} else if (FundEnums.getEnumByStatus(fundRecord.getTransStatus()) == FundEnums.FAIL) {
 			logger.error("资金流水:{}的已经为失败状态,请核查结果", fundTransferId);
-			fundBiz.reportToWX(RETURN_ERR, RETURN_ERR_MSG);
+//			fundBiz.reportToWX(RETURN_ERR, RETURN_ERR_MSG);
+			return;
 		} else {
 			fundBiz.fundInSuccessProcess(fundRecord);
 //			fundBiz.reportToWX(RETURN_OK, RETURN_OK_MSG);

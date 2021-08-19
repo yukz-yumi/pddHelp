@@ -32,25 +32,26 @@ public class TaskConfirmedObserver implements Observer {
 	@Autowired
 	private RedisHandler redisHandler;
 	
-	private String getStoreKey(TaskApplyInfoDO taskInfo) {
-		return "agent_"+taskInfo.getAgentId()+":task_id"+taskInfo.getId();
-	}
+	@Autowired
+	private TaskExecuteBiz taskExecuteBiz;
+	
 	
 	@Override
 	public void update(Observable o, Object arg) {
 		TaskApplyInfoDO taskInfo = (TaskApplyInfoDO)arg;
 		logger.info("监听到 任务 [taskId:{}]已经被确认,准备进入通知发单流程",taskInfo.getId());
-		String key = getStoreKey(taskInfo);
+		String key = taskExecuteBiz.taskRemaminKeyGenerator(taskInfo.getAgentId(),taskInfo.getId());
 		RLock rlock = redissonClient.getLock(key);
 		try {
-			rlock.tryLock(10, TimeUnit.SECONDS);
+			rlock.tryLock(5, TimeUnit.MINUTES);
 			redisHandler.hmSet(TaskConstants.MAP_REMAIN, key, taskInfo.getTaskNumber());
 			logger.debug("已将待完成的数量同步到redis,并准备开始发单");
 			// TODO 走微信的通知流程
 			logger.info("向用户进行任务发布通知");
 		}catch(InterruptedException exn) {
-			rlock.unlock();
 			logger.error("加锁失败，释放锁");
+		}finally {
+			rlock.unlock();
 		}
 	}
 

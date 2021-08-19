@@ -233,11 +233,12 @@ public class TaskCtrl {
 	@PostMapping("take/{id}")
 	public R takeTask(@PathVariable("id") Long taskId,UserAgent userAgent){
 		Long agentId = userAgent.getAgentId();
-		String key = "agentId:"+agentId+"task_id:"+taskId;
+		String key = taskExecuteBiz.taskRemaminKeyGenerator(agentId,taskId);
+		
 		RLock rlock = redissonClient.getLock(key);
 		TaskAcceptInfoDO tasktakeInfo = null;
 		try {
-			rlock.tryLock(10, TimeUnit.SECONDS);
+			rlock.tryLock(5, TimeUnit.MINUTES);
 			int remain =  taskExecuteBiz.getTaskRemain(key);
 			if(remain > 0) {
 				// 在扣减数量
@@ -246,11 +247,12 @@ public class TaskCtrl {
 				tasktakeInfo = taskExecuteBiz.takeTask(taskId, userAgent);
 			}
 		} catch (InterruptedException e) {
-			rlock.unlock();
 			logger.error("接单过程中加锁失败");
 			return R.error("接单失败:加锁失败");
 		} catch (Exception e) {
 			return R.error("接单失败:"+e.getMessage());
+		}finally {
+			rlock.unlock();
 		}
 		return R.ok().put("data", tasktakeInfo);
 	}

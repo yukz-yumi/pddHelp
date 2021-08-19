@@ -17,8 +17,10 @@ import com.yukz.daodaoping.app.fund.enums.FundBizEnum;
  */
 public enum TaskIsPaidEnum {
 	
-	UNPAID("unpaid", "未放款"),
-	PAID("paid", "已放款");
+	UNPAID("0","unpaid", "未放款"),
+	PAID("1","paid", "已放款");
+	
+	private String code;
 	
 	private String status;
 	
@@ -40,17 +42,41 @@ public enum TaskIsPaidEnum {
 		this.desc = desc;
 	}
 
-	private TaskIsPaidEnum(String status, String desc) {
+	
+	
+	private TaskIsPaidEnum(String code, String status, String desc) {
+		this.code = code;
 		this.status = status;
 		this.desc = desc;
 	}
-	
-	public static TaskIsPaidEnum getByType(String type) {
-		if(StringUtils.isBlank(type)) {
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public static TaskIsPaidEnum getByStatus(String status) {
+		if(StringUtils.isBlank(status)) {
 			return null;
 		}else {
 			for (TaskIsPaidEnum item : TaskIsPaidEnum.values()) {
-				if(StringUtils.equals(item.getDesc(), type)) {
+				if(StringUtils.equals(item.getStatus(), status)) {
+					return item;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public static TaskIsPaidEnum getByCode(String code) {
+		if(StringUtils.isBlank(code)) {
+			return null;
+		}else {
+			for (TaskIsPaidEnum item : TaskIsPaidEnum.values()) {
+				if(StringUtils.equals(item.getCode(), code)) {
 					return item;
 				}
 			}
@@ -62,6 +88,7 @@ public enum TaskIsPaidEnum {
 		List<Map<String,String>> list = new ArrayList<Map<String,String>>();
 		for (TaskIsPaidEnum item : TaskIsPaidEnum.values()) {
 			Map<String,String> map = new HashMap<String,String>();
+			map.put("code", item.code);
 			map.put("type", item.getStatus());
 			map.put("desc", item.getDesc());
 			list.add(map);

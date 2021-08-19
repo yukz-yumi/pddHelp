@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
 import com.yukz.daodaoping.app.task.enums.TaskIsPaidEnum;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
+import com.yukz.daodaoping.app.task.enums.TaskVerifyStatusEnum;
 import com.yukz.daodaoping.app.task.request.TaskRequest;
 import com.yukz.daodaoping.app.task.threads.SetTaskExecutionThread;
 import com.yukz.daodaoping.common.amqp.AmqpHandler;
@@ -90,6 +92,10 @@ public class TaskExecuteBiz {
 	
 	@Value("${ttl.task}")
 	private int ttl;
+	
+	public String taskRemaminKeyGenerator(Long agentId,Long taskId) {
+		return "agent_" + agentId + ":task_id:" + taskId;
+	}
 	
 	/**
 	 * 初始化任务记录
@@ -202,11 +208,13 @@ public class TaskExecuteBiz {
 		Long orderAmout = orderItem.getTotalAmount();
 		long taskAmount = new BigDecimal(orderAmout).multiply(new BigDecimal(proportionTask/100)).longValue();
 		taskAcceptInfoDO.setAgentId(userAgent.getAgentId());
+		taskAcceptInfoDO.setOpenId(userAgent.getOpenId());
 		taskAcceptInfoDO.setUserId(userAgent.getUserId());
 		taskAcceptInfoDO.setTaskId(taskId);
 		taskAcceptInfoDO.setAmount(taskAmount);
 		taskAcceptInfoDO.setTaskStatus(TaskAcceptionStatusEunm.PENDING.getStatus());
-		taskAcceptInfoDO.setHasPaid(TaskIsPaidEnum.UNPAID.getStatus());
+		taskAcceptInfoDO.setVerifyStatus(TaskVerifyStatusEnum.UNVERIFIED.getStatus());
+		taskAcceptInfoDO.setHasPaid(TaskIsPaidEnum.UNPAID.getCode());
 		taskAcceptInfoDO.setGmtCreate(new Date());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(taskAcceptInfoDO.getGmtCreate());
@@ -234,7 +242,7 @@ public class TaskExecuteBiz {
 	
 	
 	public void repay(Long agentId,Long taskId) {
-		String key = "agentId:"+agentId+"task_id:"+taskId;
+		String key = taskRemaminKeyGenerator(agentId, taskId);
 		RLock rlock = redissonClient.getLock(key);
 		try {
 			rlock.tryLock(10, TimeUnit.SECONDS);
@@ -254,6 +262,8 @@ public class TaskExecuteBiz {
 				logger.warn("任务未执行数量补偿失败");
 			}
 		} catch (InterruptedException e) {
+			logger.error("加锁失败");
+		}finally {
 			rlock.unlock();
 		}
 	}
@@ -302,8 +312,6 @@ public class TaskExecuteBiz {
 		}else {
 			throw new Exception("接单确认失败");
 		}
-		
-		
 	}
 	
 	
