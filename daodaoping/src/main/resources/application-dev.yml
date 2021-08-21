@@ -80,3 +80,7 @@ proportion:
  commission:
   level1: 10
   level2: 5
+
+wx:
+ appId: wx492bfcf10245c5d1
+ secert: 8cc95aa6d5641a725e7710c0434378bc
