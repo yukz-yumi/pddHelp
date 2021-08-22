@@ -39,6 +39,8 @@ public class WXService {
 	private static final String TOKEN_KEY = "access_token:agentId:";
 
 	private static final String TOKEN_URI = "https://api.weixin.qq.com/cgi-bin/token";
+	
+	private static final String UNIFORM_SEND_URL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send";
 
 	@Autowired
 	private RedisHandler redisHandler;
@@ -86,6 +88,10 @@ public class WXService {
 		}
 		
 		return "";
+	}
+	
+	public void uniformSend() {
+		
 	}
 
 }

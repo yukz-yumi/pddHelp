@@ -27,6 +27,8 @@ public class LoginWebConfig implements WebMvcConfigurer {
 	@Autowired
 	private Map<String,HandlerMethodArgumentResolver> resolverMap = new HashMap<String,HandlerMethodArgumentResolver>();
 	
+	@Autowired
+	private UserSessionInterceptor userSessionInterceptor;
 
 	@Bean
 	protected List<HandlerMethodArgumentResolver> initResolvers(){
@@ -40,7 +42,7 @@ public class LoginWebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new UserSessionInterceptor()).addPathPatterns("/appInt/**")
+		registry.addInterceptor(userSessionInterceptor).addPathPatterns("/appInt/**")
 			.excludePathPatterns("/appInt/user/login","/appInt/user/bindMobile","/appInt/user/bindExAccount")
 			.excludePathPatterns("/appInt/pageConfig/**")
 			.excludePathPatterns("/appInt/wx/**");

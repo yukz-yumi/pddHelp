@@ -11,7 +11,9 @@ public class UserAgent implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 5710919441152048062L;
-
+	
+	private String sessionId;
+	
 	private Long userId;
 
 	private Long agentId;
@@ -31,6 +33,15 @@ public class UserAgent implements Serializable {
 	private String userStatus;
 
 	private List<UserVsExAccountDO> exAccountList;
+	
+	
+	public String getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(String sessionId) {
+		this.sessionId = sessionId;
+	}
 
 	public Long getUserId() {
 		return userId;
@@ -111,10 +122,11 @@ public class UserAgent implements Serializable {
 	public void setExAccountList(List<UserVsExAccountDO> exAccountList) {
 		this.exAccountList = exAccountList;
 	}
-
-	public UserAgent(Long userId, Long agentId, String openId, String nickName, String headImgUrl, Long scores,
-			String userGrade, String mobile, String userStatus, List<UserVsExAccountDO> exAccountList) {
+	
+	public UserAgent(String sessionId, Long userId, Long agentId, String openId, String nickName, String headImgUrl,
+			Long scores, String userGrade, String mobile, String userStatus, List<UserVsExAccountDO> exAccountList) {
 		super();
+		this.sessionId = sessionId;
 		this.userId = userId;
 		this.agentId = agentId;
 		this.openId = openId;

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.yukz.daodaoping.app.auth.request.UserExAccountRequest;
 import com.yukz.daodaoping.app.auth.vo.LoginParamVo;
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
@@ -30,6 +31,7 @@ import com.yukz.daodaoping.app.enums.UserStatusEnum;
 import com.yukz.daodaoping.app.webConfig.Constants;
 import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
+import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.user.domain.UserInfoDO;
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
 import com.yukz.daodaoping.user.service.UserInfoService;
@@ -50,6 +52,9 @@ public class AppUserCtrl {
 	
 	@Autowired
 	private AppUserBiz userBiz;
+	
+	@Autowired
+	private RedisHandler redisHandler;
 
 	@Autowired
 	private UserInfoService userInfoService;
@@ -70,19 +75,19 @@ public class AppUserCtrl {
 		param.put("agentId", loginParam.getAgentId());
 		List<UserInfoDO> userList = userInfoService.list(param);
 		if (userList.isEmpty()) {
-			return null;
+			return R.ok().put("data", UserStatusEnum.UNBIND.getUserStatus());
 		}
 		if (userList.size() > 1) {
 			return R.error("存在重复的openId");
 		}
 		UserInfoDO UserInfo = userList.get(0);
 	
+		String sessionId = request.getSession().getId();
 		UserAgent userAgent = convertor(UserInfo);
-		// 向session中传入值
-		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
-		Map<String,Object> resultMap = new HashMap<String,Object>();
-		resultMap.put("data", userAgent);
-		return R.ok(resultMap);
+		userAgent.setSessionId(sessionId);
+		// 向 redis 中存入
+		redisHandler.hmSet(Constants.USER_AGENT, sessionId, JSON.toJSON(userAgent));
+		return R.ok().put("data", userAgent);
 	}
 
 	/**

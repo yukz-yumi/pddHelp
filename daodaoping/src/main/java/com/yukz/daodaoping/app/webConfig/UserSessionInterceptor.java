@@ -7,24 +7,34 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.yukz.daodaoping.app.auth.vo.UserAgent;
 import com.yukz.daodaoping.app.enums.ExAccountEnum;
 import com.yukz.daodaoping.app.enums.IsAllowEnum;
 import com.yukz.daodaoping.common.exception.BDException;
+import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
 
+@Component
 public class UserSessionInterceptor implements HandlerInterceptor {
 
 	private static final Logger logger = LoggerFactory.getLogger(UserSessionInterceptor.class);
-
+	
+	@Autowired
+	private RedisHandler redisHandler;
+	
+	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		Object object = request.getSession().getAttribute(Constants.USER_AGENT);
-		UserAgent userAgent = JSONObject.parseObject(JSONObject.toJSONString(object), UserAgent.class);
+		String sessionId = request.getHeader(Constants.USER_TOKEN);
+		Object object = redisHandler.hmGet(Constants.USER_AGENT, sessionId);
+		UserAgent  userAgent= JSON.parseObject(JSON.toJSONString(object), UserAgent.class);
 		if (userAgent == null) {
 			return false;
 		}
@@ -33,7 +43,7 @@ public class UserSessionInterceptor implements HandlerInterceptor {
 //		List<UserVsExAccountDO> list = new ArrayList<UserVsExAccountDO>();
 		List<UserVsExAccountDO> list = userAgent.getExAccountList();
 		if (list.isEmpty()) {
-			throw new BDException("请先绑定用户外部账号");
+			throw new Exception("请先绑定用户外部账号");
 		} else {
 			for (int i = 0; i < list.size(); i++) {
 				if (list.get(i).getAllowed().equals(IsAllowEnum.YES.getStatus())
