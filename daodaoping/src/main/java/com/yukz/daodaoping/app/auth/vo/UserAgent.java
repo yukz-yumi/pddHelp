@@ -1,6 +1,7 @@
 package com.yukz.daodaoping.app.auth.vo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.yukz.daodaoping.user.domain.UserVsExAccountDO;
@@ -32,7 +33,7 @@ public class UserAgent implements Serializable {
 	// 用户状态:unverified 未认证/ verified 已认证/ forbidden 已停用
 	private String userStatus;
 
-	private List<UserVsExAccountDO> exAccountList;
+	private List<UserVsExAccountDO> exAccountList = new ArrayList<UserVsExAccountDO>();
 	
 	
 	public String getSessionId() {

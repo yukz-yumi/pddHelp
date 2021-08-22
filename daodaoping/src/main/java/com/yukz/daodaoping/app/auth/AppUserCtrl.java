@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,9 +113,13 @@ public class AppUserCtrl {
 				userBiz.volidateCodeChecked(validateCode);
 				userInfoDO.setMobile(mobile);
 				userInfoDO.setOpenId(openId);
-				userInfoDO.setHeadImgUrl(headImgUrl);
+				if(StringUtils.isBlank(headImgUrl)) {
+					userInfoDO.setHeadImgUrl(headImgUrl);					
+				}
+				if(StringUtils.isBlank(nickName)) {
+					userInfoDO.setNickName(nickName);					
+				}
 				userInfoDO.setAgentId(agentId);
-				userInfoDO.setNickName(nickName);
 				userBiz.initUser(userInfoDO);
 				userInfoDO.setUserStatus(UserStatusEnum.NORMAL.getUserStatus());
 				userInfoService.update(userInfoDO);
@@ -125,9 +130,11 @@ public class AppUserCtrl {
 			}
 		}
 		UserAgent userAgent = convertor(userInfoDO);
+		String sessionId = request.getSession().getId();
 		// 向session中传入值
-		request.getSession().setAttribute(Constants.USER_AGENT, userAgent);
-		
+		userAgent.setSessionId(sessionId);
+		// 向 redis 中存入
+		redisHandler.hmSet(Constants.USER_AGENT, sessionId, JSON.toJSON(userAgent));
 		return R.ok().put("data", userAgent);
 	}
 	
