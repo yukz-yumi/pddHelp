@@ -3,94 +3,106 @@
 
 <mapper namespace="com.yukz.daodaoping.order.dao.OrderInfoDao">
 
-	<select id="get" resultType="com.yukz.daodaoping.order.domain.OrderInfoDO">
-		select `id`,`order_id`,`user_id`,`task_id`,`total_amount`,`scores_deduction`,`discount`,`payment_amount`,`order_status`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_order_info where id = #{value}
+	<select id="get"
+		resultType="com.yukz.daodaoping.order.domain.OrderInfoDO">
+		select
+		`id`,`order_id`,`user_id`,`task_id`,`total_amount`,`scores_deduction`,`discount`,`payment_amount`,`order_status`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify`
+		from ddp_order_info where id = #{value}
 	</select>
 
-	<select id="list" resultType="com.yukz.daodaoping.order.domain.OrderInfoDO">
-		select `id`,`order_id`,`user_id`,`task_id`,`total_amount`,`scores_deduction`,`discount`,`payment_amount`,`order_status`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify` from ddp_order_info
-        <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="orderId != null and orderId != ''"> and order_id = #{orderId} </if>
-		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
-		  		  <if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
-		  		  <if test="totalAmount != null and totalAmount != ''"> and total_amount = #{totalAmount} </if>
-		  		  <if test="scoresDeduction != null and scoresDeduction != ''"> and scores_deduction = #{scoresDeduction} </if>
-		  		  <if test="discount != null and discount != ''"> and discount = #{discount} </if>
-		  		  <if test="paymentAmount != null and paymentAmount != ''"> and payment_amount = #{paymentAmount} </if>
-		  		  <if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
-		  		  <if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
-		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
-		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
-		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
-		  		</where>
-        <choose>
-            <when test="sort != null and sort.trim() != ''">
-                order by ${sort} ${order}
-            </when>
+	<select id="list"
+		resultType="com.yukz.daodaoping.order.domain.OrderInfoDO">
+		select
+		`id`,`order_id`,`user_id`,`task_id`,`total_amount`,`scores_deduction`,`discount`,`payment_amount`,`order_status`,`expire_time`,`agent_id`,`gmt_create`,`gmt_modify`
+		from ddp_order_info
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="orderId != null and orderId != ''"> and order_id = #{orderId} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
+			<if test="totalAmount != null and totalAmount != ''"> and total_amount = #{totalAmount} </if>
+			<if test="scoresDeduction != null and scoresDeduction != ''"> and scores_deduction = #{scoresDeduction} </if>
+			<if test="discount != null and discount != ''"> and discount = #{discount} </if>
+			<if test="paymentAmount != null and paymentAmount != ''"> and payment_amount = #{paymentAmount} </if>
+			<if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
+			<if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		</where>
+		<if test="endTime!=null">
+               and DATE_FORMAT(t1.gmt_create,'%Y-%m-%d')  <![CDATA[ >=  ]]>DATE_FORMAT(#{endTime},'%Y-%m-%d')
+        </if>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
 			<otherwise>
-                order by id desc
+				order by t1.id desc
 			</otherwise>
-        </choose>
+		</choose>
 		<if test="offset != null and limit != null">
 			limit #{offset}, #{limit}
 		</if>
 	</select>
-	
- 	<select id="count" resultType="int">
+
+	<select id="count" resultType="int">
 		select count(*) from ddp_order_info
-		 <where>  
-		  		  <if test="id != null and id != ''"> and id = #{id} </if>
-		  		  <if test="orderId != null and orderId != ''"> and order_id = #{orderId} </if>
-		  		  <if test="userId != null and userId != ''"> and user_id = #{userId} </if>
-		  		  <if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
-		  		  <if test="totalAmount != null and totalAmount != ''"> and total_amount = #{totalAmount} </if>
-		  		  <if test="scoresDeduction != null and scoresDeduction != ''"> and scores_deduction = #{scoresDeduction} </if>
-		  		  <if test="discount != null and discount != ''"> and discount = #{discount} </if>
-		  		  <if test="paymentAmount != null and paymentAmount != ''"> and payment_amount = #{paymentAmount} </if>
-		  		  <if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
-		  		  <if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
-		  		  <if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
-		  		  <if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
-		  		  <if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
-		  		</where>
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="orderId != null and orderId != ''"> and order_id = #{orderId} </if>
+			<if test="userId != null and userId != ''"> and user_id = #{userId} </if>
+			<if test="taskId != null and taskId != ''"> and task_id = #{taskId} </if>
+			<if test="totalAmount != null and totalAmount != ''"> and total_amount = #{totalAmount} </if>
+			<if test="scoresDeduction != null and scoresDeduction != ''"> and scores_deduction = #{scoresDeduction} </if>
+			<if test="discount != null and discount != ''"> and discount = #{discount} </if>
+			<if test="paymentAmount != null and paymentAmount != ''"> and payment_amount = #{paymentAmount} </if>
+			<if test="orderStatus != null and orderStatus != ''"> and order_status = #{orderStatus} </if>
+			<if test="expireTime != null and expireTime != ''"> and expire_time = #{expireTime} </if>
+			<if test="agentId != null and agentId != ''"> and agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> and gmt_modify = #{gmtModify} </if>
+		</where>
 	</select>
-	 
-	<insert id="save" parameterType="com.yukz.daodaoping.order.domain.OrderInfoDO" useGeneratedKeys="true" keyProperty="id">
+
+	<insert id="save"
+		parameterType="com.yukz.daodaoping.order.domain.OrderInfoDO"
+		useGeneratedKeys="true" keyProperty="id">
 		insert into ddp_order_info
 		(
-			`order_id`, 
-			`user_id`, 
-			`task_id`, 
-			`total_amount`, 
-			`scores_deduction`, 
-			`discount`, 
-			`payment_amount`, 
-			`order_status`, 
-			`expire_time`, 
-			`agent_id`, 
-			`gmt_create`, 
-			`gmt_modify`
+		`order_id`,
+		`user_id`,
+		`task_id`,
+		`total_amount`,
+		`scores_deduction`,
+		`discount`,
+		`payment_amount`,
+		`order_status`,
+		`expire_time`,
+		`agent_id`,
+		`gmt_create`,
+		`gmt_modify`
 		)
 		values
 		(
-			#{orderId}, 
-			#{userId}, 
-			#{taskId}, 
-			#{totalAmount}, 
-			#{scoresDeduction}, 
-			#{discount}, 
-			#{paymentAmount}, 
-			#{orderStatus}, 
-			#{expireTime}, 
-			#{agentId}, 
-			#{gmtCreate}, 
-			#{gmtModify}
+		#{orderId},
+		#{userId},
+		#{taskId},
+		#{totalAmount},
+		#{scoresDeduction},
+		#{discount},
+		#{paymentAmount},
+		#{orderStatus},
+		#{expireTime},
+		#{agentId},
+		#{gmtCreate},
+		#{gmtModify}
 		)
 	</insert>
-	 
-	<update id="update" parameterType="com.yukz.daodaoping.order.domain.OrderInfoDO">
-		update ddp_order_info 
+
+	<update id="update"
+		parameterType="com.yukz.daodaoping.order.domain.OrderInfoDO">
+		update ddp_order_info
 		<set>
 			<if test="orderId != null">`order_id` = #{orderId}, </if>
 			<if test="userId != null">`user_id` = #{userId}, </if>
@@ -107,16 +119,67 @@
 		</set>
 		where id = #{id}
 	</update>
-	
+
 	<delete id="remove">
 		delete from ddp_order_info where id = #{value}
 	</delete>
-	
+
 	<delete id="batchRemove">
-		delete from ddp_order_info where id in 
-		<foreach item="id" collection="array" open="(" separator="," close=")">
+		delete from ddp_order_info where id in
+		<foreach item="id" collection="array" open="(" separator=","
+			close=")">
 			#{id}
 		</foreach>
 	</delete>
+
+
+	<!-- 自定义查询 -->
+	<select id="getOrderDetailById"
+		resultType="com.yukz.daodaoping.app.order.vo.OrderDetailVO">
+		select t1.*,
+		t3.id as task_type_id,t3.platform,t3.task_type_desc,t3.task_type,t3.task_img,
+		t2.assistant_type,t2.task_number,t2.completed_number,t2.task_result,t2.task_status,t2.gmt_create as task_create_gmt
+		from ddp_order_info t1 inner join ddp_task_apply_info t2 on t1.task_id =
+		t2.id
+		inner join ddp_task_type_info t3 on t2.task_type_id = t3.id where
+		t1.order_id = #{orderId};
+	</select>
+	
+	<select id="getOrderDetail"
+		resultType="com.yukz.daodaoping.app.order.vo.OrderDetailVO">
+		select t1.*,
+		t3.id as task_type_id,t3.platform,t3.task_type_desc,t3.task_type,t3.task_img,
+		t2.assistant_type,t2.task_number,t2.completed_number,t2.task_result,t2.task_status,t2.gmt_create as task_create_gmt
+		from ddp_order_info t1 inner join ddp_task_apply_info t2 on t1.task_id =
+		t2.id
+		inner join ddp_task_type_info t3 on t2.task_type_id = t3.id 
+		<where>
+			<if test="id != null and id != ''"> and id = #{id} </if>
+			<if test="orderId != null and orderId != ''"> and t1.order_id = #{orderId} </if>
+			<if test="userId != null and userId != ''"> and t1.user_id = #{userId} </if>
+			<if test="taskId != null and taskId != ''"> and t1.task_id = #{taskId} </if>
+			<if test="orderStatus != null and orderStatus != ''"> and t1.order_status = #{orderStatus} </if>
+			<if test="agentId != null and agentId != ''"> and t1.agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> t1.and gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> t1.and gmt_modify = #{gmtModify} </if>
+		</where>
+		<if test="endTime!=null">
+               and DATE_FORMAT(t1.gmt_create,'%Y-%m-%d')  <![CDATA[ >=  ]]>DATE_FORMAT(#{endTime},'%Y-%m-%d')
+        </if>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by t1.id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+	</select>
+	
+	
+	
 
 </mapper>

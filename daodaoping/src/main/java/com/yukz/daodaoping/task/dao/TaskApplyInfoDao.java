@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.task.dao;
 
+import com.yukz.daodaoping.app.task.vo.TaskDetailVO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -30,4 +31,6 @@ public interface TaskApplyInfoDao {
 	int remove(Long id);
 	
 	int batchRemove(Long[] ids);
+	
+	List<TaskDetailVO> getTaskDetailList(Map<String,Object> map);
 }

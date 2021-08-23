@@ -32,6 +32,7 @@ import com.yukz.daodaoping.app.fund.enums.FundBizEnum;
 import com.yukz.daodaoping.app.fund.enums.FundEnums;
 import com.yukz.daodaoping.app.fund.enums.FundTransTypeEnum;
 import com.yukz.daodaoping.app.fund.wxpay.DDPWXpayConfig;
+import com.yukz.daodaoping.app.order.vo.OrderDetailVO;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.fund.domain.FundTransferInfoDO;
@@ -39,6 +40,7 @@ import com.yukz.daodaoping.fund.service.FundTransferInfoService;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import com.yukz.daodaoping.task.enums.PlatformEnum;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 
 @RequestMapping("/appInt/order")
@@ -55,6 +57,19 @@ public class OrderCtrl {
 
 	@Autowired
 	private FundBiz fundBiz;
+	
+	@GetMapping("/{orderId}")
+	public R getOrderById(@PathVariable("orderId") Long orderId,UserAgent userAgent) {
+//		OrderInfoDO orderInfo = orderInfoService.get(id);
+//		Long taskId = orderInfo.getTaskId();
+//		TaskApplyInfoDO taskApplyInfo = taskApplyInfoService.get(taskId);
+//		Long taskTypeId= taskApplyInfo.getTaskTypeId();
+		OrderDetailVO orderDetailVO = orderInfoService.getOrderDetailById(orderId);
+		orderDetailVO.setPlatform(PlatformEnum.getDesc(orderDetailVO.getPlatform()));
+		return R.ok().put("data", orderDetailVO);
+		
+	}
+	
 	
 	@GetMapping
 	public R getOrderList(UserAgent userAgent, HttpServletRequest request) {
@@ -78,9 +93,13 @@ public class OrderCtrl {
 			endDate = getEndTime("week");
 		}
 		paramMap.put("endTime", endDate);
-		List<OrderInfoDO> list = orderInfoService.list(paramMap);
+//		List<OrderInfoDO> list = orderInfoService.list(paramMap);
 		PageHelper.startPage(pageNum, pageSize);
-		PageInfo<OrderInfoDO> pageResult = new PageInfo<OrderInfoDO>(list);
+		List<OrderDetailVO> list = orderInfoService.getOrderDetailList(paramMap);
+		for (OrderDetailVO orderDetailVO : list) {
+			orderDetailVO.setPlatform(PlatformEnum.getDesc(orderDetailVO.getPlatform()));
+		}
+		PageInfo<OrderDetailVO> pageResult = new PageInfo<OrderDetailVO>(list);
 		return R.ok().put("data", pageResult);
 	}
 

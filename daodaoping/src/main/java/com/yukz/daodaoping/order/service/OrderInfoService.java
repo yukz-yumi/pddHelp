@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.order.service;
 
+import com.yukz.daodaoping.app.order.vo.OrderDetailVO;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 
 import java.util.List;
@@ -27,4 +28,8 @@ public interface OrderInfoService {
 	int remove(Long id);
 	
 	int batchRemove(Long[] ids);
+	
+	OrderDetailVO getOrderDetailById(Long id);
+	
+	List<OrderDetailVO> getOrderDetailList(Map<String, Object> map);
 }

@@ -1,9 +1,10 @@
 package com.yukz.daodaoping.task.service;
 
-import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
-
 import java.util.List;
 import java.util.Map;
+
+import com.yukz.daodaoping.app.task.vo.TaskDetailVO;
+import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 
 /**
  * 任务申请表
@@ -29,4 +30,6 @@ public interface TaskApplyInfoService {
 	int remove(Long id);
 	
 	int batchRemove(Long[] ids);
+	
+	List<TaskDetailVO> getTaskDetailList(Map<String,Object> map);
 }

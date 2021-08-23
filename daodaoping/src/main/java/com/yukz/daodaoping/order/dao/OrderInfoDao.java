@@ -1,11 +1,12 @@
 package com.yukz.daodaoping.order.dao;
 
-import com.yukz.daodaoping.order.domain.OrderInfoDO;
-
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+
+import com.yukz.daodaoping.app.order.vo.OrderDetailVO;
+import com.yukz.daodaoping.order.domain.OrderInfoDO;
 
 /**
  * 订单表
@@ -29,4 +30,9 @@ public interface OrderInfoDao {
 	int remove(Long id);
 	
 	int batchRemove(Long[] ids);
+	
+	OrderDetailVO getOrderDetailById(Long id);
+	
+	
+	List<OrderDetailVO> getOrderDetail(Map<String,Object> map);
 }

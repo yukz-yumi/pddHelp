@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
+import com.yukz.daodaoping.app.order.vo.OrderDetailVO;
 import com.yukz.daodaoping.order.dao.OrderInfoDao;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
@@ -51,5 +52,18 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 	public int batchRemove(Long[] ids){
 		return orderInfoDao.batchRemove(ids);
 	}
+
+	@Override
+	public OrderDetailVO getOrderDetailById(Long id) {
+		
+		return orderInfoDao.getOrderDetailById(id);
+	}
+
+	@Override
+	public List<OrderDetailVO> getOrderDetailList(Map<String, Object> map) {
+		
+		return orderInfoDao.getOrderDetail(map);
+	}
+	
 	
 }

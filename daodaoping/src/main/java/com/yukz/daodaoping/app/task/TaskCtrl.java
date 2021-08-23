@@ -32,6 +32,7 @@ import com.yukz.daodaoping.app.order.OrderEnum;
 import com.yukz.daodaoping.app.order.TaskOrderBiz;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.app.task.request.TaskRequest;
+import com.yukz.daodaoping.app.task.vo.TaskDetailVO;
 import com.yukz.daodaoping.common.amqp.AmqpHandler;
 import com.yukz.daodaoping.common.amqp.MqConstants;
 import com.yukz.daodaoping.common.exception.BDException;
@@ -79,8 +80,8 @@ public class TaskCtrl {
 	@Autowired
 	private RedissonClient redissonClient;
 	
-	@Autowired
-	private RedisHandler redisHandler;
+//	@Autowired
+//	private RedisHandler redisHandler;
 	
 
 	/**
@@ -228,9 +229,10 @@ public class TaskCtrl {
 		paramMap.put("endTime", endDate);
 		paramMap.put("userId", userAgent.getUserId());
 		paramMap.put("agentId", agentId);
-		List<TaskApplyInfoDO> list = taskApplyInfoDOService.list(paramMap);
 		PageHelper.startPage(pageNum, pageSize);
-		PageInfo<TaskApplyInfoDO> pageResult = new PageInfo<TaskApplyInfoDO>(list);
+//		List<TaskApplyInfoDO> list = taskApplyInfoDOService.list(paramMap);
+		List<TaskDetailVO> list = taskApplyInfoDOService.getTaskDetailList(paramMap);
+		PageInfo<TaskDetailVO> pageResult = new PageInfo<TaskDetailVO>(list);
 		return R.ok().put("data", pageResult);
 	}
 	

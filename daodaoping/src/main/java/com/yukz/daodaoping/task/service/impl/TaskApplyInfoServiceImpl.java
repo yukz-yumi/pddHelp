@@ -1,5 +1,6 @@
 package com.yukz.daodaoping.task.service.impl;
 
+import com.yukz.daodaoping.app.task.vo.TaskDetailVO;
 import com.yukz.daodaoping.task.dao.TaskApplyInfoDao;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
@@ -55,5 +56,13 @@ public class TaskApplyInfoServiceImpl implements TaskApplyInfoService {
 	public int batchRemove(Long[] ids){
 		return taskApplyInfoDao.batchRemove(ids);
 	}
+
+	@Override
+	public List<TaskDetailVO> getTaskDetailList(Map<String, Object> map) {
+		
+		return taskApplyInfoDao.getTaskDetailList(map);
+	}
+	
+	
 	
 }
