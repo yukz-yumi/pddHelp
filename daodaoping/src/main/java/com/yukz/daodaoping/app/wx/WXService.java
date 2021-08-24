@@ -14,6 +14,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -60,7 +61,7 @@ public class WXService {
 	private RedisHandler redisHandler;
 	
 
-	private String getAccessToken(Long agentId) {
+	public String getAccessToken(Long agentId) {
 		Object obj = redisHandler.get(TOKEN_KEY+agentId);
 		if (obj != null) {
 			return String.valueOf(obj);
@@ -110,10 +111,10 @@ public class WXService {
 	 */
 	@Async
 	public void taskPublishMsgSend(MessageRequest request) {
-		Map<String,String> param = new HashMap<String, String>();
+		Map<String,Object> param = new HashMap<String, Object>();
 		param.put("access_token",getAccessToken(request.getAppId()));
 		param.put("touser", request.getOpenId());
-		Map<String,String> templateMap = new HashMap<String, String>();
+		Map<String,Object> templateMap = new HashMap<String, Object>();
 		templateMap.put("template_id", PURCHASE_TEMPLATE_ID);
 		templateMap.put("url", TASK_CONFIRM_REDIRECT_URL);
 		JSONObject miniprogram = new JSONObject();
@@ -134,30 +135,32 @@ public class WXService {
 		data.put("thing8", dataDetail.fluentPut("value", request.getMemo()).put("color",COLOR));
 		dataDetail = new JSONObject();
 		data.put("remark", dataDetail.fluentPut("value", "查看详情").put("color",COLOR));
-		templateMap.put("data", JSON.toJSONString(data));
-		param.put("mp_template_msg",JSON.toJSONString(templateMap));
+		templateMap.put("data",data);
+		param.put("mp_template_msg",templateMap);
 		JSONObject result = remote2wx(HttpMethodName.POST, UNIFORM_SEND_URL, param);
 	}
 	
-	private JSONObject remote2wx(HttpMethodName method,String url,Map<String,String> param) {
+	public JSONObject remote2wx(HttpMethodName method,String url,Map<String,Object> param) {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		CloseableHttpResponse response = null;
 		JSONObject result = new JSONObject();
 		try {
-			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-			for (Entry<String, String> item : param.entrySet()) {
-				nvps.add(new BasicNameValuePair(item.getKey(),item.getValue()));
-			}
 //			nvps.add(new BasicNameValuePair("grant_type", CLIENT_CREDENTIAL));
 //			nvps.add(new BasicNameValuePair("appid", appId));
 //			nvps.add(new BasicNameValuePair("secret", secert));
-			URI uri = new URIBuilder(url).addParameters(nvps).build();
 			if(method == HttpMethodName.GET ) {
+				List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+				for (Entry<String, Object> item : param.entrySet()) {
+					nvps.add(new BasicNameValuePair(item.getKey(),String.valueOf(item.getValue())));
+				}
+				URI uri = new URIBuilder(url).addParameters(nvps).build();
 				HttpGet httpGet = new HttpGet(uri);
 				// 执行请求
 				response = httpclient.execute(httpGet);				
 			}else if(method == HttpMethodName.POST ){
-				HttpPost httpPost = new HttpPost(uri);
+				HttpPost httpPost = new HttpPost(url);
+				logger.info("请求参数:{}",JSONObject.toJSONString(param));
+				httpPost.setEntity(new StringEntity(JSONObject.toJSONString(param)) );
 				response = httpclient.execute(httpPost);
 			}
 			
@@ -166,6 +169,8 @@ public class WXService {
 				// 解析响应数据
 				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
 				result = JSONObject.parseObject(content);
+//				logger.debug(result.toJSONString());
+				logger.info("响应参数:{}",result.toJSONString());
 			}
 		} catch (Exception ex) {
 			logger.error("远程调用失败",ex.getMessage());
@@ -180,6 +185,40 @@ public class WXService {
 			}
 		}
 		return result;
+	}
+	
+	public void sendMsgTest() {
+		String openId = "oSwe25HcPjTKsBmoK0SsUZSjtF3U";
+		String token = "48_Zn4p_jH6gibwczo-h1XYChbtrnnoBQNq9a19_pCUv"
+						+ "FaGBCH3iZDaWwF0yNGvpqA_5bRXA_R360ll62KMQK1tD09k3dS"
+						+ "_Z38Zx8AuOiT1hLelwhcg_CUUzY2l7eqRCqFwxuAAuoVSuOVpecK4IVDhACAVIQ";
+		Map<String,Object> param = new HashMap<String, Object>();
+		param.put("access_token",token);
+		param.put("touser", openId);
+		Map<String,Object> templateMap = new HashMap<String, Object>();
+		templateMap.put("template_id", PURCHASE_TEMPLATE_ID);
+		templateMap.put("url", TASK_CONFIRM_REDIRECT_URL);
+		templateMap.put("appId", "wx492bfcf10245c5d1");
+		JSONObject miniprogram = new JSONObject();
+		templateMap.put("miniprogram", miniprogram.fluentPut("appid", "wx492bfcf10245c5d1").fluentPut("pagepath", "index?foo=bar"));
+		JSONObject data = new JSONObject();
+		JSONObject dataDetail = new JSONObject();
+		data.put("first", dataDetail.fluentPut("value", "助力任务发布成功").fluentPut("color", COLOR));
+		dataDetail = new JSONObject();
+		data.put("thing1", dataDetail.fluentPut("value", "平多多现金红包").fluentPut("color",COLOR));
+		dataDetail = new JSONObject();
+		data.put("amount5", dataDetail.fluentPut("value", "200.00").fluentPut("color",COLOR));
+		dataDetail = new JSONObject();
+		data.put("thing7", dataDetail.fluentPut("value", "订单编号:testtest").fluentPut("color",COLOR));
+		dataDetail = new JSONObject();
+		data.put("thing8", dataDetail.fluentPut("value", "预计完成时间").fluentPut("color",COLOR));
+		dataDetail = new JSONObject();
+		data.put("remark", dataDetail.fluentPut("value", "查看详情").fluentPut("color",COLOR));
+		templateMap.put("data", data);
+		param.put("mp_template_msg",templateMap);		
+		WXService service = new WXService();
+//		System.out.println(param);
+		JSONObject json = service.remote2wx(HttpMethodName.POST, UNIFORM_SEND_URL, param);
 	}
 
 }

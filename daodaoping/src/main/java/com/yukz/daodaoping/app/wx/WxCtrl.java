@@ -24,7 +24,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.yukz.daodaoping.common.utils.R;
 
 @RequestMapping("/appInt/wx")
-
 @RestController
 public class WxCtrl {
 
@@ -35,7 +34,7 @@ public class WxCtrl {
 
 	@Value("${wx.secert}")
 	private String secert;
-	
+
 	@Autowired
 	private WXService wxService;
 
@@ -73,6 +72,13 @@ public class WxCtrl {
 		}
 		return R.ok().put("data", json);
 	}
+	
+	@GetMapping("/getToken")
+	public R getToken() {
+		String token = wxService.getAccessToken(100001L);
+		return R.ok().put("token", token);
+	}
+
 	
 
 }

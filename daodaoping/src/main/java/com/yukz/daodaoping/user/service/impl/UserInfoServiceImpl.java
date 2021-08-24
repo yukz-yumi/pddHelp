@@ -14,6 +14,7 @@ import com.yukz.daodaoping.user.service.UserInfoService;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
+	
 	@Autowired
 	private UserInfoDao userInfoDao;
 	
