@@ -17,6 +17,7 @@ import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
 import com.yukz.daodaoping.common.observer.RealSubject;
 import com.yukz.daodaoping.common.observer.TaskConfirmedObserver;
+import com.yukz.daodaoping.common.observer.TaskSendMessageObserver;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
@@ -42,7 +43,10 @@ public class Receivers {
 	private AmqpHandler amqpHandler;
 	
 	@Autowired
-	private TaskConfirmedObserver observer;
+	private TaskConfirmedObserver taskConfirmedObserver;
+	
+	@Autowired
+	private TaskSendMessageObserver taskSendMessageObserver;
 
 	@Autowired
 	private TaskExecuteBiz taskExecuteBiz;
@@ -73,6 +77,9 @@ public class Receivers {
 
 		// 交给订单处理类处理
 		amqpHandler.sendToDirectQueue(MqConstants.TASK_ROUTER_KEY, orderInfo.getTaskId());
+		RealSubject subject = new RealSubject();
+		subject.addObserver(taskSendMessageObserver);
+		subject.makeChanged(orderInfo);
 	}
 
 	/**
@@ -102,7 +109,7 @@ public class Receivers {
 			taskApplyInfoService.update(taskInfo);
 			// 向监听者发送消息
 			RealSubject subject = new RealSubject();
-			subject.addObserver(observer);
+			subject.addObserver(taskConfirmedObserver);
 			subject.makeChanged(taskInfo);
 			amqpHandler.sendDelayMessage(taskId, MqConstants.TASK_EXPIRE_ROUTER_KEY);
 			logger.info("任务taskId:{}状态更新成功", taskId);

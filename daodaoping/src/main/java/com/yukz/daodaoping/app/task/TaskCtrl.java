@@ -39,7 +39,6 @@ import com.yukz.daodaoping.common.exception.BDException;
 import com.yukz.daodaoping.common.utils.R;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
-import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
 import com.yukz.daodaoping.task.domain.TaskTypeInfoDO;

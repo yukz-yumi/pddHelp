@@ -74,12 +74,5 @@ public class WxCtrl {
 		return R.ok().put("data", json);
 	}
 	
-	@RequestMapping("/getToken")
-	public R getAccessToken() {
-		String token = wxService.getAccessToken(100001L);
-		return R.ok().put("token", token);
-	}
-	
-	
 
 }
