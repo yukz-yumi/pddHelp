@@ -38,7 +38,7 @@
 				order by ${sort} ${order}
 			</when>
 			<otherwise>
-				order by t1.id desc
+				order by id desc
 			</otherwise>
 		</choose>
 		<if test="offset != null and limit != null">

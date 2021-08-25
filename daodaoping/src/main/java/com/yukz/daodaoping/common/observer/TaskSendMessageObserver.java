@@ -1,7 +1,6 @@
 package com.yukz.daodaoping.common.observer;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.yukz.daodaoping.app.order.vo.OrderDetailVO;
 import com.yukz.daodaoping.app.task.enums.TaskStatusEnum;
-import com.yukz.daodaoping.app.wx.WXService;
+import com.yukz.daodaoping.app.wx.WXServiceHandler;
 import com.yukz.daodaoping.app.wx.request.MessageRequest;
 import com.yukz.daodaoping.order.domain.OrderInfoDO;
 import com.yukz.daodaoping.order.service.OrderInfoService;
@@ -29,7 +28,7 @@ public class TaskSendMessageObserver implements Observer {
 	private static final Logger logger = LoggerFactory.getLogger(TaskSendMessageObserver.class);
 	
 	@Autowired
-	private WXService wxService;
+	private WXServiceHandler wxService;
 	
 	@Autowired
 	private OrderInfoService orderInfoService;
@@ -60,9 +59,9 @@ public class TaskSendMessageObserver implements Observer {
 		}
 		
 		logger.info("taskId:{}的任务开启成功...准备向发单用户发送任务确认成功的通知",taskApplyInfo.getId());
-		OrderDetailVO orderDetail  = orderInfoService.getOrderDetailById(orderInfo.getId());
+		OrderDetailVO orderDetail  = orderInfoService.getOrderDetailById(orderInfo.getOrderId());
 		MessageRequest request = new MessageRequest();
-		request.setAppId(orderInfo.getAgentId());
+		request.setAgentId(orderInfo.getAgentId());
 		request.setAmount(String.valueOf(orderDetail.getPaymentAmount()));
 		Long userId = orderDetail.getUserId();
 		Map<String,Object> userInfoMap = new HashMap<String,Object>();

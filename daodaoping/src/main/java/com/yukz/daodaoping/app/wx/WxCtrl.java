@@ -36,7 +36,7 @@ public class WxCtrl {
 	private String secert;
 
 	@Autowired
-	private WXService wxService;
+	private WXServiceHandler wxService;
 
 	@GetMapping("/getOpenId")
 	public R getOpenId(HttpServletRequest request) throws Exception {
@@ -77,6 +77,12 @@ public class WxCtrl {
 	public R getToken() {
 		String token = wxService.getAccessToken(100001L);
 		return R.ok().put("token", token);
+	}
+	
+	@GetMapping("/sendMsgTest")
+	public R sendMsgTest() {
+		wxService.sendMsgTest();
+		return R.ok();
 	}
 
 	

@@ -8,7 +8,7 @@ public class MessageRequest {
 	
 	private String openId;
 	
-	private Long appId;
+	private Long agentId;
 	
 	private String templateId;
 	
@@ -42,12 +42,12 @@ public class MessageRequest {
 		this.openId = openId;
 	}
 
-	public Long getAppId() {
-		return appId;
+	public Long getAgentId() {
+		return agentId;
 	}
 
-	public void setAppId(Long appId) {
-		this.appId = appId;
+	public void setAgentId(Long agentId) {
+		this.agentId = agentId;
 	}
 
 	public String getTemplateId() {
@@ -65,16 +65,6 @@ public class MessageRequest {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-	public Map<String, String> getData() {
-		return data;
-	}
-
-	public void setData(Map<String, String> data) {
-		this.data = data;
-	}
-
-	
 
 	public String getTitle() {
 		return title;
@@ -108,17 +98,20 @@ public class MessageRequest {
 		this.memo = memo;
 	}
 
-	public MessageRequest() {
-		super();
-		// TODO Auto-generated constructor stub
+	public Map<String, String> getData() {
+		return data;
 	}
 
-	public MessageRequest(Long userId, String openId, Long appId, String templateId, String url,
-			String title, String amount, String detail, String memo, Map<String, String> data) {
+	public void setData(Map<String, String> data) {
+		this.data = data;
+	}
+
+	public MessageRequest(Long userId, String openId, Long agentId, String templateId, String url, String title,
+			String amount, String detail, String memo, Map<String, String> data) {
 		super();
 		this.userId = userId;
 		this.openId = openId;
-		this.appId = appId;
+		this.agentId = agentId;
 		this.templateId = templateId;
 		this.url = url;
 		this.title = title;
@@ -127,6 +120,13 @@ public class MessageRequest {
 		this.memo = memo;
 		this.data = data;
 	}
+
+	public MessageRequest() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	
 	
 	

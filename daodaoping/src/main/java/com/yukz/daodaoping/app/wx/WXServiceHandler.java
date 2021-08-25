@@ -33,9 +33,9 @@ import com.yukz.daodaoping.app.wx.request.MessageRequest;
 import com.yukz.daodaoping.system.config.RedisHandler;
 
 @Service
-public class WXService {
+public class WXServiceHandler {
 	
-	private static final Logger logger = LoggerFactory.getLogger(WXService.class);
+	private static final Logger logger = LoggerFactory.getLogger(WXServiceHandler.class);
 
 	@Value("${wx.appId}")
 	private String appId;
@@ -49,7 +49,7 @@ public class WXService {
 
 	private static final String TOKEN_URI = "https://api.weixin.qq.com/cgi-bin/token";
 	
-	private static final String UNIFORM_SEND_URL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send";
+	private static final String UNIFORM_SEND_URL = "https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=";
 	
 	private static final String PURCHASE_TEMPLATE_ID = "jNQxovLS_wGdymokeEp4fHTMzYIFw6l4givU9zL_1hA";
 	
@@ -83,6 +83,7 @@ public class WXService {
 				// 解析响应数据
 				String content = EntityUtils.toString(response.getEntity(), "UTF-8");
 				json = JSONObject.parseObject(content);
+				logger.info("获取access_token接口返回参数:{}",json);
 				String token = json.getString("access_token");
 				Long expiredTime = Long.valueOf(json.getString("expires_in"));
 				redisHandler.set(TOKEN_KEY+agentId, token, expiredTime, TimeUnit.SECONDS);
@@ -111,8 +112,9 @@ public class WXService {
 	 */
 	@Async
 	public void taskPublishMsgSend(MessageRequest request) {
+		String accessToken = getAccessToken(request.getAgentId());
 		Map<String,Object> param = new HashMap<String, Object>();
-		param.put("access_token",getAccessToken(request.getAppId()));
+		param.put("access_token",accessToken);
 		param.put("touser", request.getOpenId());
 		Map<String,Object> templateMap = new HashMap<String, Object>();
 		templateMap.put("template_id", PURCHASE_TEMPLATE_ID);
@@ -137,7 +139,8 @@ public class WXService {
 		data.put("remark", dataDetail.fluentPut("value", "查看详情").put("color",COLOR));
 		templateMap.put("data",data);
 		param.put("mp_template_msg",templateMap);
-		JSONObject result = remote2wx(HttpMethodName.POST, UNIFORM_SEND_URL, param);
+//		JSONObject result = remote2wx(HttpMethodName.POST, UNIFORM_SEND_URL+accessToken, param);
+		logger.info("测试：消息发送成功");
 	}
 	
 	public JSONObject remote2wx(HttpMethodName method,String url,Map<String,Object> param) {
@@ -189,9 +192,7 @@ public class WXService {
 	
 	public void sendMsgTest() {
 		String openId = "oSwe25HcPjTKsBmoK0SsUZSjtF3U";
-		String token = "48_Zn4p_jH6gibwczo-h1XYChbtrnnoBQNq9a19_pCUv"
-						+ "FaGBCH3iZDaWwF0yNGvpqA_5bRXA_R360ll62KMQK1tD09k3dS"
-						+ "_Z38Zx8AuOiT1hLelwhcg_CUUzY2l7eqRCqFwxuAAuoVSuOVpecK4IVDhACAVIQ";
+		String token = getAccessToken(100001L);
 		Map<String,Object> param = new HashMap<String, Object>();
 		param.put("access_token",token);
 		param.put("touser", openId);
@@ -216,9 +217,8 @@ public class WXService {
 		data.put("remark", dataDetail.fluentPut("value", "查看详情").fluentPut("color",COLOR));
 		templateMap.put("data", data);
 		param.put("mp_template_msg",templateMap);		
-		WXService service = new WXService();
 //		System.out.println(param);
-		JSONObject json = service.remote2wx(HttpMethodName.POST, UNIFORM_SEND_URL, param);
+		remote2wx(HttpMethodName.POST, UNIFORM_SEND_URL+token, param);
 	}
 
 }
