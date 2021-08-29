@@ -6,6 +6,7 @@ import com.yukz.daodaoping.approve.service.VerifyRecordInfoService;
 import com.yukz.daodaoping.common.task.service.CheckTaskAcceptJobService;
 import com.yukz.daodaoping.task.domain.TaskAcceptInfoDO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+import com.yukz.daodaoping.task.enums.TaskResultEnum;
 import com.yukz.daodaoping.task.service.TaskAcceptInfoService;
 import com.yukz.daodaoping.task.service.TaskApplyInfoService;
 import org.apache.commons.lang3.StringUtils;
@@ -67,6 +68,10 @@ public class CheckTaskAcceptJobServiceImpl implements CheckTaskAcceptJobService 
         upTaskApply.setId(taskApplyInfo.getId());
         upTaskApply.setCompletedNumber(completeNum);
         upTaskApply.setGmtModify(now);
+        //任务申请记录初始化是null，第一个人接单后更新成“未完成”状态
+        if (null == taskApplyInfo.getTaskResult()) {
+            upTaskApply.setTaskResult(TaskResultEnum.UNCOMPLETED.getCode());
+        }
         taskApplyInfoService.update(upTaskApply);
     }
 

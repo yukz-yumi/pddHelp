@@ -25,6 +25,8 @@ public interface SysSetService {
 	 */
 	SysSetDO getByKey(String setKey, String platform, String setType, Long agentId);
 
+	List<SysSetDO> listFromRedisHandle(List<Object> setKeyList, String platform, String setType, Long agentId);
+
 	List<SysSetDO> list(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);

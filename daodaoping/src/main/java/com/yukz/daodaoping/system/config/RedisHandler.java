@@ -163,6 +163,18 @@ public class RedisHandler {
     }
 
     /**
+     * 批量读取缓存
+     *
+     * @param keys
+     * @return
+     */
+    public List<Object> getListByKeys(final List<Object> keys) {
+
+        List<Object> list = redisTemplate.opsForValue().multiGet(keys);
+        return list;
+    }
+
+    /**
      * 哈希 添加
      *
      * @param key

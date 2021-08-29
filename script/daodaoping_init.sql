@@ -342,3 +342,6 @@ CREATE TABLE `ddp_sys_set`  (
 INSERT INTO `ddp_sys_set` VALUES (null, 'ttl_order', '900000', '100001', 'pdd', null, 'pdd订单超时时间', null, sysdate(), sysdate());
 INSERT INTO `ddp_sys_set` VALUES (null, 'ttl_task', '600000', '100001', 'pdd', null, 'pdd任务超时时间', null, sysdate(), sysdate());
 INSERT INTO `ddp_sys_set` VALUES (null, 'ttl_completed', '300000', '100001', 'pdd', null, 'pdd任务完成时间', null, sysdate(), sysdate());
+INSERT INTO `ddp_sys_set` VALUES (null, 'proportion_commission_level1', '10', '100001', null, null, '系统一级推广人佣金百分比', null, sysdate(), sysdate());
+INSERT INTO `ddp_sys_set` VALUES (null, 'proportion_commission_level2', '5', '100001', null, null, '系统二级推广人佣金百分比', null, sysdate(), sysdate());
+INSERT INTO `ddp_sys_set` VALUES (null, 'proportion_task', '55', '100001', 'pdd', null, '拼多多接单人奖励百分比', null, sysdate(), sysdate());
