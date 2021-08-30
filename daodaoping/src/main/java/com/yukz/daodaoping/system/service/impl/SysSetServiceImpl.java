@@ -1,5 +1,7 @@
 package com.yukz.daodaoping.system.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.yukz.daodaoping.common.utils.JSONUtils;
 import com.yukz.daodaoping.system.config.RedisHandler;
 import com.yukz.daodaoping.system.dao.SysSetDao;
 import com.yukz.daodaoping.system.domain.SysSetDO;
@@ -7,6 +9,7 @@ import com.yukz.daodaoping.system.service.SysSetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +35,29 @@ public class SysSetServiceImpl implements SysSetService {
 	}
 
 	@Override
-	public List<SysSetDO> listFromRedisHandle(List<Object> setKeyList, String platform, String setType, Long agentId){
+	public List<SysSetDO> listFromRedisHandle(List<Object> setKeyList){
 		List<Object> cacheList = redisHandler.getListByKeys(setKeyList);
-		return null;
+		String cacheListJson = JSON.toJSONString(cacheList);
+		List<SysSetDO> rtnList = JSONUtils.jsonToBean(cacheListJson, SysSetDO.class);
+		return rtnList;
+	}
+
+	@Override
+	public Map<String, Object> mapFromRedisHandle(List<Object> setKeyList){
+		List<SysSetDO> rtnList = this.listFromRedisHandle(setKeyList);
+		Map<String, Object> sysSetMap = new HashMap<>();
+		for (SysSetDO sysSet : rtnList) {
+			sysSetMap.put(sysSet.getSetKey(), sysSet.getSetValue());
+		}
+		return sysSetMap;
+	}
+
+	@Override
+	public SysSetDO getByKeyFromRedisHandler(String key) {
+		Object obj = redisHandler.get(key);
+		String cacheJson = JSON.toJSONString(obj);
+		SysSetDO rtnObj = JSON.parseObject(cacheJson, SysSetDO.class);
+		return rtnObj;
 	}
 
 	@Override

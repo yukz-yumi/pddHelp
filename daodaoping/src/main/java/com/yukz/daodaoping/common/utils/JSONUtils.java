@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class JSONUtils {
@@ -54,6 +55,20 @@ public class JSONUtils {
 		Map<String, String> map = new HashMap<String, String>(16);
 		map.put(key, value);
 		return beanToJson(map, null);
+	}
+
+	/**
+	 * 将json字符串转换成对象列表
+	 *
+	 * @param json
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> List<T> jsonToBean(String json, Class<T> clazz) {
+		if (StringUtils.isEmpty(json) || clazz == null) {
+			return null;
+		}
+		return JSON.parseArray(json, clazz);
 	}
 
 	/**
