@@ -24,6 +24,10 @@ public interface TaskApplyInfoDao {
 	
 	int count(Map<String,Object> map);
 	
+	List<TaskApplyInfoDO> listWithOrder(Map<String,Object> map);
+
+	int countWithOrder(Map<String,Object> map);
+
 	int save(TaskApplyInfoDO taskApplyInfo);
 	
 	int update(TaskApplyInfoDO taskApplyInfo);

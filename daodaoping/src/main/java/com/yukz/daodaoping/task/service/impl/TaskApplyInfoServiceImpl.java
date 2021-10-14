@@ -38,6 +38,16 @@ public class TaskApplyInfoServiceImpl implements TaskApplyInfoService {
 	}
 	
 	@Override
+	public List<TaskApplyInfoDO> listWithOrder(Map<String, Object> map){
+		return taskApplyInfoDao.listWithOrder(map);
+	}
+
+	@Override
+	public int countWithOrder(Map<String, Object> map){
+		return taskApplyInfoDao.countWithOrder(map);
+	}
+
+	@Override
 	public int save(TaskApplyInfoDO taskApplyInfo){
 		return taskApplyInfoDao.save(taskApplyInfo);
 	}

@@ -44,6 +44,10 @@ public class TaskApplyInfoDO implements Serializable {
 	//修改时间
 	private Date gmtModify;
 
+	private Long totalAmount;
+	private Long paymentAmount;
+	private Long orderId;
+
 	/**
 	 * 设置：
 	 */
@@ -211,5 +215,29 @@ public class TaskApplyInfoDO implements Serializable {
 	 */
 	public Date getGmtModify() {
 		return gmtModify;
+	}
+
+	public Long getTotalAmount() {
+		return totalAmount;
+	}
+
+	public void setTotalAmount(Long totalAmount) {
+		this.totalAmount = totalAmount;
+	}
+
+	public Long getPaymentAmount() {
+		return paymentAmount;
+	}
+
+	public void setPaymentAmount(Long paymentAmount) {
+		this.paymentAmount = paymentAmount;
+	}
+
+	public Long getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Long orderId) {
+		this.orderId = orderId;
 	}
 }

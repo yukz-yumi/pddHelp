@@ -2,7 +2,6 @@ package com.yukz.daodaoping.common.task;
 
 import com.yukz.daodaoping.app.task.enums.TaskAcceptionStatusEunm;
 import com.yukz.daodaoping.common.config.ConfigKey;
-import com.yukz.daodaoping.common.task.service.CheckTaskAcceptJobService;
 import com.yukz.daodaoping.common.task.threads.EndPDDTaskThread;
 import com.yukz.daodaoping.system.service.SysSetService;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
@@ -16,9 +15,11 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.concurrent.FutureTask;
 
 @Component
 public class EndPDDTaskJob implements Job{
@@ -26,9 +27,9 @@ public class EndPDDTaskJob implements Job{
 	@Autowired
 	private TaskApplyInfoService taskApplyInfoService;
 	@Autowired
-    private CheckTaskAcceptJobService checkTaskAcceptJobService;
-	@Autowired
     private SysSetService sysSetService;
+    @Autowired
+    private ThreadPoolTaskExecutor taskExecutor;
 
     @Override
     public void execute(JobExecutionContext arg0) throws JobExecutionException {
@@ -57,11 +58,12 @@ public class EndPDDTaskJob implements Job{
             cal.add(GregorianCalendar.SECOND, 0-completedSecond);
             query.put("expireTimeEnd", completedSecond);
 
-            List<TaskApplyInfoDO> taskApplayList = taskApplyInfoService.list(query);
+            List<TaskApplyInfoDO> taskApplayList = taskApplyInfoService.listWithOrder(query);
             if (null != taskApplayList && taskApplayList.size()>0) {
                 for (TaskApplyInfoDO taskApply : taskApplayList) {
                     EndPDDTaskThread endPDDTaskThread = new EndPDDTaskThread(
-                            "结束任务线程："+taskApply.getId(), taskApply);
+                            "结束任务线程："+taskApply.getId(), taskApply, sysSetListMap);
+                    FutureTask<Boolean> future = (FutureTask<Boolean>) taskExecutor.submit(endPDDTaskThread);
                 }
             }
 

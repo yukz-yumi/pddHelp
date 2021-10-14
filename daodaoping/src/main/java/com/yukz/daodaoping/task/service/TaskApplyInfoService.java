@@ -1,10 +1,10 @@
 package com.yukz.daodaoping.task.service;
 
-import java.util.List;
-import java.util.Map;
-
 import com.yukz.daodaoping.app.task.vo.TaskDetailVO;
 import com.yukz.daodaoping.task.domain.TaskApplyInfoDO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 任务申请表
@@ -22,7 +22,11 @@ public interface TaskApplyInfoService {
 	List<TaskApplyInfoDO> list(Map<String, Object> map);
 	
 	int count(Map<String, Object> map);
-	
+
+	List<TaskApplyInfoDO> listWithOrder(Map<String, Object> map);
+
+	int countWithOrder(Map<String, Object> map);
+
 	int save(TaskApplyInfoDO taskApplyInfo);
 	
 	int update(TaskApplyInfoDO taskApplyInfo);

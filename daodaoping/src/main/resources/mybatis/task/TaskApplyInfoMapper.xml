@@ -79,6 +79,68 @@
 		</where>
 	</select>
 
+	<select id="listWithOrder"
+			resultType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO">
+		select
+		ta.*, oi.order_id, oi.total_amount, oi.payment_amount
+		from ddp_task_apply_info ta, ddp_order_info oi
+		<where> oi.task_id = ta.id
+			<if test="id != null and id != ''"> and ta.id = #{id} </if>
+			<if test="userId != null and userId != ''"> and ta.user_id = #{userId} </if>
+			<if test="taskTypeId != null and taskTypeId != ''"> and ta.task_type_id = #{taskTypeId} </if>
+			<if test="assistantType != null and assistantType != ''"> and ta.assistant_type = #{assistantType} </if>
+			<if test="command != null and command != ''"> and ta.command = #{command} </if>
+			<if test="taskNumber != null and taskNumber != ''"> and ta.task_number = #{taskNumber} </if>
+			<if test="completedNumber != null and completedNumber != ''"> and ta.completed_number = #{completedNumber} </if>
+			<if test="taskResult != null and taskResult != ''"> and ta.task_result = #{taskResult} </if>
+			<if test="taskStatus != null and taskStatus != ''"> and ta.task_status = #{taskStatus} </if>
+			<if test="startTime != null and startTime != ''"> and ta.start_time = #{startTime} </if>
+			<if test="expireTime != null and expireTime != ''"> and ta.expire_time = #{expireTime} </if>
+			<if test="expireTimeStart != null and expireTimeStart != ''"> <![CDATA[ and ta.expire_time >= #{expireTimeStart} ]]> </if>
+			<if test="expireTimeEnd != null and expireTimeEnd != ''"> <![CDATA[ and ta.expire_time <= #{expireTimeEnd} ]]> </if>
+			<if test="agentId != null and agentId != ''"> and ta.agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and ta.gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> and ta.gmt_modify = #{gmtModify} </if>
+		</where>
+		<if test="endTime!=null">
+			and DATE_FORMAT(ta.gmt_create,'%Y-%m-%d')  <![CDATA[ >=  ]]>DATE_FORMAT(#{ta.endTime},'%Y-%m-%d')
+		</if>
+		<choose>
+			<when test="sort != null and sort.trim() != ''">
+				order by ${sort} ${order}
+			</when>
+			<otherwise>
+				order by ta.id desc
+			</otherwise>
+		</choose>
+		<if test="offset != null and limit != null">
+			limit #{offset}, #{limit}
+		</if>
+
+	</select>
+
+	<select id="countWithOrder" resultType="int">
+		select count(*) from ddp_task_apply_info ta, ddp_order_info oi
+		<where> oi.task_id = ta.id
+			<if test="id != null and id != ''"> and ta.id = #{id} </if>
+			<if test="userId != null and userId != ''"> and ta.user_id = #{userId} </if>
+			<if test="taskTypeId != null and taskTypeId != ''"> and ta.task_type_id = #{taskTypeId} </if>
+			<if test="assistantType != null and assistantType != ''"> and ta.assistant_type = #{assistantType} </if>
+			<if test="command != null and command != ''"> and ta.command = #{command} </if>
+			<if test="taskNumber != null and taskNumber != ''"> and ta.task_number = #{taskNumber} </if>
+			<if test="completedNumber != null and completedNumber != ''"> and ta.completed_number = #{completedNumber} </if>
+			<if test="taskResult != null and taskResult != ''"> and ta.task_result = #{taskResult} </if>
+			<if test="taskStatus != null and taskStatus != ''"> and ta.task_status = #{taskStatus} </if>
+			<if test="startTime != null and startTime != ''"> and ta.start_time = #{startTime} </if>
+			<if test="expireTime != null and expireTime != ''"> and ta.expire_time = #{expireTime} </if>
+			<if test="expireTimeStart != null and expireTimeStart != ''"> <![CDATA[ and ta.expire_time >= #{expireTimeStart} ]]> </if>
+			<if test="expireTimeEnd != null and expireTimeEnd != ''"> <![CDATA[ and ta.expire_time <= #{expireTimeEnd} ]]> </if>
+			<if test="agentId != null and agentId != ''"> and ta.agent_id = #{agentId} </if>
+			<if test="gmtCreate != null and gmtCreate != ''"> and ta.gmt_create = #{gmtCreate} </if>
+			<if test="gmtModify != null and gmtModify != ''"> and ta.gmt_modify = #{gmtModify} </if>
+		</where>
+	</select>
+
 	<insert id="save"
 		parameterType="com.yukz.daodaoping.task.domain.TaskApplyInfoDO"
 		useGeneratedKeys="true" keyProperty="id">
